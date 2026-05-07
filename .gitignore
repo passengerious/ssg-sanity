@@ -34,3 +34,9 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+init_project_ledger.sh
+kraina-mriy-fest.pdf
+.stitch
+.opencode
+LICENSE
