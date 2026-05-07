@@ -424,6 +424,17 @@ export type BlockContent = Array<
     } & Code)
 >;
 
+export type TicketInfo = {
+  _id: string;
+  _type: "ticketInfo";
+  _createdAt: string;
+  _updatedAt: string;
+  _rev: string;
+  price?: string;
+  ticketsLeft?: string;
+  boxOfficeUrl?: string;
+};
+
 export type Settings = {
   _id: string;
   _type: "settings";
@@ -792,6 +803,7 @@ export type AllSanitySchemaTypes =
   | PageReference
   | Link
   | BlockContent
+  | TicketInfo
   | Settings
   | SanityImageCrop
   | SanityImageHotspot
@@ -2013,6 +2025,15 @@ export type SETTINGS_QUERY_RESULT = {
   copyright: BlockContent | null;
 } | null;
 
+// Source: ../frontend/sanity/queries/ticket-info.ts
+// Variable: TICKET_INFO_QUERY
+// Query: *[_type == "ticketInfo" && _id == "ticketInfo"][0]{  price,  ticketsLeft,  boxOfficeUrl}
+export type TICKET_INFO_QUERY_RESULT = {
+  price: string | null;
+  ticketsLeft: string | null;
+  boxOfficeUrl: string | null;
+} | null;
+
 // Query TypeMap
 import "@sanity/client";
 declare module "@sanity/client" {
@@ -2024,5 +2045,6 @@ declare module "@sanity/client" {
     '*[_type == "post" && defined(slug)] | order(_createdAt desc){\n    title,\n    slug,\n    excerpt,\n    image{\n      \n  ...,\n  asset->{\n    _id,\n    url,\n    mimeType,\n    metadata {\n      lqip,\n      dimensions {\n        width,\n        height\n      }\n    }\n  }\n\n    },\n}': POSTS_QUERY_RESULT;
     '*[_type == "post" && defined(slug)]{slug}': POSTS_SLUGS_QUERY_RESULT;
     '*[_type == "settings"][0]{\n  _type,\n  siteName,\n  logo{\n    dark{\n      ...,\n      asset->{\n        _id,\n        url,\n        mimeType,\n        metadata {\n          lqip,\n          dimensions {\n            width,\n            height\n          }\n        }\n      }\n    },\n    light{\n      ...,\n      asset->{\n        _id,\n        url,\n        mimeType,\n        metadata {\n          lqip,\n          dimensions {\n            width,\n            height\n          }\n        }\n      }\n    },\n    width,\n    height,\n  },\n  copyright\n}': SETTINGS_QUERY_RESULT;
+    '*[_type == "ticketInfo" && _id == "ticketInfo"][0]{\n  price,\n  ticketsLeft,\n  boxOfficeUrl\n}': TICKET_INFO_QUERY_RESULT;
   }
 }

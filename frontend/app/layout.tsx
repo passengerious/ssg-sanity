@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Inter as FontSans } from "next/font/google";
+import { Mulish as FontSans } from "next/font/google";
 import "./globals.css";
 import { cn } from "@/lib/utils";
 import { ThemeProvider } from "@/components/theme-provider";
@@ -10,10 +10,18 @@ const isProduction = process.env.NEXT_PUBLIC_SITE_ENV === "production";
 export const metadata: Metadata = {
   metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL!),
   title: {
-    template: "%s | Schema UI",
-    default: "Sanity Next.js Website | Schema UI",
+    template: "%s | Країна Мрій",
+    default: "Країна Мрій 2026",
+  },
+  description:
+    "Країна Мрій 2026 — етно-фестиваль традиції, свободи та сучасної української культури.",
+  icons: {
+    icon: "/favicon.ico",
   },
   openGraph: {
+    title: "Країна Мрій 2026",
+    description:
+      "Етно-фестиваль, де традиції творять майбутнє української культури.",
     images: [
       {
         url: `${process.env.NEXT_PUBLIC_SITE_URL}/images/og-image.jpg`,
@@ -21,16 +29,16 @@ export const metadata: Metadata = {
         height: 630,
       },
     ],
-    locale: "en_US",
+    locale: "uk_UA",
     type: "website",
   },
   robots: !isProduction ? "noindex, nofollow" : "index, follow",
 };
 
 const fontSans = FontSans({
-  subsets: ["latin"],
-  weight: ["400", "500", "600", "700", "800"],
-  variable: "--font-sans",
+  subsets: ["latin", "cyrillic"],
+  weight: ["400", "500", "600", "700"],
+  variable: "--font-mulish",
 });
 
 export default function RootLayout({
@@ -39,12 +47,11 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" suppressHydrationWarning>
-      <link rel="icon" href="/favicon.ico" />
+    <html lang="uk" suppressHydrationWarning>
       <body
         className={cn(
           "min-h-screen bg-background font-sans antialiased overscroll-none",
-          fontSans.variable,
+          fontSans.variable
         )}
       >
         <ThemeProvider
