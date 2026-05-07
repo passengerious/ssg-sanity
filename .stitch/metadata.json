@@ -1,0 +1,29 @@
+{
+  "project": "kraina-mriy-fest",
+  "lastUpdated": "2026-05-07",
+  "screens": [
+    {
+      "name": "Landing page MVP",
+      "route": "/landing",
+      "designHtml": ".stitch/designs/landing.html",
+      "designImage": ".stitch/designs/landing.png",
+      "sourceOfTruth": ".stitch/DESIGN.md",
+      "status": "implemented-mvp",
+      "notes": [
+        "Frontend implementation was realigned to the updated Brand Red / Natural Green / Warm Beige / Dark Grey tokens.",
+        "Temporary generated image URLs were removed from React components and replaced with persistent placeholders until Sanity or public assets are approved.",
+        "Next planned screen is the Sanity-backed Kamianets-Podilskyi city page."
+      ]
+    },
+    {
+      "name": "Tickets MVP",
+      "route": "/tickets",
+      "sourceOfTruth": ".stitch/DESIGN.md",
+      "status": "implemented-mvp",
+      "notes": [
+        "Uses the ticketInfo Sanity singleton for price, ticket availability text, and the external box office URL.",
+        "Renders safe placeholder states until the final service partner URL is available."
+      ]
+    }
+  ]
+}
