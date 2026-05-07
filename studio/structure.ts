@@ -7,6 +7,7 @@ import {
   Quote,
   Menu,
   Settings,
+  Ticket,
 } from "lucide-react";
 
 export const structure = (S: any, context: any) =>
@@ -74,5 +75,14 @@ export const structure = (S: any, context: any) =>
             .id("settings")
             .schemaType("settings")
             .documentId("settings")
+        ),
+      S.listItem()
+        .title("Ticket Info")
+        .icon(Ticket)
+        .child(
+          S.editor()
+            .id("ticketInfo")
+            .schemaType("ticketInfo")
+            .documentId("ticketInfo")
         ),
     ]);
