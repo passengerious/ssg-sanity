@@ -75,6 +75,12 @@ export default nextConfig
 
 Decision needed: whether to add `trailingSlash: true` based on `adm.tools` URL behavior.
 
+## Current next target
+
+The next architecture target is static export readiness for `frontend/next.config.mjs`. Do **not** add `output: 'export'` until Phase 1 blockers are resolved, but use it as the next implementation milestone: remove runtime-only features, replace or isolate API-backed flows, remove runtime redirects, then enable and validate static export.
+
+The landing and ticket MVP routes are allowed to exist before static export is enabled as static-safe preview routes, but they do not by themselves satisfy the final `adm.tools` deployment requirements.
+
 ## Implementation phases
 
 ### Phase 0 — Architecture decision and export readiness audit
@@ -138,6 +144,10 @@ Owner: `sanity-schema-architect` with `content-blocks-architect`
    - `Partner`: logo, partnership level, URL, display order.
 4. Add validation rules for required editorial fields and stable slugs.
 5. Run Sanity TypeGen after schema and query changes.
+6. MVP ticket content:
+   - add singleton `ticketInfo` document,
+   - fields: price, number of tickets left, external box office link,
+   - render `/tickets` with safe placeholders when the Sanity document or URL is missing.
 
 Exit criteria:
 
@@ -289,4 +299,4 @@ Exit criteria:
 
 ## Completion notes
 
-Not started. This plan replaces the original phase list with a static-export-safe sequence and calls out the blockers that must be resolved before setting `output: 'export'`.
+In progress. Landing MVP and `ticketInfo`/`/tickets` MVP are implemented as static-safe preview work. Static export configuration remains the next architecture target and still requires resolving Phase 1 blockers before setting `output: 'export'`.
