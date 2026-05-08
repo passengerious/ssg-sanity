@@ -2,33 +2,21 @@
 
 import Image from "next/image";
 import type { LandingTheme } from "@/components/landing/LandingExperience";
+import type { LANDING_CITIES_QUERY_RESULT } from "@/sanity.types";
 
 type HeroProps = {
+  cities: LANDING_CITIES_QUERY_RESULT;
   theme: LandingTheme;
   onThemeChange: (theme: LandingTheme) => void;
 };
 
-const cityCards: Array<{
-  theme: LandingTheme;
-  title: string;
-  city: string;
-  alt: string;
-}> = [
-  {
-    theme: "epic",
-    title: "Країна Мрій Епічна",
-    city: "Кам'янець-Подільський",
-    alt: "Візуальний заповнювач для Кам'янця-Подільського",
-  },
-  {
-    theme: "heroic",
-    title: "Країна Мрій Героїчна",
-    city: "Львів",
-    alt: "Візуальний заповнювач для Львова",
-  },
-];
+function isLandingTheme(theme: string | null | undefined): theme is LandingTheme {
+  return theme === "epic" || theme === "heroic";
+}
 
-export const Hero = ({ onThemeChange, theme }: HeroProps) => {
+export const Hero = ({ cities, onThemeChange, theme }: HeroProps) => {
+  const cityCards = cities.filter((city) => city.slug && isLandingTheme(city.themeKey));
+
   return (
     <section className="relative flex min-h-[707px] flex-col items-center justify-center overflow-hidden px-4 py-12 text-center md:px-12">
       <div className="absolute inset-0 z-0 bg-[radial-gradient(currentColor_1px,transparent_0)] bg-[size:24px_24px] text-primary opacity-10" />
@@ -40,28 +28,29 @@ export const Hero = ({ onThemeChange, theme }: HeroProps) => {
 
         <div className="mx-auto mt-12 grid w-full max-w-4xl grid-cols-1 gap-6 md:grid-cols-2" id="cities">
           {cityCards.map((card) => {
-            const selected = theme === card.theme;
+            const cardTheme = card.themeKey as LandingTheme;
+            const selected = theme === cardTheme;
 
             return (
               <button
                 aria-pressed={selected}
                 className={`group rounded-xl border bg-card p-6 text-left shadow-sm transition-all hover:shadow-2xl focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-4 focus-visible:ring-offset-background ${selected ? "border-primary ring-2 ring-primary" : "border-border"}`}
-                key={card.theme}
-                onClick={() => onThemeChange(card.theme)}
-                onMouseEnter={() => onThemeChange(card.theme)}
+                key={card._id || card.slug}
+                onClick={() => onThemeChange(cardTheme)}
+                onMouseEnter={() => onThemeChange(cardTheme)}
                 type="button"
               >
                 <div className="relative mb-6 aspect-video overflow-hidden rounded-lg bg-muted">
                   <Image
-                    alt={card.alt}
+                    alt={card.heroImage?.alt || card.cityName || card.title || "Місто фестивалю"}
                     className="object-cover transition-transform group-hover:scale-105"
                     fill
                     sizes="(min-width: 768px) 384px, calc(100vw - 80px)"
-                    src="/images/placeholder.svg"
+                    src={card.heroImage?.asset?.url || "/images/placeholder.svg"}
                   />
                 </div>
-                <span className="mb-2 block font-serif text-2xl font-bold text-primary transition-colors duration-300">{card.title}</span>
-                <p className="text-sm text-muted-foreground">{card.city}</p>
+                <span className="mb-2 block font-serif text-2xl font-bold text-primary transition-colors duration-300">{card.title || card.cityName}</span>
+                <p className="text-sm text-muted-foreground">{card.cityName}</p>
               </button>
             );
           })}

@@ -1,9 +1,12 @@
 import { PAGE_QUERY, PAGES_SLUGS_QUERY } from "@/sanity/queries/page";
 import { NAVIGATION_QUERY } from "@/sanity/queries/navigation";
 import { SETTINGS_QUERY } from "@/sanity/queries/settings";
+import { TICKET_INFO_QUERY } from "@/sanity/queries/ticket-info";
 import {
-  TICKET_INFO_QUERY,
-} from "@/sanity/queries/ticket-info";
+  FESTIVAL_CITIES_SLUGS_QUERY,
+  FESTIVAL_CITY_QUERY,
+  LANDING_CITIES_QUERY,
+} from "@/sanity/queries/festival-city";
 import { client } from "@/sanity/lib/client";
 import {
   POST_QUERY,
@@ -19,6 +22,9 @@ import {
   NAVIGATION_QUERY_RESULT,
   SETTINGS_QUERY_RESULT,
   TICKET_INFO_QUERY_RESULT,
+  FESTIVAL_CITIES_SLUGS_QUERY_RESULT,
+  FESTIVAL_CITY_QUERY_RESULT,
+  LANDING_CITIES_QUERY_RESULT,
 } from "@/sanity.types";
 
 export const fetchSanityPageBySlug = async ({
@@ -32,6 +38,24 @@ export const fetchSanityPageBySlug = async ({
 export const fetchSanityPagesStaticParams =
   async (): Promise<PAGES_SLUGS_QUERY_RESULT> => {
     return client.fetch(PAGES_SLUGS_QUERY);
+  };
+
+export const fetchSanityFestivalCityBySlug = async ({
+  slug,
+}: {
+  slug: string;
+}): Promise<FESTIVAL_CITY_QUERY_RESULT> => {
+  return client.fetch(FESTIVAL_CITY_QUERY, { slug });
+};
+
+export const fetchSanityFestivalCitiesStaticParams =
+  async (): Promise<FESTIVAL_CITIES_SLUGS_QUERY_RESULT> => {
+    return client.fetch(FESTIVAL_CITIES_SLUGS_QUERY);
+  };
+
+export const fetchSanityLandingCities =
+  async (): Promise<LANDING_CITIES_QUERY_RESULT> => {
+    return client.fetch(LANDING_CITIES_QUERY);
   };
 
 export const fetchSanityPosts = async (): Promise<POSTS_QUERY_RESULT> => {

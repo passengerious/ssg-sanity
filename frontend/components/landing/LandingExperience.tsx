@@ -9,11 +9,21 @@ import { Founder } from "@/components/landing/Founder";
 import { Header } from "@/components/landing/Header";
 import { Hero } from "@/components/landing/Hero";
 import { LocationsGrid } from "@/components/landing/LocationsGrid";
+import type { LANDING_CITIES_QUERY_RESULT } from "@/sanity.types";
 
 export type LandingTheme = "epic" | "heroic";
 
-export function LandingExperience() {
-  const [theme, setTheme] = useState<LandingTheme>("epic");
+function isLandingTheme(theme: string | null | undefined): theme is LandingTheme {
+  return theme === "epic" || theme === "heroic";
+}
+
+export function LandingExperience({
+  cities,
+}: {
+  cities: LANDING_CITIES_QUERY_RESULT;
+}) {
+  const initialTheme = cities.find((city) => isLandingTheme(city.themeKey))?.themeKey ?? "epic";
+  const [theme, setTheme] = useState<LandingTheme>(initialTheme);
 
   return (
     <div
@@ -28,7 +38,7 @@ export function LandingExperience() {
       </a>
       <Header />
       <main className="mx-auto max-w-7xl" id="main-content">
-        <Hero onThemeChange={setTheme} theme={theme} />
+        <Hero cities={cities} onThemeChange={setTheme} theme={theme} />
         <BuyTickets />
         <AboutFestival />
         <Founder />
