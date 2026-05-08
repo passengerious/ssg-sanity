@@ -8,6 +8,10 @@ import {
   Menu,
   Settings,
   Ticket,
+  MapPin,
+  TreePine,
+  Music,
+  HeartHandshake,
 } from "lucide-react";
 
 export const structure = (S: any, context: any) =>
@@ -54,6 +58,35 @@ export const structure = (S: any, context: any) =>
         type: "testimonial",
         title: "Testimonials",
         icon: Quote,
+        S,
+        context,
+      }),
+      S.divider({ title: "Festival" }),
+      orderableDocumentListDeskItem({
+        type: "festivalCity",
+        title: "Festival Cities",
+        icon: MapPin,
+        S,
+        context,
+      }),
+      orderableDocumentListDeskItem({
+        type: "location",
+        title: "Locations / Stages",
+        icon: TreePine,
+        S,
+        context,
+      }),
+      orderableDocumentListDeskItem({
+        type: "artist",
+        title: "Artists",
+        icon: Music,
+        S,
+        context,
+      }),
+      orderableDocumentListDeskItem({
+        type: "partner",
+        title: "Partners",
+        icon: HeartHandshake,
         S,
         context,
       }),

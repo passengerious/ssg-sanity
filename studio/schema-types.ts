@@ -8,6 +8,10 @@ import testimonial from "./schemas/documents/testimonial";
 import navigation from "./schemas/documents/navigation";
 import settings from "./schemas/documents/settings";
 import ticketInfo from "./schemas/documents/ticket-info";
+import festivalCity from "./schemas/documents/festival-city";
+import location from "./schemas/documents/location";
+import artist from "./schemas/documents/artist";
+import partner from "./schemas/documents/partner";
 
 // Schema UI shared objects
 import blockContent from "./schemas/blocks/shared/block-content";
@@ -51,6 +55,10 @@ export const schemaTypes = [
   navigation,
   settings,
   ticketInfo,
+  festivalCity,
+  location,
+  artist,
+  partner,
   // shared objects
   blockContent,
   link,
