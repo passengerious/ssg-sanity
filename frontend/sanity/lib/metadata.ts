@@ -1,17 +1,43 @@
 import { urlFor } from "@/sanity/lib/image";
-import { PAGE_QUERY_RESULT, POST_QUERY_RESULT } from "@/sanity.types";
+import type { SanityImageSource } from "@sanity/image-url";
+
 const isProduction = process.env.NEXT_PUBLIC_SITE_ENV === "production";
+
+type MetadataDocument = {
+  title?: string | null;
+  cityName?: string | null;
+  tagline?: string | null;
+  description?: string | null;
+  meta?: {
+    title?: string | null;
+    description?: string | null;
+    noindex?: boolean | null;
+    image?: SanityImageSource & {
+      asset?: {
+        metadata?: {
+          dimensions?: {
+            width?: number | null;
+            height?: number | null;
+          } | null;
+        } | null;
+      } | null;
+    } | null;
+  } | null;
+} | null;
 
 export function generatePageMetadata({
   page,
   slug,
 }: {
-  page: PAGE_QUERY_RESULT | POST_QUERY_RESULT;
+  page: MetadataDocument;
   slug: string;
 }) {
+  const title = page?.meta?.title || page?.title || page?.cityName;
+  const description = page?.meta?.description || page?.description || page?.tagline;
+
   return {
-    title: page?.meta?.title,
-    description: page?.meta?.description,
+    title,
+    description,
     openGraph: {
       images: [
         {

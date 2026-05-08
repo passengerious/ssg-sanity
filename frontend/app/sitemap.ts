@@ -2,16 +2,15 @@ import { MetadataRoute } from "next";
 import { groq } from "next-sanity";
 import { client } from "@/sanity/lib/client";
 
-const VIEWABLE_TYPES = ["page", "post"] as const;
+const VIEWABLE_TYPES = ["page", "post", "festivalCity"] as const;
 
 export const dynamic = "force-static";
 
 const urlQuery = `
   'url': select(
     slug.current == "index" => $baseUrl + "/",
-    _type == "post-index" => $baseUrl + "/blog",
     _type == "post" => $baseUrl + "/blog/" + slug.current,
-    _type == "contact" => $baseUrl + "/contact",
+    _type == "festivalCity" => $baseUrl + "/" + slug.current,
     $baseUrl + "/" + slug.current
   )
 `;
@@ -21,13 +20,15 @@ const SITEMAP_QUERY = groq`
   *[
     _type in $viewableTypes
     && meta.noindex != true
-    && (defined(slug) || _type in ["contact", "post-index"])
+    && defined(slug.current)
+    && !(_type == "page" && slug.current in *[_type == "festivalCity" && defined(slug.current)].slug.current)
   ] {
     ${urlQuery},
     "lastModified": _updatedAt,
     "changeFrequency": select(_type == "page" => "daily", "weekly"),
     "priority": select(
       _type == "page" && slug.current == "index" => 1,
+      _type == "festivalCity" => 0.8,
       _type == "page" => 0.5,
       0.7
     )

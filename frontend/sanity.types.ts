@@ -972,6 +972,241 @@ export type AllSanitySchemaTypes =
   | SanityImageAsset
   | Geopoint;
 
+// Source: ../frontend/sanity/queries/festival-city.ts
+// Variable: FESTIVAL_CITIES_SLUGS_QUERY
+// Query: *[_type == "festivalCity" && defined(slug.current)]{    "slug": slug.current  }
+export type FESTIVAL_CITIES_SLUGS_QUERY_RESULT = Array<{
+  slug: string | null;
+}>;
+
+// Source: ../frontend/sanity/queries/festival-city.ts
+// Variable: FESTIVAL_CITY_QUERY
+// Query: *[_type == "festivalCity" && slug.current == $slug][0]{    _id,    _type,    title,    cityName,    slug,    themeKey,    tagline,    dateRange,    description,    ticketUrlOverride,    heroImage{        ...,  asset->{    _id,    url,    mimeType,    metadata {      lqip,      dimensions {        width,        height      }    }  }    },    locations[]->{      _id,      name,      slug,      stageType,      description,      address,      mapUrl,      image{          ...,  asset->{    _id,    url,    mimeType,    metadata {      lqip,      dimensions {        width,        height      }    }  }      }    },    artists[]->{      _id,      name,      slug,      genre,      description,      externalUrl,      photo{          ...,  asset->{    _id,    url,    mimeType,    metadata {      lqip,      dimensions {        width,        height      }    }  }      }    },    partners[]->{      _id,      name,      slug,      level,      url,      logo{          ...,  asset->{    _id,    url,    mimeType,    metadata {      lqip,      dimensions {        width,        height      }    }  }      }    },    body[]{        ...,  markDefs[]{    ...,    _type == "link" => {          _key,    ...,    "href": select(      isExternal => href,      defined(href) && !defined(internalLink) => href,      @.internalLink->slug.current == "index" => "/",      @.internalLink->_type == "post" => "/blog/" + @.internalLink->slug.current,      "/" + @.internalLink->slug.current    )    }  },  _type == "image" => {      ...,  asset->{    _id,    url,    mimeType,    metadata {      lqip,      dimensions {        width,        height      }    }  }  }    },      meta{    title,    description,    noindex,    image{        ...,  asset->{    _id,    url,    mimeType,    metadata {      lqip,      dimensions {        width,        height      }    }  }    }  }  }
+export type FESTIVAL_CITY_QUERY_RESULT = {
+  _id: string;
+  _type: "festivalCity";
+  title: string | null;
+  cityName: string | null;
+  slug: Slug | null;
+  themeKey: "epic" | "heroic" | null;
+  tagline: string | null;
+  dateRange: string | null;
+  description: string | null;
+  ticketUrlOverride: string | null;
+  heroImage: {
+    asset: {
+      _id: string;
+      url: string | null;
+      mimeType: string | null;
+      metadata: {
+        lqip: string | null;
+        dimensions: {
+          width: number | null;
+          height: number | null;
+        } | null;
+      } | null;
+    } | null;
+    media?: unknown;
+    hotspot?: SanityImageHotspot;
+    crop?: SanityImageCrop;
+    alt?: string;
+    _type: "image";
+  } | null;
+  locations: Array<{
+    _id: string;
+    name: string | null;
+    slug: Slug | null;
+    stageType: "acoustic" | "epic" | "main" | "other" | "workshop" | null;
+    description: string | null;
+    address: string | null;
+    mapUrl: string | null;
+    image: {
+      asset: {
+        _id: string;
+        url: string | null;
+        mimeType: string | null;
+        metadata: {
+          lqip: string | null;
+          dimensions: {
+            width: number | null;
+            height: number | null;
+          } | null;
+        } | null;
+      } | null;
+      media?: unknown;
+      hotspot?: SanityImageHotspot;
+      crop?: SanityImageCrop;
+      alt?: string;
+      _type: "image";
+    } | null;
+  }> | null;
+  artists: Array<{
+    _id: string;
+    name: string | null;
+    slug: Slug | null;
+    genre: string | null;
+    description: string | null;
+    externalUrl: string | null;
+    photo: {
+      asset: {
+        _id: string;
+        url: string | null;
+        mimeType: string | null;
+        metadata: {
+          lqip: string | null;
+          dimensions: {
+            width: number | null;
+            height: number | null;
+          } | null;
+        } | null;
+      } | null;
+      media?: unknown;
+      hotspot?: SanityImageHotspot;
+      crop?: SanityImageCrop;
+      alt?: string;
+      _type: "image";
+    } | null;
+  }> | null;
+  partners: Array<{
+    _id: string;
+    name: string | null;
+    slug: Slug | null;
+    level: "bronze" | "friend" | "gold" | "media" | "silver" | "title" | null;
+    url: string | null;
+    logo: {
+      asset: {
+        _id: string;
+        url: string | null;
+        mimeType: string | null;
+        metadata: {
+          lqip: string | null;
+          dimensions: {
+            width: number | null;
+            height: number | null;
+          } | null;
+        } | null;
+      } | null;
+      media?: unknown;
+      hotspot?: SanityImageHotspot;
+      crop?: SanityImageCrop;
+      alt?: string;
+      _type: "image";
+    } | null;
+  }> | null;
+  body: Array<
+    | {
+        children?: Array<{
+          marks?: Array<string>;
+          text?: string;
+          _type: "span";
+          _key: string;
+        }>;
+        style?: "blockquote" | "h1" | "h2" | "h3" | "h4" | "normal";
+        listItem?: "bullet" | "number";
+        markDefs: Array<{
+          isExternal?: boolean;
+          internalLink?: FestivalCityReference | PageReference | PostReference;
+          href: string | "/" | null;
+          target?: boolean;
+          _type: "link";
+          _key: string;
+        }> | null;
+        level?: number;
+        _type: "block";
+        _key: string;
+      }
+    | {
+        _key: string;
+        _type: "code";
+        language?: string;
+        filename?: string;
+        code?: string;
+        highlightedLines?: Array<number>;
+        markDefs: null;
+      }
+    | {
+        asset: {
+          _id: string;
+          url: string | null;
+          mimeType: string | null;
+          metadata: {
+            lqip: string | null;
+            dimensions: {
+              width: number | null;
+              height: number | null;
+            } | null;
+          } | null;
+        } | null;
+        media?: unknown;
+        hotspot?: SanityImageHotspot;
+        crop?: SanityImageCrop;
+        alt?: string;
+        _type: "image";
+        _key: string;
+        markDefs: null;
+      }
+    | {
+        videoId?: string;
+        _type: "youtube";
+        _key: string;
+        markDefs: null;
+      }
+  > | null;
+  meta: {
+    title: string | null;
+    description: string | null;
+    noindex: boolean | null;
+    image: {
+      asset: {
+        _id: string;
+        url: string | null;
+        mimeType: string | null;
+        metadata: {
+          lqip: string | null;
+          dimensions: {
+            width: number | null;
+            height: number | null;
+          } | null;
+        } | null;
+      } | null;
+      media?: unknown; // Unable to locate the referenced type "image.media" in schema
+      hotspot?: SanityImageHotspot;
+      crop?: SanityImageCrop;
+      _type: "image";
+    } | null;
+  } | null;
+} | null;
+
+// Source: ../frontend/sanity/queries/festival-city.ts
+// Variable: LANDING_CITIES_QUERY
+// Query: *[_type == "festivalCity" && defined(slug.current)] | order(orderRank asc){    _id,    "slug": slug.current,    title,    cityName,    themeKey,    heroImage{        ...,  asset->{    _id,    url,    mimeType,    metadata {      lqip,      dimensions {        width,        height      }    }  }    }  }
+export type LANDING_CITIES_QUERY_RESULT = Array<{
+  _id: string;
+  slug: string | null;
+  title: string | null;
+  cityName: string | null;
+  themeKey: "epic" | "heroic" | null;
+  heroImage: {
+    asset: {
+      _id: string;
+      url: string | null;
+      mimeType: string | null;
+      metadata: {
+        lqip: string | null;
+        dimensions: {
+          width: number | null;
+          height: number | null;
+        } | null;
+      } | null;
+    } | null;
+    media?: unknown;
+    hotspot?: SanityImageHotspot;
+    crop?: SanityImageCrop;
+    alt?: string;
+    _type: "image";
+  } | null;
+}>;
+
 // Source: ../frontend/sanity/queries/navigation.ts
 // Variable: NAVIGATION_QUERY
 // Query: *[_type == "navigation"]{    _type,    _key,    links  }
@@ -2218,6 +2453,9 @@ export type TICKET_INFO_QUERY_RESULT = {
 import "@sanity/client";
 declare module "@sanity/client" {
   interface SanityQueries {
+    '\n  *[_type == "festivalCity" && defined(slug.current)]{\n    "slug": slug.current\n  }\n': FESTIVAL_CITIES_SLUGS_QUERY_RESULT;
+    '\n  *[_type == "festivalCity" && slug.current == $slug][0]{\n    _id,\n    _type,\n    title,\n    cityName,\n    slug,\n    themeKey,\n    tagline,\n    dateRange,\n    description,\n    ticketUrlOverride,\n    heroImage{\n      \n  ...,\n  asset->{\n    _id,\n    url,\n    mimeType,\n    metadata {\n      lqip,\n      dimensions {\n        width,\n        height\n      }\n    }\n  }\n\n    },\n    locations[]->{\n      _id,\n      name,\n      slug,\n      stageType,\n      description,\n      address,\n      mapUrl,\n      image{\n        \n  ...,\n  asset->{\n    _id,\n    url,\n    mimeType,\n    metadata {\n      lqip,\n      dimensions {\n        width,\n        height\n      }\n    }\n  }\n\n      }\n    },\n    artists[]->{\n      _id,\n      name,\n      slug,\n      genre,\n      description,\n      externalUrl,\n      photo{\n        \n  ...,\n  asset->{\n    _id,\n    url,\n    mimeType,\n    metadata {\n      lqip,\n      dimensions {\n        width,\n        height\n      }\n    }\n  }\n\n      }\n    },\n    partners[]->{\n      _id,\n      name,\n      slug,\n      level,\n      url,\n      logo{\n        \n  ...,\n  asset->{\n    _id,\n    url,\n    mimeType,\n    metadata {\n      lqip,\n      dimensions {\n        width,\n        height\n      }\n    }\n  }\n\n      }\n    },\n    body[]{\n      \n  ...,\n  markDefs[]{\n    ...,\n    _type == "link" => {\n      \n    _key,\n    ...,\n    "href": select(\n      isExternal => href,\n      defined(href) && !defined(internalLink) => href,\n      @.internalLink->slug.current == "index" => "/",\n      @.internalLink->_type == "post" => "/blog/" + @.internalLink->slug.current,\n      "/" + @.internalLink->slug.current\n    )\n\n    }\n  },\n  _type == "image" => {\n    \n  ...,\n  asset->{\n    _id,\n    url,\n    mimeType,\n    metadata {\n      lqip,\n      dimensions {\n        width,\n        height\n      }\n    }\n  }\n\n  }\n\n    },\n    \n  meta{\n    title,\n    description,\n    noindex,\n    image{\n      \n  ...,\n  asset->{\n    _id,\n    url,\n    mimeType,\n    metadata {\n      lqip,\n      dimensions {\n        width,\n        height\n      }\n    }\n  }\n\n    }\n  }\n\n  }\n': FESTIVAL_CITY_QUERY_RESULT;
+    '\n  *[_type == "festivalCity" && defined(slug.current)] | order(orderRank asc){\n    _id,\n    "slug": slug.current,\n    title,\n    cityName,\n    themeKey,\n    heroImage{\n      \n  ...,\n  asset->{\n    _id,\n    url,\n    mimeType,\n    metadata {\n      lqip,\n      dimensions {\n        width,\n        height\n      }\n    }\n  }\n\n    }\n  }\n': LANDING_CITIES_QUERY_RESULT;
     '\n  *[_type == "navigation"]{\n    _type,\n    _key,\n    links\n  }\n': NAVIGATION_QUERY_RESULT;
     '\n  *[_type == "page" && slug.current == $slug][0]{\n    blocks[]{\n      \n  _type == "hero-1" => {\n    _type,\n    _key,\n    tagLine,\n    title,\n    body[]{\n      \n  ...,\n  markDefs[]{\n    ...,\n    _type == "link" => {\n      \n    _key,\n    ...,\n    "href": select(\n      isExternal => href,\n      defined(href) && !defined(internalLink) => href,\n      @.internalLink->slug.current == "index" => "/",\n      @.internalLink->_type == "post" => "/blog/" + @.internalLink->slug.current,\n      "/" + @.internalLink->slug.current\n    )\n\n    }\n  },\n  _type == "image" => {\n    \n  ...,\n  asset->{\n    _id,\n    url,\n    mimeType,\n    metadata {\n      lqip,\n      dimensions {\n        width,\n        height\n      }\n    }\n  }\n\n  }\n\n    },\n    image{\n      \n  ...,\n  asset->{\n    _id,\n    url,\n    mimeType,\n    metadata {\n      lqip,\n      dimensions {\n        width,\n        height\n      }\n    }\n  }\n\n    },\n    links[]{\n      \n    _key,\n    ...,\n    "href": select(\n      isExternal => href,\n      defined(href) && !defined(internalLink) => href,\n      @.internalLink->slug.current == "index" => "/",\n      @.internalLink->_type == "post" => "/blog/" + @.internalLink->slug.current,\n      "/" + @.internalLink->slug.current\n    )\n\n    },\n  }\n,\n      \n  _type == "hero-2" => {\n    _type,\n    _key,\n    tagLine,\n    title,\n    body[]{\n      \n  ...,\n  markDefs[]{\n    ...,\n    _type == "link" => {\n      \n    _key,\n    ...,\n    "href": select(\n      isExternal => href,\n      defined(href) && !defined(internalLink) => href,\n      @.internalLink->slug.current == "index" => "/",\n      @.internalLink->_type == "post" => "/blog/" + @.internalLink->slug.current,\n      "/" + @.internalLink->slug.current\n    )\n\n    }\n  },\n  _type == "image" => {\n    \n  ...,\n  asset->{\n    _id,\n    url,\n    mimeType,\n    metadata {\n      lqip,\n      dimensions {\n        width,\n        height\n      }\n    }\n  }\n\n  }\n\n    },\n    links[]{\n      \n    _key,\n    ...,\n    "href": select(\n      isExternal => href,\n      defined(href) && !defined(internalLink) => href,\n      @.internalLink->slug.current == "index" => "/",\n      @.internalLink->_type == "post" => "/blog/" + @.internalLink->slug.current,\n      "/" + @.internalLink->slug.current\n    )\n\n    },\n  }\n,\n      \n  _type == "section-header" => {\n    _type,\n    _key,\n    padding,\n    colorVariant,\n    sectionWidth,\n    stackAlign,\n    tagLine,\n    title,\n    description,\n    link{\n      \n    _key,\n    ...,\n    "href": select(\n      isExternal => href,\n      defined(href) && !defined(internalLink) => href,\n      @.internalLink->slug.current == "index" => "/",\n      @.internalLink->_type == "post" => "/blog/" + @.internalLink->slug.current,\n      "/" + @.internalLink->slug.current\n    )\n\n    },\n  }\n,\n      \n  _type == "split-row" => {\n    _type,\n    _key,\n    padding,\n    colorVariant,\n    noGap,\n    splitColumns[]{\n      \n  _type == "split-content" => {\n    _type,\n    _key,\n    sticky,\n    padding,\n    colorVariant,\n    tagLine,\n    title,\n    body[]{\n      \n  ...,\n  markDefs[]{\n    ...,\n    _type == "link" => {\n      \n    _key,\n    ...,\n    "href": select(\n      isExternal => href,\n      defined(href) && !defined(internalLink) => href,\n      @.internalLink->slug.current == "index" => "/",\n      @.internalLink->_type == "post" => "/blog/" + @.internalLink->slug.current,\n      "/" + @.internalLink->slug.current\n    )\n\n    }\n  },\n  _type == "image" => {\n    \n  ...,\n  asset->{\n    _id,\n    url,\n    mimeType,\n    metadata {\n      lqip,\n      dimensions {\n        width,\n        height\n      }\n    }\n  }\n\n  }\n\n    },\n    link{\n      \n    _key,\n    ...,\n    "href": select(\n      isExternal => href,\n      defined(href) && !defined(internalLink) => href,\n      @.internalLink->slug.current == "index" => "/",\n      @.internalLink->_type == "post" => "/blog/" + @.internalLink->slug.current,\n      "/" + @.internalLink->slug.current\n    )\n\n    },\n  }\n,\n      \n  _type == "split-cards-list" => {\n    _type,\n    _key,\n    list[]{\n      tagLine,\n      title,\n      body[]{\n        \n  ...,\n  markDefs[]{\n    ...,\n    _type == "link" => {\n      \n    _key,\n    ...,\n    "href": select(\n      isExternal => href,\n      defined(href) && !defined(internalLink) => href,\n      @.internalLink->slug.current == "index" => "/",\n      @.internalLink->_type == "post" => "/blog/" + @.internalLink->slug.current,\n      "/" + @.internalLink->slug.current\n    )\n\n    }\n  },\n  _type == "image" => {\n    \n  ...,\n  asset->{\n    _id,\n    url,\n    mimeType,\n    metadata {\n      lqip,\n      dimensions {\n        width,\n        height\n      }\n    }\n  }\n\n  }\n\n      },\n    },\n  }\n,\n      \n  _type == "split-image" => {\n    _type,\n    _key,\n    image{\n      \n  ...,\n  asset->{\n    _id,\n    url,\n    mimeType,\n    metadata {\n      lqip,\n      dimensions {\n        width,\n        height\n      }\n    }\n  }\n\n    },\n  }\n,\n      \n  _type == "split-info-list" => {\n    _type,\n    _key,\n    list[]{\n      image{\n        \n  ...,\n  asset->{\n    _id,\n    url,\n    mimeType,\n    metadata {\n      lqip,\n      dimensions {\n        width,\n        height\n      }\n    }\n  }\n\n      },\n      title,\n      body[]{\n        \n  ...,\n  markDefs[]{\n    ...,\n    _type == "link" => {\n      \n    _key,\n    ...,\n    "href": select(\n      isExternal => href,\n      defined(href) && !defined(internalLink) => href,\n      @.internalLink->slug.current == "index" => "/",\n      @.internalLink->_type == "post" => "/blog/" + @.internalLink->slug.current,\n      "/" + @.internalLink->slug.current\n    )\n\n    }\n  },\n  _type == "image" => {\n    \n  ...,\n  asset->{\n    _id,\n    url,\n    mimeType,\n    metadata {\n      lqip,\n      dimensions {\n        width,\n        height\n      }\n    }\n  }\n\n  }\n\n      },\n      tags[],\n    },\n  }\n,\n    },\n  }\n,\n      \n  _type == "grid-row" => {\n    _type,\n    _key,\n    padding,\n    colorVariant,\n    gridColumns,\n    columns[]{\n      \n  _type == "grid-card" => {\n    _type,\n    _key,\n    title,\n    excerpt,\n    image{\n      \n  ...,\n  asset->{\n    _id,\n    url,\n    mimeType,\n    metadata {\n      lqip,\n      dimensions {\n        width,\n        height\n      }\n    }\n  }\n\n    },\n    link{\n      \n    _key,\n    ...,\n    "href": select(\n      isExternal => href,\n      defined(href) && !defined(internalLink) => href,\n      @.internalLink->slug.current == "index" => "/",\n      @.internalLink->_type == "post" => "/blog/" + @.internalLink->slug.current,\n      "/" + @.internalLink->slug.current\n    )\n\n    },\n  }\n,\n      \n  _type == "pricing-card" => {\n    _type,\n    _key,\n    title,\n    tagLine,\n    price,\n    list[],\n    excerpt,\n    link{\n      \n    _key,\n    ...,\n    "href": select(\n      isExternal => href,\n      defined(href) && !defined(internalLink) => href,\n      @.internalLink->slug.current == "index" => "/",\n      @.internalLink->_type == "post" => "/blog/" + @.internalLink->slug.current,\n      "/" + @.internalLink->slug.current\n    )\n\n    },\n  }\n,\n      \n  _type == "grid-post" => {\n    _type,\n    _key,\n    post->{\n      title,\n      slug,\n      excerpt,\n      image{\n        \n  ...,\n  asset->{\n    _id,\n    url,\n    mimeType,\n    metadata {\n      lqip,\n      dimensions {\n        width,\n        height\n      }\n    }\n  }\n\n      },\n      categories[]->{\n        _id,\n        title,\n      },\n    },\n  }\n,\n    },\n  }\n,\n      \n  _type == "carousel-1" => {\n    _type,\n    _key,\n    padding,\n    colorVariant,\n    size,\n    orientation,\n    indicators,\n    images[]{\n      \n  ...,\n  asset->{\n    _id,\n    url,\n    mimeType,\n    metadata {\n      lqip,\n      dimensions {\n        width,\n        height\n      }\n    }\n  }\n\n    },\n  }\n,\n      \n  _type == "carousel-2" => {\n    _type,\n    _key,\n    padding,\n    colorVariant,\n    testimonial[]->{\n      _id,\n      name,\n      title,\n      image{\n        \n  ...,\n  asset->{\n    _id,\n    url,\n    mimeType,\n    metadata {\n      lqip,\n      dimensions {\n        width,\n        height\n      }\n    }\n  }\n\n      },\n      body[]{\n        \n  ...,\n  markDefs[]{\n    ...,\n    _type == "link" => {\n      \n    _key,\n    ...,\n    "href": select(\n      isExternal => href,\n      defined(href) && !defined(internalLink) => href,\n      @.internalLink->slug.current == "index" => "/",\n      @.internalLink->_type == "post" => "/blog/" + @.internalLink->slug.current,\n      "/" + @.internalLink->slug.current\n    )\n\n    }\n  },\n  _type == "image" => {\n    \n  ...,\n  asset->{\n    _id,\n    url,\n    mimeType,\n    metadata {\n      lqip,\n      dimensions {\n        width,\n        height\n      }\n    }\n  }\n\n  }\n\n      },\n      rating,\n    },\n  }\n,\n      \n  _type == "timeline-row" => {\n    _type,\n    _key,\n    padding,\n    colorVariant,\n    timelines[]{\n      title,\n      tagLine,\n      body[]{\n        \n  ...,\n  markDefs[]{\n    ...,\n    _type == "link" => {\n      \n    _key,\n    ...,\n    "href": select(\n      isExternal => href,\n      defined(href) && !defined(internalLink) => href,\n      @.internalLink->slug.current == "index" => "/",\n      @.internalLink->_type == "post" => "/blog/" + @.internalLink->slug.current,\n      "/" + @.internalLink->slug.current\n    )\n\n    }\n  },\n  _type == "image" => {\n    \n  ...,\n  asset->{\n    _id,\n    url,\n    mimeType,\n    metadata {\n      lqip,\n      dimensions {\n        width,\n        height\n      }\n    }\n  }\n\n  }\n\n      },\n    },\n  }\n,\n      \n  _type == "cta-1" => {\n    _type,\n    _key,\n    padding,\n    colorVariant,\n    sectionWidth,\n    stackAlign,\n    tagLine,\n    title,\n    body[]{\n      \n  ...,\n  markDefs[]{\n    ...,\n    _type == "link" => {\n      \n    _key,\n    ...,\n    "href": select(\n      isExternal => href,\n      defined(href) && !defined(internalLink) => href,\n      @.internalLink->slug.current == "index" => "/",\n      @.internalLink->_type == "post" => "/blog/" + @.internalLink->slug.current,\n      "/" + @.internalLink->slug.current\n    )\n\n    }\n  },\n  _type == "image" => {\n    \n  ...,\n  asset->{\n    _id,\n    url,\n    mimeType,\n    metadata {\n      lqip,\n      dimensions {\n        width,\n        height\n      }\n    }\n  }\n\n  }\n\n    },\n    links[]{\n      \n    _key,\n    ...,\n    "href": select(\n      isExternal => href,\n      defined(href) && !defined(internalLink) => href,\n      @.internalLink->slug.current == "index" => "/",\n      @.internalLink->_type == "post" => "/blog/" + @.internalLink->slug.current,\n      "/" + @.internalLink->slug.current\n    )\n\n    },\n  }\n,\n      \n  _type == "logo-cloud-1" => {\n    _type,\n    _key,\n    padding,\n    colorVariant,\n    title,\n    images[]{\n      \n  ...,\n  asset->{\n    _id,\n    url,\n    mimeType,\n    metadata {\n      lqip,\n      dimensions {\n        width,\n        height\n      }\n    }\n  }\n\n    },\n  }\n,\n      \n  _type == "faqs" => {\n    _type,\n    _key,\n    padding,\n    colorVariant,\n    faqs[]->{\n      _id,\n      title,\n      body[]{\n        \n  ...,\n  markDefs[]{\n    ...,\n    _type == "link" => {\n      \n    _key,\n    ...,\n    "href": select(\n      isExternal => href,\n      defined(href) && !defined(internalLink) => href,\n      @.internalLink->slug.current == "index" => "/",\n      @.internalLink->_type == "post" => "/blog/" + @.internalLink->slug.current,\n      "/" + @.internalLink->slug.current\n    )\n\n    }\n  },\n  _type == "image" => {\n    \n  ...,\n  asset->{\n    _id,\n    url,\n    mimeType,\n    metadata {\n      lqip,\n      dimensions {\n        width,\n        height\n      }\n    }\n  }\n\n  }\n\n      },\n    },\n  }\n,\n      \n  _type == "form-newsletter" => {\n    _type,\n    _key,\n    padding,\n    colorVariant,\n    stackAlign,\n    consentText,\n    buttonText,\n    successMessage,\n  }\n,\n      \n  _type == "all-posts" => {\n    _type,\n    _key,\n    padding,\n    colorVariant,\n  }\n,\n    },\n    \n  meta{\n    title,\n    description,\n    noindex,\n    image{\n      \n  ...,\n  asset->{\n    _id,\n    url,\n    mimeType,\n    metadata {\n      lqip,\n      dimensions {\n        width,\n        height\n      }\n    }\n  }\n\n    }\n  }\n,\n  }\n': PAGE_QUERY_RESULT;
     '*[_type == "page" && defined(slug)]{slug}': PAGES_SLUGS_QUERY_RESULT;

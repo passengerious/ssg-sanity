@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { LandingExperience } from "@/components/landing/LandingExperience";
+import { fetchSanityLandingCities } from "@/sanity/lib/fetch";
 
 export const metadata: Metadata = {
   title: "Лендинг фестивалю",
@@ -13,6 +14,8 @@ export const metadata: Metadata = {
   },
 };
 
-export default function LandingPage() {
-  return <LandingExperience />;
+export default async function LandingPage() {
+  const cities = await fetchSanityLandingCities();
+
+  return <LandingExperience cities={cities} />;
 }
