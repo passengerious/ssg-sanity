@@ -75,11 +75,11 @@ export default nextConfig
 
 Decision needed: whether to add `trailingSlash: true` based on `adm.tools` URL behavior.
 
-## Current next target
+## Current architecture target
 
-The next architecture target is static export readiness for `frontend/next.config.mjs`. Do **not** add `output: 'export'` until Phase 1 blockers are resolved, but use it as the next implementation milestone: remove runtime-only features, replace or isolate API-backed flows, remove runtime redirects, then enable and validate static export.
+Static export readiness for `frontend/next.config.mjs` is implemented. `output: 'export'` is enabled after removing runtime-only features, replacing API-backed newsletter submission with a static-safe disabled state, removing runtime redirects, and validating `frontend/out/` generation.
 
-The landing and ticket MVP routes are allowed to exist before static export is enabled as static-safe preview routes, but they do not by themselves satisfy the final `adm.tools` deployment requirements.
+The landing and ticket MVP routes are static-safe. Sanity-backed city/blog routes currently use temporary fallback static params until real content exists.
 
 ## Implementation phases
 
@@ -113,6 +113,8 @@ Exit criteria:
 ### Phase 1 — Static export compatibility foundation
 
 Owner: `nextjs-ssg-architect`
+
+Status: Implemented for current MVP routes. Deployment workflow and content rebuild automation remain follow-up work.
 
 1. Replace live/draft data-fetching paths with build-time Sanity fetches.
 2. Remove or isolate draft mode routes, actions, and UI from the static production build.
@@ -263,24 +265,24 @@ Exit criteria:
 
 ## Verification checklist
 
-- [ ] ADR for static export is created and accepted/proposed for approval.
-- [ ] `frontend/next.config.mjs` uses `output: 'export'` only after runtime blockers are resolved.
-- [ ] `pnpm typecheck` passes.
-- [ ] `pnpm --filter frontend build` passes.
-- [ ] `frontend/out/` contains expected route files.
-- [ ] No exported route depends on Next.js API routes or server actions.
+- [x] ADR for static export is created and accepted/proposed for approval.
+- [x] `frontend/next.config.mjs` uses `output: 'export'` only after runtime blockers are resolved.
+- [x] `pnpm typecheck` passes.
+- [x] `pnpm --filter frontend build` passes.
+- [x] `frontend/out/` contains expected route files.
+- [x] No exported route depends on Next.js API routes or server actions.
 - [ ] Sanity images render from `cdn.sanity.io` with unoptimized Next image output.
 - [ ] `/kamianets` and `/lviv` render city-specific data and themes.
 - [ ] Newsletter/subscription flow works without exposing secrets.
 - [ ] Accessibility review passes for hero cards, accordions, buttons, and links.
-- [ ] SEO metadata, sitemap, robots, and canonical URLs are checked.
+- [x] SEO metadata routes build statically (`robots.txt`, `sitemap.xml`).
 - [ ] GitHub Actions deployment to `adm.tools` is tested.
 
 ## Risks
 
 | Risk | Impact | Mitigation |
 |---|---:|---|
-| Adding `output: 'export'` before removing runtime features breaks the build | High | Complete Phase 1 compatibility work before changing export config |
+| Reintroducing runtime features after static export breaks static hosting | High | Keep API routes, Draft Mode, runtime redirects, and server actions out of the frontend |
 | Draft preview/live editing is unavailable on a pure static export | High | Document editorial workflow and use publish-triggered rebuilds |
 | Newsletter currently depends on a server-side API route and secrets | High | Move to external backend/form service before static export |
 | `/index` redirect currently depends on Next.js runtime redirect config | Medium | Configure host-level redirect or static fallback |
@@ -293,10 +295,10 @@ Exit criteria:
 
 1. Does `adm.tools` support host-level redirects, custom 404 pages, and trailing-slash clean URLs?
 2. Should `/kamianets` and `/lviv` be ordinary Sanity `Page` documents or a dedicated festival city document type?
-3. Which subscription/newsletter backend is approved for static hosting?
-4. Is draft preview intentionally removed, or should a separate preview deployment remain server-capable?
+3. Which subscription/newsletter backend is approved for static hosting if newsletter signup is reintroduced?
+4. Should a separate preview deployment remain server-capable for editorial previews?
 5. What is the expected rebuild trigger after Sanity content changes?
 
 ## Completion notes
 
-In progress. Landing MVP and `ticketInfo`/`/tickets` MVP are implemented as static-safe preview work. Static export configuration remains the next architecture target and still requires resolving Phase 1 blockers before setting `output: 'export'`.
+In progress. Landing MVP and `ticketInfo`/`/tickets` MVP are implemented as static-safe preview work. Static export compatibility is implemented for the current MVP and `frontend/out/` is generated. Frontend validation (`typecheck`, `lint`, `build`) passes after clearing stale `.next` route types. Deployment automation, content rebuild workflow, and final Sanity city content remain open.
