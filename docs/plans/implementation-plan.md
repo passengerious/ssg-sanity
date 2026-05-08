@@ -138,18 +138,19 @@ Exit criteria:
 
 Owner: `sanity-schema-architect` with `content-blocks-architect`
 
+Status: Schema implementation complete. `ticketInfo` was completed in Phase 1 and is intentionally skipped here. GROQ/static route integration remains Phase 3 work.
+
 1. Model festival city content for Kamianets and Lviv.
-2. Confirm whether city pages reuse existing `Page` documents with slugs `kamianets` and `lviv`, or require a dedicated `festivalCity` document type.
+2. Use a dedicated `festivalCity` document type for city pages, per ADR 0002.
 3. Add or adapt schemas:
-   - `Location`: name, description, city/performance city, stage type, `isEpicStage` checkbox.
+   - `Location`: name, description, stage type.
    - `Artist`: name, photo, description, city/date/stage references if needed, ticket link.
    - `Partner`: logo, partnership level, URL, display order.
 4. Add validation rules for required editorial fields and stable slugs.
 5. Run Sanity TypeGen after schema and query changes.
 6. MVP ticket content:
-   - add singleton `ticketInfo` document,
-   - fields: price, number of tickets left, external box office link,
-   - render `/tickets` with safe placeholders when the Sanity document or URL is missing.
+   - completed in Phase 1 via the `ticketInfo` singleton,
+   - no additional ticket schema changes required in Phase 2.
 
 Exit criteria:
 
@@ -294,11 +295,10 @@ Exit criteria:
 ## Open questions
 
 1. Does `adm.tools` support host-level redirects, custom 404 pages, and trailing-slash clean URLs?
-2. Should `/kamianets` and `/lviv` be ordinary Sanity `Page` documents or a dedicated festival city document type?
-3. Which subscription/newsletter backend is approved for static hosting if newsletter signup is reintroduced?
-4. Should a separate preview deployment remain server-capable for editorial previews?
-5. What is the expected rebuild trigger after Sanity content changes?
+2. Which subscription/newsletter backend is approved for static hosting if newsletter signup is reintroduced?
+3. Should a separate preview deployment remain server-capable for editorial previews?
+4. What is the expected rebuild trigger after Sanity content changes?
 
 ## Completion notes
 
-In progress. Landing MVP and `ticketInfo`/`/tickets` MVP are implemented as static-safe preview work. Static export compatibility is implemented for the current MVP and `frontend/out/` is generated. Frontend validation (`typecheck`, `lint`, `build`) passes after clearing stale `.next` route types. Deployment automation, content rebuild workflow, and final Sanity city content remain open.
+In progress. Landing MVP and `ticketInfo`/`/tickets` MVP are implemented as static-safe preview work. Static export compatibility is implemented for the current MVP and `frontend/out/` is generated. Frontend validation (`typecheck`, `lint`, `build`) passes after clearing stale `.next` route types. Phase 2 content modeling now uses dedicated `festivalCity` documents with city-owned references to locations, artists, and partners. Deployment automation, content rebuild workflow, and frontend festival city route integration remain open.
