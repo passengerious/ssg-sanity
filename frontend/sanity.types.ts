@@ -373,10 +373,17 @@ export type PageReference = {
   [internalGroqTypeReferenceTo]?: "page";
 };
 
+export type FestivalCityReference = {
+  _ref: string;
+  _type: "reference";
+  _weak?: boolean;
+  [internalGroqTypeReferenceTo]?: "festivalCity";
+};
+
 export type Link = {
   _type: "link";
   isExternal?: boolean;
-  internalLink?: PageReference | PostReference;
+  internalLink?: PageReference | PostReference | FestivalCityReference;
   title?: string;
   href?: string;
   target?: boolean;
@@ -395,7 +402,7 @@ export type BlockContent = Array<
       listItem?: "bullet" | "number";
       markDefs?: Array<{
         isExternal?: boolean;
-        internalLink?: PageReference | PostReference;
+        internalLink?: PageReference | PostReference | FestivalCityReference;
         href?: string;
         target?: boolean;
         _type: "link";
@@ -423,6 +430,94 @@ export type BlockContent = Array<
       _key: string;
     } & Code)
 >;
+
+export type Partner = {
+  _id: string;
+  _type: "partner";
+  _createdAt: string;
+  _updatedAt: string;
+  _rev: string;
+  name?: string;
+  slug?: Slug;
+  logo?: {
+    asset?: SanityImageAssetReference;
+    media?: unknown;
+    hotspot?: SanityImageHotspot;
+    crop?: SanityImageCrop;
+    alt?: string;
+    _type: "image";
+  };
+  url?: string;
+  level?: "title" | "gold" | "silver" | "bronze" | "media" | "friend";
+  orderRank?: string;
+};
+
+export type SanityImageCrop = {
+  _type: "sanity.imageCrop";
+  top?: number;
+  bottom?: number;
+  left?: number;
+  right?: number;
+};
+
+export type SanityImageHotspot = {
+  _type: "sanity.imageHotspot";
+  x?: number;
+  y?: number;
+  height?: number;
+  width?: number;
+};
+
+export type Slug = {
+  _type: "slug";
+  current?: string;
+  source?: string;
+};
+
+export type Artist = {
+  _id: string;
+  _type: "artist";
+  _createdAt: string;
+  _updatedAt: string;
+  _rev: string;
+  name?: string;
+  slug?: Slug;
+  photo?: {
+    asset?: SanityImageAssetReference;
+    media?: unknown;
+    hotspot?: SanityImageHotspot;
+    crop?: SanityImageCrop;
+    alt?: string;
+    _type: "image";
+  };
+  description?: string;
+  genre?: string;
+  externalUrl?: string;
+  orderRank?: string;
+};
+
+export type Location = {
+  _id: string;
+  _type: "location";
+  _createdAt: string;
+  _updatedAt: string;
+  _rev: string;
+  name?: string;
+  slug?: Slug;
+  stageType?: "main" | "acoustic" | "workshop" | "epic" | "other";
+  description?: string;
+  image?: {
+    asset?: SanityImageAssetReference;
+    media?: unknown;
+    hotspot?: SanityImageHotspot;
+    crop?: SanityImageCrop;
+    alt?: string;
+    _type: "image";
+  };
+  address?: string;
+  mapUrl?: string;
+  orderRank?: string;
+};
 
 export type TicketInfo = {
   _id: string;
@@ -461,22 +556,6 @@ export type Settings = {
   };
   siteName?: string;
   copyright?: BlockContent;
-};
-
-export type SanityImageCrop = {
-  _type: "sanity.imageCrop";
-  top?: number;
-  bottom?: number;
-  left?: number;
-  right?: number;
-};
-
-export type SanityImageHotspot = {
-  _type: "sanity.imageHotspot";
-  x?: number;
-  y?: number;
-  height?: number;
-  width?: number;
 };
 
 export type Navigation = {
@@ -627,6 +706,69 @@ export type Post = {
   meta?: Meta;
 };
 
+export type LocationReference = {
+  _ref: string;
+  _type: "reference";
+  _weak?: boolean;
+  [internalGroqTypeReferenceTo]?: "location";
+};
+
+export type ArtistReference = {
+  _ref: string;
+  _type: "reference";
+  _weak?: boolean;
+  [internalGroqTypeReferenceTo]?: "artist";
+};
+
+export type PartnerReference = {
+  _ref: string;
+  _type: "reference";
+  _weak?: boolean;
+  [internalGroqTypeReferenceTo]?: "partner";
+};
+
+export type FestivalCity = {
+  _id: string;
+  _type: "festivalCity";
+  _createdAt: string;
+  _updatedAt: string;
+  _rev: string;
+  title?: string;
+  cityName?: string;
+  slug?: Slug;
+  themeKey?: "epic" | "heroic";
+  tagline?: string;
+  dateRange?: string;
+  heroImage?: {
+    asset?: SanityImageAssetReference;
+    media?: unknown;
+    hotspot?: SanityImageHotspot;
+    crop?: SanityImageCrop;
+    alt?: string;
+    _type: "image";
+  };
+  description?: string;
+  body?: BlockContent;
+  locations?: Array<
+    {
+      _key: string;
+    } & LocationReference
+  >;
+  artists?: Array<
+    {
+      _key: string;
+    } & ArtistReference
+  >;
+  partners?: Array<
+    {
+      _key: string;
+    } & PartnerReference
+  >;
+  ticketUrlOverride?: string;
+  meta?: Meta;
+  orderRank?: string;
+};
+
 export type Author = {
   _id: string;
   _type: "author";
@@ -644,12 +786,6 @@ export type Author = {
     _type: "image";
   };
   orderRank?: string;
-};
-
-export type Slug = {
-  _type: "slug";
-  current?: string;
-  source?: string;
 };
 
 export type MediaTag = {
@@ -801,12 +937,17 @@ export type AllSanitySchemaTypes =
   | ButtonVariant
   | ColorVariant
   | PageReference
+  | FestivalCityReference
   | Link
   | BlockContent
-  | TicketInfo
-  | Settings
+  | Partner
   | SanityImageCrop
   | SanityImageHotspot
+  | Slug
+  | Artist
+  | Location
+  | TicketInfo
+  | Settings
   | Navigation
   | Testimonial
   | Faq
@@ -815,8 +956,11 @@ export type AllSanitySchemaTypes =
   | AuthorReference
   | CategoryReference
   | Post
+  | LocationReference
+  | ArtistReference
+  | PartnerReference
+  | FestivalCity
   | Author
-  | Slug
   | MediaTag
   | Code
   | SanityImagePaletteSwatch
@@ -920,7 +1064,10 @@ export type PAGE_QUERY_RESULT = {
                 listItem?: "bullet" | "number";
                 markDefs: Array<{
                   isExternal?: boolean;
-                  internalLink?: PageReference | PostReference;
+                  internalLink?:
+                    | FestivalCityReference
+                    | PageReference
+                    | PostReference;
                   href: string | "/" | null;
                   target?: boolean;
                   _type: "link";
@@ -991,7 +1138,10 @@ export type PAGE_QUERY_RESULT = {
               listItem?: "bullet" | "number";
               markDefs: Array<{
                 isExternal?: boolean;
-                internalLink?: PageReference | PostReference;
+                internalLink?:
+                  | FestivalCityReference
+                  | PageReference
+                  | PostReference;
                 href: string | "/" | null;
                 target?: boolean;
                 _type: "link";
@@ -1042,7 +1192,7 @@ export type PAGE_QUERY_RESULT = {
           _key: string;
           _type: "link";
           isExternal?: boolean;
-          internalLink?: PageReference | PostReference;
+          internalLink?: FestivalCityReference | PageReference | PostReference;
           title?: string;
           href: string | "/" | null;
           target?: boolean;
@@ -1069,7 +1219,10 @@ export type PAGE_QUERY_RESULT = {
                 listItem?: "bullet" | "number";
                 markDefs: Array<{
                   isExternal?: boolean;
-                  internalLink?: PageReference | PostReference;
+                  internalLink?:
+                    | FestivalCityReference
+                    | PageReference
+                    | PostReference;
                   href: string | "/" | null;
                   target?: boolean;
                   _type: "link";
@@ -1163,7 +1316,10 @@ export type PAGE_QUERY_RESULT = {
                 _key: null;
                 _type: "link";
                 isExternal?: boolean;
-                internalLink?: PageReference | PostReference;
+                internalLink?:
+                  | FestivalCityReference
+                  | PageReference
+                  | PostReference;
                 title?: string;
                 href: string | "/" | null;
                 target?: boolean;
@@ -1214,7 +1370,10 @@ export type PAGE_QUERY_RESULT = {
                 _key: null;
                 _type: "link";
                 isExternal?: boolean;
-                internalLink?: PageReference | PostReference;
+                internalLink?:
+                  | FestivalCityReference
+                  | PageReference
+                  | PostReference;
                 title?: string;
                 href: string | "/" | null;
                 target?: boolean;
@@ -1240,7 +1399,10 @@ export type PAGE_QUERY_RESULT = {
               listItem?: "bullet" | "number";
               markDefs: Array<{
                 isExternal?: boolean;
-                internalLink?: PageReference | PostReference;
+                internalLink?:
+                  | FestivalCityReference
+                  | PageReference
+                  | PostReference;
                 href: string | "/" | null;
                 target?: boolean;
                 _type: "link";
@@ -1310,7 +1472,7 @@ export type PAGE_QUERY_RESULT = {
           _key: string;
           _type: "link";
           isExternal?: boolean;
-          internalLink?: PageReference | PostReference;
+          internalLink?: FestivalCityReference | PageReference | PostReference;
           title?: string;
           href: string | "/" | null;
           target?: boolean;
@@ -1334,7 +1496,10 @@ export type PAGE_QUERY_RESULT = {
               listItem?: "bullet" | "number";
               markDefs: Array<{
                 isExternal?: boolean;
-                internalLink?: PageReference | PostReference;
+                internalLink?:
+                  | FestivalCityReference
+                  | PageReference
+                  | PostReference;
                 href: string | "/" | null;
                 target?: boolean;
                 _type: "link";
@@ -1385,7 +1550,7 @@ export type PAGE_QUERY_RESULT = {
           _key: string;
           _type: "link";
           isExternal?: boolean;
-          internalLink?: PageReference | PostReference;
+          internalLink?: FestivalCityReference | PageReference | PostReference;
           title?: string;
           href: string | "/" | null;
           target?: boolean;
@@ -1462,7 +1627,10 @@ export type PAGE_QUERY_RESULT = {
                       listItem?: "bullet" | "number";
                       markDefs: Array<{
                         isExternal?: boolean;
-                        internalLink?: PageReference | PostReference;
+                        internalLink?:
+                          | FestivalCityReference
+                          | PageReference
+                          | PostReference;
                         href: string | "/" | null;
                         target?: boolean;
                         _type: "link";
@@ -1531,7 +1699,10 @@ export type PAGE_QUERY_RESULT = {
                     listItem?: "bullet" | "number";
                     markDefs: Array<{
                       isExternal?: boolean;
-                      internalLink?: PageReference | PostReference;
+                      internalLink?:
+                        | FestivalCityReference
+                        | PageReference
+                        | PostReference;
                       href: string | "/" | null;
                       target?: boolean;
                       _type: "link";
@@ -1582,7 +1753,10 @@ export type PAGE_QUERY_RESULT = {
                 _key: null;
                 _type: "link";
                 isExternal?: boolean;
-                internalLink?: PageReference | PostReference;
+                internalLink?:
+                  | FestivalCityReference
+                  | PageReference
+                  | PostReference;
                 title?: string;
                 href: string | "/" | null;
                 target?: boolean;
@@ -1654,7 +1828,10 @@ export type PAGE_QUERY_RESULT = {
                       listItem?: "bullet" | "number";
                       markDefs: Array<{
                         isExternal?: boolean;
-                        internalLink?: PageReference | PostReference;
+                        internalLink?:
+                          | FestivalCityReference
+                          | PageReference
+                          | PostReference;
                         href: string | "/" | null;
                         target?: boolean;
                         _type: "link";
@@ -1726,7 +1903,10 @@ export type PAGE_QUERY_RESULT = {
                 listItem?: "bullet" | "number";
                 markDefs: Array<{
                   isExternal?: boolean;
-                  internalLink?: PageReference | PostReference;
+                  internalLink?:
+                    | FestivalCityReference
+                    | PageReference
+                    | PostReference;
                   href: string | "/" | null;
                   target?: boolean;
                   _type: "link";
@@ -1845,7 +2025,7 @@ export type POST_QUERY_RESULT = {
         listItem?: "bullet" | "number";
         markDefs: Array<{
           isExternal?: boolean;
-          internalLink?: PageReference | PostReference;
+          internalLink?: FestivalCityReference | PageReference | PostReference;
           href: string | "/" | null;
           target?: boolean;
           _type: "link";
