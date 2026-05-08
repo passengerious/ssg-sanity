@@ -51,17 +51,17 @@ Architecture / implementation planning
 
 | Date       | Change                                                                       | Log                    |
 | ---------- | ---------------------------------------------------------------------------- | ---------------------- |
-| 2026-05-08 | Static export enabled and runtime frontend features removed                  | `docs/logs/2026-05.md` |
-| 2026-05-08 | Festival content model ADR and schemas added                                 | `docs/logs/2026-05.md` |
-| 2026-05-08 | Root slug route contract and `festivalCity` GROQ integration added           | `docs/logs/2026-05.md` |
-| 2026-05-08 | Landing MVP realigned to updated Stitch design guidance and validation fixed | `docs/logs/2026-05.md` |
-| 2026-05-08 | TicketInfo singleton and `/tickets` MVP route added                          | `docs/logs/2026-05.md` |
-| 2026-05-07 | Static export implementation plan improved                                   | `docs/logs/2026-05.md` |
-| 2026-05-07 | Project ledger initialized                                                   | `docs/logs/2026-05.md` |
+| 2026-05-08 | Static export enabled and runtime frontend features removed                  | `docs/logs/static-export-compatibility-implementation.md`         |
+| 2026-05-08 | Festival content model ADR and schemas added                                 | `docs/logs/phase-2-festival-content-model-schemas.md`             |
+| 2026-05-08 | Root slug route contract and `festivalCity` GROQ integration added           | `docs/logs/phase-3-groq-and-root-static-route-contracts.md`       |
+| 2026-05-08 | Landing MVP realigned to updated Stitch design guidance and validation fixed | `docs/logs/landing-mvp-design-realignment-and-validation-fixes.md` |
+| 2026-05-08 | TicketInfo singleton and `/tickets` MVP route added                          | `docs/logs/ticket-info-schema-and-tickets-mvp-route.md`           |
+| 2026-05-07 | Static export implementation plan improved                                   | `docs/logs/static-export-implementation-plan-improved.md`         |
+| 2026-05-07 | Project ledger initialized                                                   | `docs/logs/project-ledger-initialized.md`                         |
 
 ## Agent handoff notes
 
 - Read this ledger before starting non-trivial work.
 - Use ADRs for architecture decisions.
 - Use plans for multi-step implementation work.
-- Use monthly logs for factual task history.
+- Use task-specific logs in `docs/logs/` (e.g., `task-name.md`) for factual task history.

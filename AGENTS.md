@@ -13,7 +13,7 @@ Before making architectural or implementation changes, read:
 
 - Do not introduce architectural changes without either referencing an existing ADR or proposing a new ADR.
 - For any non-trivial task, create or update a plan in `docs/plans/`.
-- After completing work, append a concise entry to `docs/logs/YYYY-MM.md`.
+- After completing work, append a concise entry to a task-specific log file in `docs/logs/` (e.g., `task-name.md`).
 - If the task changes project direction, update `docs/ai/PROJECT_LEDGER.md`.
 - Keep logs factual: what changed, why, affected files, verification, risks, next steps.
 - Do not store secrets, API keys, tokens, credentials, or private client data in project logs.

@@ -1,0 +1,39 @@
+# Project Log: Static export implementation plan improved
+
+- **Date**: 2026-05-07
+- **Task**: Static export implementation plan improved
+- **Agent**: architect
+- **Subagent**: nextjs-ssg-architect
+- **Plan**: `docs/plans/implementation-plan.md`
+- **ADR**: Static export to `adm.tools` needed
+
+## Summary
+
+Expanded the implementation plan from a short phase list into a static-export-safe sequence. Documented that `output: 'export'` should not be the first code change because the current frontend still uses API routes, draft mode, server actions, and runtime redirects.
+
+## Files changed
+
+- `docs/plans/implementation-plan.md`
+- `docs/ai/PROJECT_LEDGER.md`
+- `docs/logs/2026-05.md`
+
+## Verification
+
+- Reviewed `AGENTS.md`, `README.md`, project context, protocol, ledger, plan template, ADR guidance, and `frontend/next.config.mjs`.
+- Scanned frontend routes for static export blockers.
+- Delegated static export review to `nextjs-ssg-architect`.
+
+## Architectural impact
+
+High. The plan now treats static export as an architecture decision requiring an ADR and compatibility work before enabling `output: 'export'`.
+
+## Risks
+
+- Static export will fail until API routes, draft mode, server actions, and runtime redirects are addressed.
+- Newsletter handling needs a static-host-compatible backend that does not expose secrets.
+
+## Follow-ups
+
+- [ ] Create ADR for static export to `adm.tools`.
+- [ ] Decide newsletter backend for static hosting.
+- [ ] Confirm `adm.tools` redirect, 404, and trailing-slash behavior.
