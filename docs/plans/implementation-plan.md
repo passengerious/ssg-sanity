@@ -161,9 +161,11 @@ Exit criteria:
 
 Owner: `sanity-groq-specialist`
 
+Status: MVP implemented. Root `/:slug` route contract is documented in ADR 0003: `festivalCity` resolves before generic `page`, and static params are generated from Sanity slugs only. Phase 4/5 remain responsible for theme polish and cinematic city UI.
+
 1. Centralize city-specific GROQ queries under `frontend/sanity/queries/**`.
-2. Ensure page generation fetches city data separately for `/kamianets` and `/lviv`.
-3. Ensure `generateStaticParams()` includes all required slugs at build time.
+2. Ensure page generation resolves `festivalCity` content before generic `page` content for shared root slugs.
+3. Ensure `generateStaticParams()` includes all required Sanity city/page slugs at build time and excludes hardcoded city fallbacks.
 4. Define query projections for:
    - city theme/mood,
    - hero content,
