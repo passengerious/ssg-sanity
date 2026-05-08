@@ -42,3 +42,5 @@ opencode.jsonc
 legacy/
 .agents/
 skills-lock.json
+AGENTS.md
+.cursor/
