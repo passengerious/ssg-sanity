@@ -1,8 +1,10 @@
 import { MetadataRoute } from "next";
 import { groq } from "next-sanity";
-import { sanityFetch } from "@/sanity/lib/live";
+import { client } from "@/sanity/lib/client";
 
 const VIEWABLE_TYPES = ["page", "post"] as const;
+
+export const dynamic = "force-static";
 
 const urlQuery = `
   'url': select(
@@ -33,12 +35,9 @@ const SITEMAP_QUERY = groq`
 `;
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const { data } = await sanityFetch({
-    query: SITEMAP_QUERY,
-    params: {
+  const data = await client.withConfig({ stega: false }).fetch(SITEMAP_QUERY, {
       baseUrl: process.env.NEXT_PUBLIC_SITE_URL!,
       viewableTypes: [...VIEWABLE_TYPES],
-    },
   });
 
   return data || [];

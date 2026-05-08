@@ -6,12 +6,23 @@ import {
 import { notFound } from "next/navigation";
 import { generatePageMetadata } from "@/sanity/lib/metadata";
 
+export const dynamic = "force-static";
+export const dynamicParams = false;
+
+const FALLBACK_STATIC_PAGE_SLUGS = ["kamianets", "lviv"];
+
 export async function generateStaticParams() {
   const pages = await fetchSanityPagesStaticParams();
 
-  return pages.map((page) => ({
-    slug: page.slug?.current,
-  }));
+  if (!pages.length) {
+    return FALLBACK_STATIC_PAGE_SLUGS.map((slug) => ({ slug }));
+  }
+
+  return pages
+    .filter((page) => page.slug?.current)
+    .map((page) => ({
+      slug: page.slug!.current,
+    }));
 }
 
 export async function generateMetadata(props: {
@@ -21,7 +32,10 @@ export async function generateMetadata(props: {
   const page = await fetchSanityPageBySlug({ slug: params.slug });
 
   if (!page) {
-    notFound();
+    return {
+      title: `Missing Sanity page: ${params.slug}`,
+      robots: "noindex, nofollow",
+    };
   }
 
   return generatePageMetadata({ page, slug: params.slug });

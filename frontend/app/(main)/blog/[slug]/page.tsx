@@ -1,4 +1,3 @@
-import { notFound } from "next/navigation";
 import Breadcrumbs from "@/components/ui/breadcrumbs";
 import PostHero from "@/components/blocks/post-hero";
 import PortableTextRenderer from "@/components/portable-text-renderer";
@@ -7,6 +6,12 @@ import {
   fetchSanityPostsStaticParams,
 } from "@/sanity/lib/fetch";
 import { generatePageMetadata } from "@/sanity/lib/metadata";
+import MissingSanityPage from "@/components/ui/missing-sanity-page";
+
+export const dynamic = "force-static";
+export const dynamicParams = false;
+
+const FALLBACK_STATIC_POST_SLUGS = ["placeholder"];
 
 type BreadcrumbLink = {
   label: string;
@@ -16,9 +21,15 @@ type BreadcrumbLink = {
 export async function generateStaticParams() {
   const posts = await fetchSanityPostsStaticParams();
 
-  return posts.map((post) => ({
-    slug: post.slug?.current,
-  }));
+  if (!posts.length) {
+    return FALLBACK_STATIC_POST_SLUGS.map((slug) => ({ slug }));
+  }
+
+  return posts
+    .filter((post) => post.slug?.current)
+    .map((post) => ({
+      slug: post.slug!.current,
+    }));
 }
 
 export async function generateMetadata(props: {
@@ -28,7 +39,10 @@ export async function generateMetadata(props: {
   const post = await fetchSanityPostBySlug({ slug: params.slug });
 
   if (!post) {
-    notFound();
+    return {
+      title: `Missing Sanity post: ${params.slug}`,
+      robots: "noindex, nofollow",
+    };
   }
 
   return generatePageMetadata({ page: post, slug: `blog/${params.slug}` });
@@ -41,7 +55,7 @@ export default async function PostPage(props: {
   const post = await fetchSanityPostBySlug(params);
 
   if (!post) {
-    notFound();
+    return <MissingSanityPage document="post" slug={params.slug} />;
   }
 
   const links: BreadcrumbLink[] = post

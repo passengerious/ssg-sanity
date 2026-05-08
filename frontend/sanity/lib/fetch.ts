@@ -1,4 +1,3 @@
-import { sanityFetch } from "@/sanity/lib/live";
 import { PAGE_QUERY, PAGES_SLUGS_QUERY } from "@/sanity/queries/page";
 import { NAVIGATION_QUERY } from "@/sanity/queries/navigation";
 import { SETTINGS_QUERY } from "@/sanity/queries/settings";
@@ -27,31 +26,16 @@ export const fetchSanityPageBySlug = async ({
 }: {
   slug: string;
 }): Promise<PAGE_QUERY_RESULT> => {
-  const { data } = await sanityFetch({
-    query: PAGE_QUERY,
-    params: { slug },
-  });
-
-  return data;
+  return client.fetch(PAGE_QUERY, { slug });
 };
 
 export const fetchSanityPagesStaticParams =
   async (): Promise<PAGES_SLUGS_QUERY_RESULT> => {
-    const { data } = await sanityFetch({
-      query: PAGES_SLUGS_QUERY,
-      perspective: "published",
-      stega: false,
-    });
-
-    return data;
+    return client.fetch(PAGES_SLUGS_QUERY);
   };
 
 export const fetchSanityPosts = async (): Promise<POSTS_QUERY_RESULT> => {
-  const { data } = await sanityFetch({
-    query: POSTS_QUERY,
-  });
-
-  return data;
+  return client.fetch(POSTS_QUERY);
 };
 
 export const fetchSanityPostBySlug = async ({
@@ -59,40 +43,21 @@ export const fetchSanityPostBySlug = async ({
 }: {
   slug: string;
 }): Promise<POST_QUERY_RESULT> => {
-  const { data } = await sanityFetch({
-    query: POST_QUERY,
-    params: { slug },
-  });
-
-  return data;
+  return client.fetch(POST_QUERY, { slug });
 };
 
 export const fetchSanityPostsStaticParams =
   async (): Promise<POSTS_SLUGS_QUERY_RESULT> => {
-    const { data } = await sanityFetch({
-      query: POSTS_SLUGS_QUERY,
-      perspective: "published",
-      stega: false,
-    });
-
-    return data;
+    return client.fetch(POSTS_SLUGS_QUERY);
   };
 
 export const fetchSanityNavigation =
   async (): Promise<NAVIGATION_QUERY_RESULT> => {
-    const { data } = await sanityFetch({
-      query: NAVIGATION_QUERY,
-    });
-
-    return data;
+    return client.fetch(NAVIGATION_QUERY);
   };
 
 export const fetchSanitySettings = async (): Promise<SETTINGS_QUERY_RESULT> => {
-  const { data } = await sanityFetch({
-    query: SETTINGS_QUERY,
-  });
-
-  return data;
+  return client.fetch(SETTINGS_QUERY);
 };
 
 export const fetchSanityTicketInfo = async (): Promise<TICKET_INFO_QUERY_RESULT> => {
