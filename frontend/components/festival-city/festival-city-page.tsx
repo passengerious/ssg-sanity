@@ -1,7 +1,9 @@
 import Image from "next/image";
 import Link from "next/link";
 import { ExternalLink, MapPin, Music, Ticket, Users } from "lucide-react";
+import { FestivalThemeShell } from "@/components/festival-theme-shell";
 import PortableTextRenderer from "@/components/portable-text-renderer";
+import { resolveFestivalTheme } from "@/lib/festival-themes";
 import type { FESTIVAL_CITY_QUERY_RESULT } from "@/sanity.types";
 
 type FestivalCity = NonNullable<FESTIVAL_CITY_QUERY_RESULT>;
@@ -14,10 +16,6 @@ type ImageLike = {
 
 function isDefined<T>(value: T | null | undefined): value is NonNullable<T> {
   return value !== null && value !== undefined;
-}
-
-function getThemeKey(themeKey: FestivalCity["themeKey"]) {
-  return themeKey === "heroic" ? "heroic" : "epic";
 }
 
 function imageUrl(image: ImageLike) {
@@ -38,13 +36,14 @@ export function FestivalCityPage({
   const locations = city.locations?.filter(isDefined) ?? [];
   const artists = city.artists?.filter(isDefined) ?? [];
   const partners = city.partners?.filter(isDefined) ?? [];
-  const themeKey = getThemeKey(city.themeKey);
+  const themeKey = resolveFestivalTheme(city.themeKey);
 
   return (
-    <article
-      className="festival-theme min-h-screen bg-background text-foreground"
-      data-theme={themeKey}
+    <FestivalThemeShell
+      className="min-h-screen bg-background text-foreground"
+      theme={themeKey}
     >
+      <article>
       <section className="mx-auto grid max-w-7xl items-center gap-10 px-4 py-16 md:grid-cols-[1.05fr_0.95fr] md:px-12 md:py-24">
         <div className="space-y-7">
           <p className="text-sm font-bold uppercase tracking-[0.2em] text-primary">
@@ -171,6 +170,7 @@ export function FestivalCityPage({
           </div>
         </div>
       </section>
-    </article>
+      </article>
+    </FestivalThemeShell>
   );
 }

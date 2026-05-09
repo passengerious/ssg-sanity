@@ -7,7 +7,7 @@ export const Header = () => {
       <Link
         aria-label="Країна Мрій — на початок лендингу"
         className="flex items-center gap-3 rounded-md text-primary focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background"
-        href="/landing"
+        href="/"
       >
         <svg
           aria-hidden="true"
@@ -36,7 +36,7 @@ export const Header = () => {
         </span>
       </Link>
       <nav aria-label="Головна навігація" className="order-3 flex w-full gap-3 overflow-x-auto pb-1 md:order-none md:w-auto md:gap-6 md:overflow-visible md:pb-0">
-        <Link className="shrink-0 rounded-sm text-xs font-bold text-primary transition-colors hover:text-primary focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background md:text-sm" href="/landing">
+        <Link className="shrink-0 rounded-sm text-xs font-bold text-primary transition-colors hover:text-primary focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background md:text-sm" href="/">
           ГОЛОВНА
         </Link>
         <Link className="shrink-0 rounded-sm text-xs text-muted-foreground transition-colors hover:text-primary focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background md:text-sm" href="#cities">
