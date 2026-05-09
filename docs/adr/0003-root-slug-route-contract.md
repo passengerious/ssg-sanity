@@ -8,6 +8,8 @@ Owner: Architect
 
 The static frontend serves both generic Sanity `page` documents and domain-specific `festivalCity` documents at root-level slugs such as `/kamianets` and `/lviv`.
 
+ADR 0004 separately assigns the root `/` route to the festival landing experience. This ADR governs only dynamic root-level slugs under `/:slug`.
+
 Next.js App Router cannot safely define separate dynamic route files for the same URL segment, even when route groups are used. Static export also requires every dynamic path to be known at build time.
 
 ## Decision
@@ -22,7 +24,7 @@ For a given slug, the route resolves documents in this order:
 
 `festivalCity` wins if a `festivalCity` and a generic `page` share the same slug.
 
-`generateStaticParams()` must return the union of published `festivalCity` slugs and generic `page` slugs, excluding the `index` page slug because `/` is handled by `frontend/app/(main)/page.tsx`.
+`generateStaticParams()` must return the union of published `festivalCity` slugs and generic `page` slugs, excluding the `index` page slug because `/` is handled by `frontend/app/page.tsx` and ADR 0004 assigns that route to the festival landing.
 
 Do not keep hardcoded fallback slugs for `/kamianets` and `/lviv`. City routes should be generated from Sanity `festivalCity` documents only.
 

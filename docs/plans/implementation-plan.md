@@ -1,6 +1,7 @@
 # Plan: Festival static site implementation
 
 Date: 2026-05-07  
+Updated: 2026-05-09
 Status: Draft  
 Owner: Architect  
 Implementing agents: `nextjs-ssg-architect`, `sanity-schema-architect`, `sanity-groq-specialist`, `tailwind-ui-implementer`, `accessibility-ui-tester`, `deployment-vercel-engineer`, `test-automator`
@@ -23,6 +24,8 @@ Relevant files:
 - `README.md` — monorepo layout, workspace commands, deploy notes, environment variables.
 - `frontend/next.config.mjs` — export, image, redirect, and static build configuration.
 - `frontend/app/(main)/[slug]/page.tsx` — existing static page route.
+- `frontend/app/page.tsx` — root route; owner of the festival landing experience before launch.
+- `frontend/app/landing/page.tsx` — temporary festival landing verification route to remove or repurpose once `/` renders the landing.
 - `frontend/app/(main)/blog/[slug]/page.tsx` — existing static blog route.
 - `frontend/app/api/**` — current API route handlers that are incompatible with static export.
 - `frontend/app/actions/**` — current server actions that are incompatible with static export.
@@ -33,8 +36,10 @@ Relevant files:
 
 Relevant ADRs:
 
-- Required before implementation: ADR for static export to `adm.tools`, including the loss of runtime APIs, draft preview, ISR, and Next.js redirects.
-- Required before schema implementation: ADR or schema decision note for the festival content model if it establishes long-term editorial structure.
+- `docs/adr/0001-static-export-to-adm-tools.md` — static export to `adm.tools`, including the loss of runtime APIs, draft preview, ISR, and Next.js redirects.
+- `docs/adr/0002-festival-content-model.md` — dedicated `festivalCity` documents with city-owned references.
+- `docs/adr/0003-root-slug-route-contract.md` — one root `/:slug` route where `festivalCity` resolves before generic `page`.
+- `docs/adr/0004-root-festival-landing-route.md` — root `/` renders the festival landing rather than requiring a generic Sanity `page` with slug `index`.
 
 ## Key finding: `output: 'export'` is not the first safe code change
 
@@ -79,7 +84,7 @@ Decision needed: whether to add `trailingSlash: true` based on `adm.tools` URL b
 
 Static export readiness for `frontend/next.config.mjs` is implemented. `output: 'export'` is enabled after removing runtime-only features, replacing API-backed newsletter submission with a static-safe disabled state, removing runtime redirects, and validating `frontend/out/` generation.
 
-The landing and ticket MVP routes are static-safe. Sanity-backed city/blog routes currently use temporary fallback static params until real content exists.
+The landing and ticket MVP routes are static-safe. Before launch, the festival landing should move from the temporary `/landing` verification route to `/` per ADR 0004. Sanity-backed city routes are generated from published `festivalCity` slugs only; `/kamianets` and `/lviv` require corresponding published documents before they appear in `frontend/out/`.
 
 ## Implementation phases
 
@@ -161,7 +166,7 @@ Exit criteria:
 
 Owner: `sanity-groq-specialist`
 
-Status: MVP implemented. Root `/:slug` route contract is documented in ADR 0003: `festivalCity` resolves before generic `page`, and static params are generated from Sanity slugs only. Phase 4/5 remain responsible for theme polish and cinematic city UI.
+Status: MVP implemented. Root `/:slug` route contract is documented in ADR 0003: `festivalCity` resolves before generic `page`, and static params are generated from Sanity slugs only. `/` is outside this dynamic route contract and is owned by the festival landing route per ADR 0004. Phase 4/5 remain responsible for theme polish and cinematic city UI.
 
 1. Centralize city-specific GROQ queries under `frontend/sanity/queries/**`.
 2. Ensure page generation resolves `festivalCity` content before generic `page` content for shared root slugs.
@@ -175,6 +180,7 @@ Status: MVP implemented. Root `/:slug` route contract is documented in ADR 0003:
    - ticket CTA links,
    - SEO metadata.
 5. Avoid duplicated query fragments where possible.
+6. Keep `/` out of generic slug static params; do not require a generic `page` document with slug `index` for the homepage.
 
 Exit criteria:
 
@@ -185,11 +191,13 @@ Exit criteria:
 
 Owner: `tailwind-ui-implementer` with `react-next-component-specialist`
 
+Status: MVP implemented. Festival theme keys are centralized, theme application is scoped to `.festival-theme`, city pages use Sanity `themeKey`, and landing city cards link to city routes while preserving hover/focus theme preview. Header/footer remain neutral by decision.
+
 1. Implement city themes via CSS variables and Tailwind tokens.
 2. Define supported themes, for example:
-   - `data-theme="kamianets"` / epic-heroic palette,
-   - `data-theme="lviv"` / alternate festival palette.
-3. Create or update the main layout/theme provider so the active route or city data sets `data-theme`.
+   - `data-theme="epic"` / Natural Green palette,
+   - `data-theme="heroic"` / Brand Red palette.
+3. Create or update the festival theme shell so the active landing selection or city data sets `data-theme`.
 4. Keep the theme logic compatible with static export and client-side navigation.
 5. Avoid coupling visual state to server runtime APIs.
 
@@ -227,6 +235,26 @@ Exit criteria:
 - UI is responsive, keyboard usable, and visually consistent.
 - Interactive elements have accessible names and focus indicators.
 
+### Phase 5.5 — Root festival landing route
+
+Owner: `nextjs-ssg-architect` with `react-next-component-specialist` and `seo-metadata-auditor`
+
+Status: Implemented. ADR 0004 accepts `/` as the canonical festival landing before launch; the temporary `/landing` route has been removed to avoid duplicate canonical content.
+
+1. Replace the generic Sanity `page` slug `index` dependency in `frontend/app/page.tsx` with the festival landing experience.
+2. Fetch landing dependencies at build time only, such as city cards from `festivalCity` documents and ticket CTA content from `ticketInfo`.
+3. Keep `FestivalThemeShell` scoped to styling/layout only; content selection remains in `LandingExperience` props/state or route-level Sanity data.
+4. Remove or repurpose `frontend/app/landing/page.tsx` after `/` serves the landing to avoid duplicate canonical content in static export.
+5. Add or confirm static metadata for `/`, including title, description, canonical URL, and Open Graph defaults.
+6. Confirm sitemap output emits `/` as the landing URL and does not emit `/landing` unless there is an intentional non-canonical preview route.
+
+Exit criteria:
+
+- `frontend/out/index.html` contains the festival landing experience.
+- `/` no longer depends on a generic Sanity `page` document with slug `index`.
+- `/landing` is removed, repurposed, or excluded from canonical discovery.
+- Static build, typecheck, and lint pass.
+
 ### Phase 6 — Integration and UX polish
 
 Owner: `react-next-component-specialist`
@@ -236,6 +264,7 @@ Owner: `react-next-component-specialist`
 3. Integrate the chosen static-safe newsletter or subscription flow.
 4. Confirm Sanity image rendering and LCP image priorities.
 5. Confirm SEO metadata for city pages, sitemap, robots, and canonical URLs.
+6. Confirm root landing metadata does not depend on a missing generic `page` document.
 
 Exit criteria:
 
@@ -275,6 +304,8 @@ Exit criteria:
 - [x] `frontend/out/` contains expected route files.
 - [x] No exported route depends on Next.js API routes or server actions.
 - [ ] Sanity images render from `cdn.sanity.io` with unoptimized Next image output.
+- [x] `/` renders the festival landing without requiring a generic Sanity `page` document with slug `index`.
+- [x] `/landing` is removed, repurposed, or excluded from canonical discovery after the root route swap.
 - [ ] `/kamianets` and `/lviv` render city-specific data and themes.
 - [ ] Newsletter/subscription flow works without exposing secrets.
 - [ ] Accessibility review passes for hero cards, accordions, buttons, and links.
@@ -293,6 +324,8 @@ Exit criteria:
 | Build fails when Sanity is unavailable | Medium | Keep build-time data fetching simple, typed, and observable in CI |
 | `adm.tools` URL/trailing-slash behavior is unknown | Medium | Confirm host behavior before final `next.config.mjs` settings |
 | Theme changes cause hydration mismatch | Medium | Derive initial theme deterministically from route/static data |
+| Legacy inbound links to `/landing` may 404 after route removal | Low | Add a host-level redirect to `/` if `/landing` was externally shared |
+| Root SEO metadata drifts because the homepage is code-owned | Medium | Add a Sanity-editable landing/site settings model or document code-owned metadata before launch |
 
 ## Open questions
 
@@ -300,7 +333,8 @@ Exit criteria:
 2. Which subscription/newsletter backend is approved for static hosting if newsletter signup is reintroduced?
 3. Should a separate preview deployment remain server-capable for editorial previews?
 4. What is the expected rebuild trigger after Sanity content changes?
+5. Should homepage SEO metadata remain code-owned for MVP or move into a Sanity singleton before launch?
 
 ## Completion notes
 
-In progress. Landing MVP and `ticketInfo`/`/tickets` MVP are implemented as static-safe preview work. Static export compatibility is implemented for the current MVP and `frontend/out/` is generated. Frontend validation (`typecheck`, `lint`, `build`) passes after clearing stale `.next` route types. Phase 2 content modeling now uses dedicated `festivalCity` documents with city-owned references to locations, artists, and partners. Deployment automation, content rebuild workflow, and frontend festival city route integration remain open.
+In progress. Landing MVP and `ticketInfo`/`/tickets` MVP are implemented as static-safe work. Static export compatibility is implemented for the current MVP and `frontend/out/` is generated. Frontend validation (`typecheck`, `lint`, `build`) passes after clearing stale `.next` route types. Phase 2 content modeling now uses dedicated `festivalCity` documents with city-owned references to locations, artists, and partners. ADR 0004 is implemented: `/` renders the festival landing without requiring a generic Sanity `page` slug `index`, `/landing` is removed, and sitemap output includes `/` as the code-owned landing URL. Deployment automation, content rebuild workflow, homepage SEO ownership, and published city content validation remain open.
