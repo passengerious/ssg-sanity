@@ -1,21 +1,24 @@
 "use client";
 
 import Image from "next/image";
-import type { LandingTheme } from "@/components/landing/LandingExperience";
+import Link from "next/link";
+import { useRef } from "react";
+import { isFestivalTheme, type FestivalTheme } from "@/lib/festival-themes";
 import type { LANDING_CITIES_QUERY_RESULT } from "@/sanity.types";
 
 type HeroProps = {
   cities: LANDING_CITIES_QUERY_RESULT;
-  theme: LandingTheme;
-  onThemeChange: (theme: LandingTheme) => void;
+  theme: FestivalTheme;
+  onThemeChange: (theme: FestivalTheme) => void;
+  onThemeReset: () => void;
 };
 
-function isLandingTheme(theme: string | null | undefined): theme is LandingTheme {
-  return theme === "epic" || theme === "heroic";
-}
-
-export const Hero = ({ cities, onThemeChange, theme }: HeroProps) => {
-  const cityCards = cities.filter((city) => city.slug && isLandingTheme(city.themeKey));
+export const Hero = ({ cities, onThemeChange, onThemeReset, theme }: HeroProps) => {
+  const cityGridRef = useRef<HTMLDivElement>(null);
+  const cityCards = cities.flatMap((city) => {
+    if (!city.slug || !isFestivalTheme(city.themeKey)) return [];
+    return [{ ...city, slug: city.slug, themeKey: city.themeKey }];
+  });
 
   return (
     <section className="relative flex min-h-[707px] flex-col items-center justify-center overflow-hidden px-4 py-12 text-center md:px-12">
@@ -26,23 +29,36 @@ export const Hero = ({ cities, onThemeChange, theme }: HeroProps) => {
         <p className="mx-auto mb-4 max-w-2xl text-lg leading-relaxed text-muted-foreground md:text-xl">Територія свободи, де традиції творять майбутнє.</p>
         <p className="mb-12 font-hand text-2xl text-primary transition-colors duration-300">Автор та засновник — Олег Скрипка</p>
 
-        <div className="mx-auto mt-12 grid w-full max-w-4xl grid-cols-1 gap-6 md:grid-cols-2" id="cities">
+        <div
+          className="mx-auto mt-12 grid w-full max-w-4xl grid-cols-1 gap-6 md:grid-cols-2"
+          id="cities"
+          onBlur={(event) => {
+            if (!event.currentTarget.contains(event.relatedTarget)) {
+              onThemeReset();
+            }
+          }}
+          onMouseLeave={() => {
+            if (!cityGridRef.current?.contains(document.activeElement)) {
+              onThemeReset();
+            }
+          }}
+          ref={cityGridRef}
+        >
           {cityCards.map((card) => {
-            const cardTheme = card.themeKey as LandingTheme;
+            const cardTheme = card.themeKey;
             const selected = theme === cardTheme;
 
             return (
-              <button
-                aria-pressed={selected}
+              <Link
                 className={`group rounded-xl border bg-card p-6 text-left shadow-sm transition-all hover:shadow-2xl focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-4 focus-visible:ring-offset-background ${selected ? "border-primary ring-2 ring-primary" : "border-border"}`}
+                data-selected={selected ? "true" : undefined}
+                href={`/${card.slug}`}
                 key={card._id || card.slug}
-                onClick={() => onThemeChange(cardTheme)}
                 onMouseEnter={() => onThemeChange(cardTheme)}
-                type="button"
               >
                 <div className="relative mb-6 aspect-video overflow-hidden rounded-lg bg-muted">
                   <Image
-                    alt={card.heroImage?.alt || card.cityName || card.title || "Місто фестивалю"}
+                    alt=""
                     className="object-cover transition-transform group-hover:scale-105"
                     fill
                     sizes="(min-width: 768px) 384px, calc(100vw - 80px)"
@@ -51,7 +67,7 @@ export const Hero = ({ cities, onThemeChange, theme }: HeroProps) => {
                 </div>
                 <span className="mb-2 block font-serif text-2xl font-bold text-primary transition-colors duration-300">{card.title || card.cityName}</span>
                 <p className="text-sm text-muted-foreground">{card.cityName}</p>
-              </button>
+              </Link>
             );
           })}
         </div>

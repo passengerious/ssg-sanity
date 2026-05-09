@@ -116,20 +116,6 @@
   --sidebar-ring: #bf2a26;
 }
 
-[data-theme="heroic"] {
-  --primary: #bf2a26; /* Brand Red */
-  --primary-foreground: #ffffff;
-  --accent: #bf2a26;
-  --ring: #bf2a26;
-}
-
-[data-theme="epic"] {
-  --primary: #8c9b5c; /* Natural Green */
-  --primary-foreground: #ffffff;
-  --accent: #8c9b5c;
-  --ring: #8c9b5c;
-}
-
 .dark {
   --background: oklch(0.13 0.028 261.692);
   --foreground: oklch(0.985 0.002 247.839);
