@@ -21,7 +21,7 @@ export const Hero = ({ cities, onThemeChange, onThemeReset, theme }: HeroProps) 
   });
 
   return (
-    <section className="relative flex min-h-screen flex-col items-center justify-center overflow-hidden px-4 py-16 text-center md:px-12 md:py-24">
+    <section className="relative flex min-h-[calc(100vh-4rem)] flex-col items-center justify-center overflow-hidden px-4 py-10 text-center md:px-12 md:py-16">
       {/* Subtle radial dot pattern */}
       <div
         className="absolute inset-0 z-0 bg-[radial-gradient(currentColor_1px,transparent_0)] bg-[size:32px_32px] text-primary opacity-[0.07]"

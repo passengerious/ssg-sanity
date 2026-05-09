@@ -4,7 +4,7 @@ import { ArrowRight, Ticket } from "lucide-react";
 
 export const BuyTickets = () => {
   return (
-    <section className="px-4 py-16 md:px-12 md:py-24" id="tickets">
+    <section className="px-4 py-10 md:px-12 md:py-16" id="tickets">
       <div className="relative mx-auto max-w-5xl overflow-hidden rounded-3xl bg-primary shadow-2xl">
         {/* Decorative corner accent */}
         <div

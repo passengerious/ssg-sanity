@@ -22,6 +22,7 @@ UI implementation / launch polish
 | ----------------------------------- | --------------- | --------- | ---------- |
 | `docs/plans/implementation-plan.md` | Draft           | Architect | 2026-05-09 |
 | `docs/plans/stitch-task.md`         | MVP implemented | UI agent  | 2026-05-08 |
+| `docs/logs/fix-hero-visibility.md`  | Completed       | Architect | 2026-05-09 |
 
 ## Architecture decisions
 
@@ -56,6 +57,7 @@ UI implementation / launch polish
 
 | Date       | Change                                                                       | Log                                                                |
 | ---------- | ---------------------------------------------------------------------------- | ------------------------------------------------------------------ |
+| 2026-05-09 | Standardized section spacing and fixed hero visibility project-wide  | `docs/logs/fix-hero-visibility.md`                                |
 | 2026-05-08 | Static export enabled and runtime frontend features removed                  | `docs/logs/static-export-compatibility-implementation.md`          |
 | 2026-05-09 | Root festival landing route documented and implemented                       | `docs/logs/root-festival-landing-route-architecture.md`            |
 | 2026-05-09 | Phase 5 cinematic landing and city UI MVP implemented                        | `docs/logs/phase-5-cinematic-ui-mvp.md`                            |

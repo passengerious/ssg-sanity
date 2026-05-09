@@ -11,7 +11,7 @@ const artists = [
 
 export const ArtistsLineup = () => {
   return (
-    <section className="px-4 py-16 md:px-12 md:py-24" id="artists">
+    <section className="px-4 py-10 md:px-12 md:py-16" id="artists">
       <div className="mx-auto max-w-5xl text-center">
         <span className="mb-3 inline-flex items-center gap-2 text-xs font-bold uppercase tracking-[0.2em] text-secondary">
           <Music aria-hidden="true" className="size-3.5" />

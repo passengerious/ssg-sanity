@@ -41,7 +41,7 @@ function toneClasses(tone: "primary" | "secondary" | "neutral") {
 
 export const LocationsGrid = () => {
   return (
-    <section className="px-4 py-16 md:px-12 md:py-24" id="program">
+    <section className="px-4 py-10 md:px-12 md:py-16" id="program">
       <div className="mx-auto max-w-5xl text-center">
         <span className="mb-3 inline-block text-xs font-bold uppercase tracking-[0.2em] text-secondary">
           Програма

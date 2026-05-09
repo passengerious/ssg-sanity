@@ -1,10 +1,9 @@
 import React from "react";
 import Image from "next/image";
-import { Quote } from "lucide-react";
 
 export const Founder = () => {
   return (
-    <section className="mx-4 my-16 flex flex-col-reverse items-center gap-12 rounded-3xl bg-muted/20 px-4 py-12 md:mx-12 md:flex-row md:gap-16 md:px-12 md:py-20">
+    <section className="mx-4 my-10 flex flex-col-reverse items-center gap-12 rounded-3xl bg-muted/20 px-4 py-10 md:mx-12 md:flex-row md:gap-16 md:px-12 md:py-16">
       {/* Text side */}
       <div className="flex-1 space-y-6 md:space-y-8">
         <div>
@@ -19,8 +18,7 @@ export const Founder = () => {
           Візіонер та засновник фестивалю, який вже понад 35 років невтомно працює над утвердженням української ідентичності. Його місія — відкрити світові та самим українцям неймовірну глибину та красу нашої культури через сучасну інтерпретацію традицій.
         </p>
         {/* Accent quote */}
-        <blockquote className="relative border-l-2 border-primary pl-5">
-          <Quote aria-hidden="true" className="absolute -left-1.5 -top-1 size-3 text-primary/40" />
+        <blockquote className="border-l-2 border-primary pl-5">
           <p className="font-hand text-xl italic text-primary md:text-2xl">
             Культурна місія, що об&apos;єднує покоління.
           </p>

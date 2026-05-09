@@ -3,7 +3,7 @@ import Image from "next/image";
 
 export const AboutFestival = () => {
   return (
-    <section className="flex flex-col items-center gap-12 px-4 py-16 md:flex-row md:gap-16 md:px-12 md:py-24">
+    <section className="flex flex-col items-center gap-12 px-4 py-10 md:flex-row md:gap-16 md:px-12 md:py-16">
       {/* Image side */}
       <div className="relative aspect-[4/3] w-full flex-1 overflow-hidden rounded-2xl shadow-2xl">
         <Image
