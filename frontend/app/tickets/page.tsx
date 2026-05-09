@@ -37,13 +37,13 @@ export default async function TicketsPage() {
   return (
     <div className="festival-theme min-h-screen bg-background text-foreground" data-theme="heroic">
       <header className="mx-auto flex w-full max-w-5xl items-center justify-between px-4 py-6 md:px-12">
-        <Link className="rounded-md font-serif text-xl font-bold text-primary focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background" href="/landing">
+        <Link className="rounded-md font-serif text-xl font-bold text-primary focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background" href="/">
           КРАЇНА МРІЙ
         </Link>
         <nav aria-label="Навігація сторінки квитків">
           <Link
             className="inline-flex items-center gap-2 rounded-md text-sm font-bold uppercase tracking-[0.1em] text-primary transition-colors hover:text-foreground focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background"
-            href="/landing"
+            href="/"
           >
             <ArrowLeft aria-hidden="true" className="size-4" />
             Назад до фестивалю
