@@ -1,7 +1,7 @@
 # Plan: Festival static site implementation
 
 Date: 2026-05-07  
-Updated: 2026-05-09
+Updated: 2026-05-11
 Status: Draft  
 Owner: Architect  
 Implementing agents: `nextjs-ssg-architect`, `sanity-schema-architect`, `sanity-groq-specialist`, `tailwind-ui-implementer`, `accessibility-ui-tester`, `deployment-vercel-engineer`, `test-automator`
@@ -25,7 +25,6 @@ Relevant files:
 - `frontend/next.config.mjs` — export, image, redirect, and static build configuration.
 - `frontend/app/(main)/[slug]/page.tsx` — existing static page route.
 - `frontend/app/page.tsx` — root route; owner of the festival landing experience before launch.
-- `frontend/app/landing/page.tsx` — temporary festival landing verification route to remove or repurpose once `/` renders the landing.
 - `frontend/app/(main)/blog/[slug]/page.tsx` — existing static blog route.
 - `frontend/app/api/**` — current API route handlers that are incompatible with static export.
 - `frontend/app/actions/**` — current server actions that are incompatible with static export.
@@ -33,6 +32,9 @@ Relevant files:
 - `frontend/components/blocks/forms/newsletter.tsx` — current newsletter form that posts to `/api/newsletter`.
 - `studio/schemas/**` — Sanity schemas for city, location, artist, partner, and content blocks.
 - `frontend/sanity/queries/**` — GROQ query contracts consumed by static pages.
+- `frontend/components/landing/ArtistsLineup.tsx` — currently hardcoded landing lineup component; must become Sanity-backed.
+- `frontend/components/landing/LandingExperience.tsx` — root landing composition; currently has no visible landing partners section.
+- `frontend/components/festival-city/festival-city-page.tsx` — already renders city-owned Sanity artists and partners for city routes.
 
 Relevant ADRs:
 
@@ -257,6 +259,34 @@ Exit criteria:
 - `/landing` is removed, repurposed, or excluded from canonical discovery.
 - Static build, typecheck, and lint pass.
 
+### Phase 5.6 — Landing Sanity artists and partners fix
+
+Owner: `sanity-groq-specialist` with `react-next-component-specialist`, `tailwind-ui-implementer`, and `accessibility-ui-tester`
+
+Status: Implemented. The root landing now sources artist and partner cards from existing `festivalCity.artists[]` and `festivalCity.partners[]` references, de-duplicates cards by `_id`, and renders accessible empty states when referenced content is unavailable.
+
+1. Update the landing GROQ contract to fetch Sanity-backed artist and partner data from the existing `festivalCity` documents:
+   - keep `festivalCity` as the source of city-owned artists and partners per ADR 0002,
+   - preserve city context (`cityName`, slug, theme key) for grouped or labeled landing cards,
+   - de-duplicate shared artists/partners by `_id` if the same reference appears in multiple cities,
+   - keep the projection small enough for static export and landing performance.
+2. Replace the hardcoded `artists` array in `frontend/components/landing/ArtistsLineup.tsx` with props derived from the landing query.
+3. Add a visible landing partners section, preferably as a reusable `PartnersSection` component under `frontend/components/landing/`, using Sanity `partner` references and accessible list/card markup.
+4. Update `LandingExperience` and `frontend/app/page.tsx` data flow so the root landing passes artists and partners to their sections without client-side fetching.
+5. Update generated Sanity query types after GROQ changes and keep component props typed from `sanity.types.ts`.
+6. Keep empty states editorially safe:
+   - artists: “Артистів буде оголошено.”
+   - partners: “Партнерів буде оголошено.”
+7. Keep header navigation accurate: `#artists` should target the Sanity-backed artist section, and `#partners` should target the visible partner section rather than only the footer.
+
+Exit criteria:
+
+- Root landing artist cards render from Sanity data, not a hardcoded local constant.
+- Root landing has a visible partners section using Sanity partner references.
+- City pages continue to render their existing artist and partner sections from `festivalCity` data.
+- `pnpm typegen`, `pnpm --filter frontend typecheck`, `pnpm --filter frontend lint`, and `pnpm --filter frontend build` pass.
+- Exported `/` includes artist/partner content or accessible empty states without requiring runtime APIs.
+
 ### Phase 6 — Integration and UX polish
 
 Owner: `react-next-component-specialist`
@@ -308,6 +338,8 @@ Exit criteria:
 - [ ] Sanity images render from `cdn.sanity.io` with unoptimized Next image output.
 - [x] `/` renders the festival landing without requiring a generic Sanity `page` document with slug `index`.
 - [x] `/landing` is removed, repurposed, or excluded from canonical discovery after the root route swap.
+- [x] `/` renders artists from Sanity data instead of the hardcoded `ArtistsLineup` array.
+- [x] `/` includes a visible Sanity-backed partners section.
 - [ ] `/kamianets` and `/lviv` render city-specific data and themes.
 - [ ] Newsletter/subscription flow works without exposing secrets.
 - [x] Accessibility review passes for Phase 5 hero cards, buttons, links, lists, and heading hierarchy.
@@ -328,6 +360,7 @@ Exit criteria:
 | Theme changes cause hydration mismatch | Medium | Derive initial theme deterministically from route/static data |
 | Legacy inbound links to `/landing` may 404 after route removal | Low | Add a host-level redirect to `/` if `/landing` was externally shared |
 | Root SEO metadata drifts because the homepage is code-owned | Medium | Add a Sanity-editable landing/site settings model or document code-owned metadata before launch |
+| Landing artist and partner cards lose multi-city context when the same reference appears in multiple cities | Low | Current MVP de-duplicates by `_id` and keeps first city context; aggregate city labels in a future enhancement if editorial needs require it |
 
 ## Open questions
 
@@ -339,4 +372,4 @@ Exit criteria:
 
 ## Completion notes
 
-In progress. Landing MVP, `ticketInfo`/`/tickets` MVP, root landing route, and Phase 5 cinematic UI MVP are implemented as static-safe work. Static export compatibility is implemented for the current MVP and `frontend/out/` is generated. Frontend validation (`typecheck`, `lint`, `build`) passes after clearing stale `.next` route types. Phase 2 content modeling now uses dedicated `festivalCity` documents with city-owned references to locations, artists, and partners. ADR 0004 is implemented: `/` renders the festival landing without requiring a generic Sanity `page` slug `index`, `/landing` is removed, and sitemap output includes `/` as the code-owned landing URL. Current build generates `/kamianets` and `/lviv` from Sanity slugs. Deployment automation, content rebuild workflow, homepage SEO ownership, real asset replacement, and final city content validation remain open.
+In progress. Landing MVP, `ticketInfo`/`/tickets` MVP, root landing route, Phase 5 cinematic UI MVP, and Phase 5.6 Sanity-backed landing artists/partners are implemented as static-safe work. Static export compatibility is implemented for the current MVP and `frontend/out/` is generated. Frontend validation (`typecheck`, `lint`, `build`) passes after clearing stale `.next` route types. Phase 2 content modeling uses dedicated `festivalCity` documents with city-owned references to locations, artists, and partners. ADR 0004 is implemented: `/` renders the festival landing without requiring a generic Sanity `page` slug `index`, `/landing` is removed, and sitemap output includes `/` as the code-owned landing URL. Current build generates `/kamianets` and `/lviv` from Sanity slugs. Deployment automation, content rebuild workflow, homepage SEO ownership, real asset replacement, and final city content validation remain open.

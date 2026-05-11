@@ -1,6 +1,6 @@
 # Project Ledger
 
-Last updated: 2026-05-09
+Last updated: 2026-05-11
 
 ## Current phase
 
@@ -20,7 +20,7 @@ UI implementation / launch polish
 
 | Plan                                | Status          | Owner     | Updated    |
 | ----------------------------------- | --------------- | --------- | ---------- |
-| `docs/plans/implementation-plan.md` | Draft           | Architect | 2026-05-09 |
+| `docs/plans/implementation-plan.md` | Draft           | Architect | 2026-05-11 |
 | `docs/plans/stitch-task.md`         | MVP implemented | UI agent  | 2026-05-08 |
 | `docs/logs/fix-hero-visibility.md`  | Completed       | Architect | 2026-05-09 |
 
@@ -52,12 +52,14 @@ UI implementation / launch polish
 | Festival UI can drift from updated `.stitch/DESIGN.md` tokens  |   Medium | UI agents  | Keep landing/city styling aligned to Brand Red, Natural Green, Warm Beige, Dark Grey tokens              |
 | Legacy inbound links to `/landing` may 404 after route removal |      Low | Architect  | Add a host-level redirect to `/` if `/landing` was externally shared                                     |
 | Placeholder imagery limits cinematic polish                    |   Medium | UI/content | Replace `/images/placeholder.svg` with approved city, artist, founder, and festival assets before launch |
+| Landing artist and partner cards lose multi-city context when the same reference appears in multiple cities | Low | UI/GROQ | Current MVP de-duplicates by `_id` and keeps first city context; aggregate city labels later if editorial needs require it |
 
 ## Recent significant changes
 
 | Date       | Change                                                                       | Log                                                                |
 | ---------- | ---------------------------------------------------------------------------- | ------------------------------------------------------------------ |
 | 2026-05-09 | Standardized section spacing and fixed hero visibility project-wide  | `docs/logs/fix-hero-visibility.md`                                |
+| 2026-05-11 | Implemented Sanity-backed landing artists and visible partners section | `docs/logs/landing-sanity-artists-partners-plan.md`                |
 | 2026-05-08 | Static export enabled and runtime frontend features removed                  | `docs/logs/static-export-compatibility-implementation.md`          |
 | 2026-05-09 | Root festival landing route documented and implemented                       | `docs/logs/root-festival-landing-route-architecture.md`            |
 | 2026-05-09 | Phase 5 cinematic landing and city UI MVP implemented                        | `docs/logs/phase-5-cinematic-ui-mvp.md`                            |
