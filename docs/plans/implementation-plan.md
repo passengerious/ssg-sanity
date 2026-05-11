@@ -211,6 +211,8 @@ Exit criteria:
 
 Owner: `tailwind-ui-implementer` with `accessibility-ui-tester`
 
+Status: MVP implemented. Landing and festival city pages now use larger cinematic type, image-backed cards, theme-colored CTAs, decorative section rhythm, stronger location/artist/partner treatments, and reduced-motion-safe transitions. Accessibility review found no remaining blockers after semantic list, heading, contrast, and keyboard-focus fixes.
+
 1. Hero section:
    - interactive city selection cards,
    - hover/focus preview of the festival mood,
@@ -308,7 +310,7 @@ Exit criteria:
 - [x] `/landing` is removed, repurposed, or excluded from canonical discovery after the root route swap.
 - [ ] `/kamianets` and `/lviv` render city-specific data and themes.
 - [ ] Newsletter/subscription flow works without exposing secrets.
-- [ ] Accessibility review passes for hero cards, accordions, buttons, and links.
+- [x] Accessibility review passes for Phase 5 hero cards, buttons, links, lists, and heading hierarchy.
 - [x] SEO metadata routes build statically (`robots.txt`, `sitemap.xml`).
 - [ ] GitHub Actions deployment to `adm.tools` is tested.
 
@@ -337,4 +339,4 @@ Exit criteria:
 
 ## Completion notes
 
-In progress. Landing MVP and `ticketInfo`/`/tickets` MVP are implemented as static-safe work. Static export compatibility is implemented for the current MVP and `frontend/out/` is generated. Frontend validation (`typecheck`, `lint`, `build`) passes after clearing stale `.next` route types. Phase 2 content modeling now uses dedicated `festivalCity` documents with city-owned references to locations, artists, and partners. ADR 0004 is implemented: `/` renders the festival landing without requiring a generic Sanity `page` slug `index`, `/landing` is removed, and sitemap output includes `/` as the code-owned landing URL. Deployment automation, content rebuild workflow, homepage SEO ownership, and published city content validation remain open.
+In progress. Landing MVP, `ticketInfo`/`/tickets` MVP, root landing route, and Phase 5 cinematic UI MVP are implemented as static-safe work. Static export compatibility is implemented for the current MVP and `frontend/out/` is generated. Frontend validation (`typecheck`, `lint`, `build`) passes after clearing stale `.next` route types. Phase 2 content modeling now uses dedicated `festivalCity` documents with city-owned references to locations, artists, and partners. ADR 0004 is implemented: `/` renders the festival landing without requiring a generic Sanity `page` slug `index`, `/landing` is removed, and sitemap output includes `/` as the code-owned landing URL. Current build generates `/kamianets` and `/lviv` from Sanity slugs. Deployment automation, content rebuild workflow, homepage SEO ownership, real asset replacement, and final city content validation remain open.

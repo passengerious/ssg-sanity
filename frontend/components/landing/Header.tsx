@@ -3,15 +3,15 @@ import Link from "next/link";
 
 export const Header = () => {
   return (
-    <header className="sticky top-0 z-50 flex w-full flex-wrap items-center justify-between gap-3 bg-background/95 px-4 py-3 shadow-sm backdrop-blur md:h-16 md:flex-nowrap md:px-12 md:py-0">
+    <header className="sticky top-0 z-50 flex w-full flex-wrap items-center justify-between gap-3 bg-background/95 px-4 py-3 shadow-sm backdrop-blur-md md:h-16 md:flex-nowrap md:px-12 md:py-0">
       <Link
         aria-label="Країна Мрій — на початок лендингу"
-        className="flex items-center gap-3 rounded-md text-primary focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+        className="group flex items-center gap-3 rounded-md text-primary transition-colors hover:text-primary/80 focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background"
         href="/"
       >
         <svg
           aria-hidden="true"
-          className="size-8 shrink-0"
+          className="size-8 shrink-0 transition-transform duration-300 group-hover:scale-110 motion-reduce:transition-none"
           fill="none"
           viewBox="0 0 32 32"
           xmlns="http://www.w3.org/2000/svg"
@@ -36,7 +36,7 @@ export const Header = () => {
         </span>
       </Link>
       <nav aria-label="Головна навігація" className="order-3 flex w-full gap-3 overflow-x-auto pb-1 md:order-none md:w-auto md:gap-6 md:overflow-visible md:pb-0">
-        <Link className="shrink-0 rounded-sm text-xs font-bold text-primary transition-colors hover:text-primary focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background md:text-sm" href="/">
+        <Link className="shrink-0 rounded-sm text-xs font-bold text-primary transition-colors hover:text-primary/80 focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background md:text-sm" href="/">
           ГОЛОВНА
         </Link>
         <Link className="shrink-0 rounded-sm text-xs text-muted-foreground transition-colors hover:text-primary focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background md:text-sm" href="#cities">
@@ -52,7 +52,7 @@ export const Header = () => {
           ПАРТНЕРИ
         </Link>
       </nav>
-      <Link className="rounded-lg bg-primary px-5 py-2 text-sm font-semibold text-primary-foreground transition-opacity hover:opacity-80 focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background md:px-6" href="/tickets">
+      <Link className="rounded-lg bg-primary px-5 py-2 text-sm font-semibold text-primary-foreground shadow-sm transition-all duration-300 hover:shadow-md hover:shadow-primary/20 hover:opacity-90 focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background motion-reduce:transition-none md:px-6" href="/tickets">
         КВИТКИ
       </Link>
     </header>

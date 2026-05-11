@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import { Mulish as FontSans } from "next/font/google";
 import "./globals.css";
 import { cn } from "@/lib/utils";
 import { ThemeProvider } from "@/components/theme-provider";
@@ -35,12 +34,6 @@ export const metadata: Metadata = {
   robots: !isProduction ? "noindex, nofollow" : "index, follow",
 };
 
-const fontSans = FontSans({
-  subsets: ["latin", "cyrillic"],
-  weight: ["400", "500", "600", "700"],
-  variable: "--font-mulish",
-});
-
 export default function RootLayout({
   children,
 }: {
@@ -50,8 +43,7 @@ export default function RootLayout({
     <html lang="uk" suppressHydrationWarning>
       <body
         className={cn(
-          "min-h-screen bg-background font-sans antialiased overscroll-none",
-          fontSans.variable
+          "min-h-screen bg-background font-sans antialiased overscroll-none"
         )}
       >
         <ThemeProvider

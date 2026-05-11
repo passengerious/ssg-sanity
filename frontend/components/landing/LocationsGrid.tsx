@@ -16,37 +16,69 @@ const locations: Array<{
   { Icon: Hammer, title: "Простори ремесел", desc: "Майстер-класи з кераміки, ковальства та ручної роботи.", tone: "neutral" },
 ];
 
+function toneClasses(tone: "primary" | "secondary" | "neutral") {
+  switch (tone) {
+    case "primary":
+      return {
+        border: "border-b-primary",
+        icon: "text-primary",
+        bg: "bg-primary/5",
+      };
+    case "secondary":
+      return {
+        border: "border-b-secondary",
+        icon: "text-secondary",
+        bg: "bg-secondary/5",
+      };
+    default:
+      return {
+        border: "border-b-border",
+        icon: "text-muted-foreground",
+        bg: "bg-muted/30",
+      };
+  }
+}
+
 export const LocationsGrid = () => {
   return (
-    <section className="px-4 py-12 md:px-12" id="program">
-      <h2 className="mb-12 text-center font-serif text-4xl font-bold md:text-5xl">Простір Мрій</h2>
-      <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
-        {locations.map((loc) => (
-          <div
-            className={`rounded-xl border-b-4 bg-card p-6 shadow-sm transition-all hover:shadow-md ${
-              loc.tone === "primary"
-                ? "border-primary"
-                : loc.tone === "secondary"
-                  ? "border-secondary"
-                  : "border-border"
-            }`}
-            key={loc.title}
-          >
-            <loc.Icon
-              aria-hidden="true"
-              className={`mb-4 size-10 ${
-                loc.tone === "primary"
-                  ? "text-primary"
-                  : loc.tone === "secondary"
-                    ? "text-secondary"
-                    : "text-muted-foreground"
-              }`}
-              strokeWidth={1.8}
-            />
-            <h3 className="mb-2 font-serif text-2xl font-bold">{loc.title}</h3>
-            <p className="text-muted-foreground">{loc.desc}</p>
-          </div>
-        ))}
+    <section className="px-4 py-10 md:px-12 md:py-16" id="program">
+      <div className="mx-auto max-w-5xl text-center">
+        <span className="mb-3 inline-block text-xs font-bold uppercase tracking-[0.2em] text-secondary">
+          Програма
+        </span>
+        <h2 className="font-serif text-4xl font-bold leading-tight text-foreground md:text-5xl lg:text-6xl">
+          Простір Мрій
+        </h2>
+        <div className="mx-auto mt-4 flex items-center justify-center gap-4">
+          <div className="h-0.5 w-12 bg-secondary" />
+          <div className="size-2 rounded-full bg-secondary" />
+          <div className="h-0.5 w-6 bg-secondary/50" />
+        </div>
+      </div>
+
+      <div className="mx-auto mt-12 grid max-w-5xl grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
+        {locations.map((loc) => {
+          const tc = toneClasses(loc.tone);
+          return (
+            <div
+              className={`group rounded-2xl border border-border bg-card p-6 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-lg ${tc.border} border-b-4 motion-reduce:transition-none`}
+              key={loc.title}
+            >
+              {/* Icon with background */}
+              <div className={`mb-5 inline-flex size-14 items-center justify-center rounded-xl ${tc.bg} transition-colors duration-300 group-hover:bg-primary/10 motion-reduce:transition-none`}>
+                <loc.Icon
+                  aria-hidden="true"
+                  className={`size-7 ${tc.icon} transition-colors duration-300 group-hover:text-primary motion-reduce:transition-none`}
+                  strokeWidth={1.5}
+                />
+              </div>
+              <h3 className="mb-2 font-serif text-xl font-bold leading-tight text-foreground md:text-2xl">
+                {loc.title}
+              </h3>
+              <p className="text-sm leading-relaxed text-muted-foreground">{loc.desc}</p>
+            </div>
+          );
+        })}
       </div>
     </section>
   );
