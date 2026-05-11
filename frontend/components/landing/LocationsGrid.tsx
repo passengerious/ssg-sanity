@@ -41,7 +41,7 @@ function toneClasses(tone: "primary" | "secondary" | "neutral") {
 
 export const LocationsGrid = () => {
   return (
-    <section className="px-4 py-10 md:px-12 md:py-16" id="program">
+    <section className="px-4 py-10 md:px-12 md:py-16" id="program" tabIndex={-1}>
       <div className="mx-auto max-w-5xl text-center">
         <span className="mb-3 inline-block text-xs font-bold uppercase tracking-[0.2em] text-secondary">
           Програма
@@ -56,11 +56,11 @@ export const LocationsGrid = () => {
         </div>
       </div>
 
-      <div className="mx-auto mt-12 grid max-w-5xl grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
+      <ul className="mx-auto mt-12 grid max-w-5xl grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
         {locations.map((loc) => {
           const tc = toneClasses(loc.tone);
           return (
-            <div
+            <li
               className={`group rounded-2xl border border-border bg-card p-6 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-lg ${tc.border} border-b-4 motion-reduce:transition-none`}
               key={loc.title}
             >
@@ -76,10 +76,10 @@ export const LocationsGrid = () => {
                 {loc.title}
               </h3>
               <p className="text-sm leading-relaxed text-muted-foreground">{loc.desc}</p>
-            </div>
+            </li>
           );
         })}
-      </div>
+      </ul>
     </section>
   );
 };

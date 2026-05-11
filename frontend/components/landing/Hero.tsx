@@ -69,6 +69,7 @@ export const Hero = ({ cities, onThemeChange, onThemeReset, theme }: HeroProps) 
             }
           }}
           ref={cityGridRef}
+          tabIndex={-1}
         >
           {cityCards.map((card) => {
             const cardTheme = card.themeKey;

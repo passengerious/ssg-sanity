@@ -3,7 +3,7 @@ import Link from "next/link";
 
 export const Footer = () => {
   return (
-    <footer className="w-full border-t border-border/50 bg-muted/30 px-4 py-12 md:px-12 md:py-16" id="partners">
+    <footer className="w-full border-t border-border/50 bg-muted/30 px-4 py-12 md:px-12 md:py-16">
       <div className="mx-auto max-w-5xl">
         <div className="flex flex-col items-center gap-6 text-center">
           {/* Logo / brand */}

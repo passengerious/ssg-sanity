@@ -71,8 +71,32 @@ export const LANDING_CITIES_QUERY = groq`
     title,
     cityName,
     themeKey,
+    dateRange,
     heroImage{
       ${imageQuery}
+    },
+    artists[]->{
+      _id,
+      name,
+      genre,
+      externalUrl,
+      photo{
+        alt,
+        asset->{
+          url
+        }
+      }
+    },
+    partners[]->{
+      _id,
+      name,
+      level,
+      url,
+      logo{
+        asset->{
+          url
+        }
+      }
     }
   }
 `;

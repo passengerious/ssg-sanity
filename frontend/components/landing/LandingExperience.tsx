@@ -9,6 +9,7 @@ import { Founder } from "@/components/landing/Founder";
 import { Header } from "@/components/landing/Header";
 import { Hero } from "@/components/landing/Hero";
 import { LocationsGrid } from "@/components/landing/LocationsGrid";
+import { PartnersSection } from "@/components/landing/PartnersSection";
 import { FestivalThemeShell } from "@/components/festival-theme-shell";
 import {
   DEFAULT_FESTIVAL_THEME,
@@ -39,7 +40,7 @@ export function LandingExperience({
         Перейти до основного вмісту
       </a>
       <Header />
-      <main className="mx-auto max-w-7xl" id="main-content">
+      <main className="mx-auto max-w-7xl" id="main-content" tabIndex={-1}>
         <Hero
           cities={cities}
           onThemeChange={setTheme}
@@ -50,7 +51,8 @@ export function LandingExperience({
         <AboutFestival />
         <Founder />
         <LocationsGrid />
-        <ArtistsLineup />
+        <ArtistsLineup cities={cities} />
+        <PartnersSection cities={cities} />
       </main>
       <Footer />
     </FestivalThemeShell>
