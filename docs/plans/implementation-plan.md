@@ -287,6 +287,65 @@ Exit criteria:
 - `pnpm typegen`, `pnpm --filter frontend typecheck`, `pnpm --filter frontend lint`, and `pnpm --filter frontend build` pass.
 - Exported `/` includes artist/partner content or accessible empty states without requiring runtime APIs.
 
+### Phase 5.7 — Code consistency and pattern standardization
+
+Owner: `react-next-component-specialist` with `code-reviewer`
+
+Status: Planned. Pattern analysis completed on 2026-05-11 identified six high/medium-priority inconsistencies across component exports, GROQ queries, data fetching, error handling, Tailwind patterns, and image rendering.
+
+1. **Component Export Patterns — Standardize on named exports**
+   - Landing components currently use `export const` while block components use `export default`.
+   - Standardize all components on named exports for better tree-shaking and explicit APIs.
+   - Optionally re-export a default alias for backward compatibility during migration.
+   - Affected areas: `frontend/components/blocks/**/*.tsx`, `frontend/components/ui/**/*.tsx`.
+
+2. **GROQ Query Patterns — Barrel exports and naming convention**
+   - 2.1 Add `frontend/sanity/queries/index.ts` as a barrel file to centralize query imports.
+   - 2.2 Standardize query export names to `SCREAMING_SNAKE_CASE` (e.g., `PAGE_QUERY`, `LANDING_CITIES_QUERY`) and deprecate mixed `camelCase` names.
+   - Update all consumers (fetch functions, route files) to import from the barrel.
+
+3. **Data Fetching Patterns — Consistent error handling**
+   - Currently only `fetchSanityTicketInfo` wraps its call in `try/catch`.
+   - Add graceful `try/catch` wrappers to all `fetchSanity*` functions in `frontend/sanity/lib/fetch.ts`.
+   - Return `null` on failure and log a contextual warning; avoid throwing unhandled errors during static generation.
+
+4. **Error Handling Patterns — Unified error boundary strategy**
+   - Block rendering (`components/blocks/index.tsx`) currently falls back to a silent empty `<div>` with `console.warn`.
+   - Replace silent fallback with an `ErrorBoundary` wrapper around each block render.
+   - Provide a visible fallback UI (e.g., `<BlockError type={block._type} />`) in production so missing blocks do not silently disappear.
+
+5. **Tailwind CSS Patterns — Extract recurring combinations**
+   - Recurring token combinations were identified across landing sections:
+     - Section padding: `px-4 py-10 md:px-12 md:py-16`
+     - Decorative divider: three-part rule with `bg-secondary`
+     - Card hover: `transition-all duration-300 hover:-translate-y-1 hover:shadow-xl motion-reduce:transition-none`
+     - Focus ring: `focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2`
+   - Extract these into `frontend/lib/tailwind-patterns.ts` (or similar) as shared constants or small helper functions.
+   - Keep Tailwind class strings in source for JIT discovery; constants can be string variables, not utility classes.
+
+6. **Image Handling Patterns — Create `SanityImage` wrapper**
+   - Image rendering logic is duplicated across `ArtistsLineup`, `Hero`, `FestivalCityPage`, and other components.
+   - Create a reusable `SanityImage` component that handles:
+     - Sanity CDN `src` with unoptimized Next.js Image
+     - Placeholder fallback (`/images/placeholder.svg`)
+     - Proper `alt` handling (CMS alt when real image, empty string when placeholder)
+     - Standard `sizes` and `fill` behavior
+   - Replace ad-hoc `Image` usages with the wrapper where Sanity asset data is passed.
+
+**What was not included (intentionally lower priority):**
+- Schema shared-fields registry — the Studio already extracts shared fields into `blocks/shared/*.ts`; editorial-facing, not frontend-blocking.
+- No global state — this is a strength for a static site; no action needed.
+
+Exit criteria:
+
+- All components use named exports consistently.
+- All GROQ queries are importable from a single barrel file with standardized naming.
+- All `fetchSanity*` functions handle failures gracefully without unhandled errors.
+- Block rendering uses error boundaries instead of silent empty `<div>` fallbacks.
+- Recurring Tailwind combinations are extracted into shared constants.
+- A reusable `SanityImage` component exists and replaces duplicated image logic.
+- `pnpm --filter frontend typecheck`, `pnpm --filter frontend lint`, and `pnpm --filter frontend build` pass.
+
 ### Phase 6 — Integration and UX polish
 
 Owner: `react-next-component-specialist`

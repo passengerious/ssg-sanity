@@ -1,6 +1,11 @@
 import React from "react";
 import { Castle, ChefHat, Hammer, Heart, Paintbrush, Sprout } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
+import {
+  cardHover,
+  decorativeDivider,
+  sectionPadding,
+} from "@/lib/tailwind-patterns";
 
 const locations: Array<{
   Icon: LucideIcon;
@@ -41,7 +46,7 @@ function toneClasses(tone: "primary" | "secondary" | "neutral") {
 
 export const LocationsGrid = () => {
   return (
-    <section className="px-4 py-10 md:px-12 md:py-16" id="program" tabIndex={-1}>
+    <section className={sectionPadding} id="program" tabIndex={-1}>
       <div className="mx-auto max-w-5xl text-center">
         <span className="mb-3 inline-block text-xs font-bold uppercase tracking-[0.2em] text-secondary">
           Програма
@@ -50,9 +55,9 @@ export const LocationsGrid = () => {
           Простір Мрій
         </h2>
         <div className="mx-auto mt-4 flex items-center justify-center gap-4">
-          <div className="h-0.5 w-12 bg-secondary" />
-          <div className="size-2 rounded-full bg-secondary" />
-          <div className="h-0.5 w-6 bg-secondary/50" />
+          <div className={decorativeDivider.start} />
+          <div className={decorativeDivider.dot} />
+          <div className={decorativeDivider.end} />
         </div>
       </div>
 
@@ -61,7 +66,7 @@ export const LocationsGrid = () => {
           const tc = toneClasses(loc.tone);
           return (
             <li
-              className={`group rounded-2xl border border-border bg-card p-6 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-lg ${tc.border} border-b-4 motion-reduce:transition-none`}
+              className={`group rounded-2xl border border-border bg-card p-6 shadow-sm ${cardHover} hover:shadow-lg ${tc.border} border-b-4`}
               key={loc.title}
             >
               {/* Icon with background */}
