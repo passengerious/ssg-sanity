@@ -291,7 +291,7 @@ Exit criteria:
 
 Owner: `react-next-component-specialist` with `code-reviewer`
 
-Status: Planned. Pattern analysis completed on 2026-05-11 identified six high/medium-priority inconsistencies across component exports, GROQ queries, data fetching, error handling, Tailwind patterns, and image rendering.
+Status: Implemented. All six pattern standardization tasks completed on 2026-05-12.
 
 1. **Component Export Patterns — Standardize on named exports**
    - Landing components currently use `export const` while block components use `export default`.
@@ -431,4 +431,4 @@ Exit criteria:
 
 ## Completion notes
 
-In progress. Landing MVP, `ticketInfo`/`/tickets` MVP, root landing route, Phase 5 cinematic UI MVP, and Phase 5.6 Sanity-backed landing artists/partners are implemented as static-safe work. Static export compatibility is implemented for the current MVP and `frontend/out/` is generated. Frontend validation (`typecheck`, `lint`, `build`) passes after clearing stale `.next` route types. Phase 2 content modeling uses dedicated `festivalCity` documents with city-owned references to locations, artists, and partners. ADR 0004 is implemented: `/` renders the festival landing without requiring a generic Sanity `page` slug `index`, `/landing` is removed, and sitemap output includes `/` as the code-owned landing URL. Current build generates `/kamianets` and `/lviv` from Sanity slugs. Deployment automation, content rebuild workflow, homepage SEO ownership, real asset replacement, and final city content validation remain open.
+In progress. Landing MVP, `ticketInfo`/`/tickets` MVP, root landing route, Phase 5 cinematic UI MVP, Phase 5.6 Sanity-backed landing artists/partners, and Phase 5.7 code consistency patterns are implemented as static-safe work. Static export compatibility is implemented for the current MVP and `frontend/out/` is generated. Frontend validation (`typecheck`, `lint`, `build`) passes after clearing stale `.next` route types. Phase 2 content modeling uses dedicated `festivalCity` documents with city-owned references to locations, artists, and partners. ADR 0004 is implemented: `/` renders the festival landing without requiring a generic Sanity `page` slug `index`, `/landing` is removed, and sitemap output includes `/` as the code-owned landing URL. Current build generates `/kamianets` and `/lviv` from Sanity slugs. Phase 5.7 added: queries barrel file (`sanity/queries/index.ts`), consistent fetch error handling, `SanityImage` wrapper, shared Tailwind pattern constants, `ErrorBoundary` for block rendering, and named export standardization for `Blocks`. Deployment automation, content rebuild workflow, homepage SEO ownership, real asset replacement, and final city content validation remain open.
