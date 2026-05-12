@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
-import Image from "next/image";
+import { SanityImage } from "@/components/sanity-image";
 import { urlFor } from "@/sanity/lib/image";
 import PortableTextRenderer from "@/components/portable-text-renderer";
 import { PAGE_QUERY_RESULT } from "@/sanity.types";
@@ -54,15 +54,12 @@ export default function Hero1({
         </div>
         <div className="flex flex-col justify-center">
           {image && image.asset?._id && (
-            <Image
-              className="rounded-xl animate-fade-up [animation-delay:500ms] opacity-0"
-              src={urlFor(image).url()}
+            <SanityImage
               alt={image.alt || ""}
-              width={image.asset?.metadata?.dimensions?.width || 800}
-              height={image.asset?.metadata?.dimensions?.height || 800}
-              placeholder={image?.asset?.metadata?.lqip ? "blur" : undefined}
-              blurDataURL={image?.asset?.metadata?.lqip || ""}
+              className="rounded-xl animate-fade-up [animation-delay:500ms] opacity-0"
+              image={image}
               quality={100}
+              src={urlFor(image).url()}
             />
           )}
         </div>

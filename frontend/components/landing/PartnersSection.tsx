@@ -1,6 +1,6 @@
 import React from "react";
-import Image from "next/image";
 import { ExternalLink, Handshake } from "lucide-react";
+import { SanityImage } from "@/components/sanity-image";
 import {
   cardHover,
   decorativeDivider,
@@ -27,10 +27,6 @@ function getPartnerCards(cities: LANDING_CITIES_QUERY_RESULT): PartnerCard[] {
       return [{ ...partner, cityName: city.cityName }];
     });
   });
-}
-
-function logoUrl(logo: PartnerCard["logo"]) {
-  return logo?.asset?.url || null;
 }
 
 const partnerLevelLabels: Partial<Record<NonNullable<PartnerCard["level"]>, string>> = {
@@ -75,7 +71,6 @@ export function PartnersSection({
       {partners.length ? (
         <ul className="mx-auto mt-12 grid max-w-5xl grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
           {partners.map((partner) => {
-            const logo = logoUrl(partner.logo);
             const safeId = partner._id.replace(/[^a-zA-Z0-9_-]/g, "-");
             const headingId = `partner-${safeId}`;
             const descriptionId = `partner-${safeId}-new-tab`;
@@ -83,12 +78,12 @@ export function PartnersSection({
             const card = (
               <>
                 <div className="flex min-h-28 items-center justify-center rounded-2xl bg-background p-6">
-                  {logo ? (
-                    <Image
+                  {partner.logo?.asset?.url ? (
+                    <SanityImage
                       alt=""
                       className="max-h-16 w-auto object-contain"
                       height={96}
-                      src={logo}
+                      image={partner.logo}
                       width={192}
                     />
                   ) : (

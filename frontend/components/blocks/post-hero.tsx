@@ -1,6 +1,6 @@
-import Image from "next/image";
 import PostDate from "@/components/post-date";
 import { Mail } from "lucide-react";
+import { SanityImage, SanityImageFill } from "@/components/sanity-image";
 import { urlFor } from "@/sanity/lib/image";
 import { POST_QUERY_RESULT } from "@/sanity.types";
 
@@ -18,14 +18,11 @@ export default function PostHero({
       {title && <h1 className="mb-4 md:mb-6 text-3xl lg:text-5xl">{title}</h1>}
       {image && image.asset?._id && (
         <div className="my-4 md:my-6 rounded-2xl overflow-hidden">
-          <Image
-            src={urlFor(image).quality(100).url()}
+          <SanityImage
             alt={image.alt || ""}
-            placeholder={image?.asset?.metadata?.lqip ? "blur" : undefined}
-            blurDataURL={image.asset?.metadata?.lqip || undefined}
-            width={image.asset?.metadata?.dimensions?.width || 1200}
-            height={image?.asset?.metadata?.dimensions?.height || 630}
+            image={image}
             quality={100}
+            src={urlFor(image).quality(100).url()}
           />
         </div>
       )}
@@ -34,19 +31,12 @@ export default function PostHero({
           <div className="flex items-center gap-2">
             {author?.image && author.image.asset?._id && (
               <div className="relative w-6 h-6 md:w-10 md:h-10">
-                <Image
-                  src={urlFor(author.image).url()}
-                  alt={author.image.alt ? author.image.alt : ""}
-                  fill
-                  style={{
-                    objectFit: "cover",
-                  }}
-                  placeholder={
-                    author.image.asset?.metadata?.lqip ? "blur" : undefined
-                  }
-                  blurDataURL={author.image.asset?.metadata?.lqip || undefined}
-                  sizes="40px"
+                <SanityImageFill
+                  alt={author.image.alt || ""}
                   className="w-10 h-10 rounded-full mr-2"
+                  image={author.image}
+                  sizes="40px"
+                  src={urlFor(author.image).url()}
                 />
               </div>
             )}

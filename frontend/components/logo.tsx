@@ -1,6 +1,6 @@
 "use client";
 
-import Image from "next/image";
+import { SanityImage } from "@/components/sanity-image";
 import { urlFor } from "@/sanity/lib/image";
 import { SETTINGS_QUERY_RESULT } from "@/sanity.types";
 import { useTheme } from "next-themes";
@@ -32,29 +32,18 @@ export default function Logo({
   const logoToUse = selectedLogo || fallbackLogo;
 
   return logoToUse ? (
-    <Image
-      src={urlFor(logoToUse).url()}
+    <SanityImage
       alt={settings.siteName || ""}
+      image={logoToUse}
+      priority
+      quality={100}
+      src={urlFor(logoToUse).url()}
+      title={settings.siteName || ""}
       width={
         (settings.logo?.width as number) ??
         logoToUse?.asset?.metadata?.dimensions?.width ??
         100
       }
-      height={
-        (settings.logo?.height as number) ??
-        logoToUse?.asset?.metadata?.dimensions?.height ??
-        40
-      }
-      title={settings.siteName || ""}
-      placeholder={
-        logoToUse?.asset?.metadata?.lqip &&
-        logoToUse?.asset?.mimeType !== "image/svg+xml"
-          ? "blur"
-          : undefined
-      }
-      blurDataURL={logoToUse?.asset?.metadata?.lqip || undefined}
-      quality={100}
-      priority
     />
   ) : (
     <span className="text-lg font-semibold tracking-tighter">
