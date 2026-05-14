@@ -1,29 +1,15 @@
-import Image from "next/image";
 import Link from "next/link";
 import { ArrowRight, ExternalLink, MapPin, Music, Ticket, Users } from "lucide-react";
 import { FestivalThemeShell } from "@/components/festival-theme-shell";
 import PortableTextRenderer from "@/components/portable-text-renderer";
+import { SanityImageFill } from "@/components/sanity-image";
 import { resolveFestivalTheme } from "@/lib/festival-themes";
 import type { FESTIVAL_CITY_QUERY_RESULT } from "@/sanity.types";
 
 type FestivalCity = NonNullable<FESTIVAL_CITY_QUERY_RESULT>;
-type ImageLike = {
-  alt?: string | null;
-  asset?: {
-    url?: string | null;
-  } | null;
-} | null | undefined;
 
 function isDefined<T>(value: T | null | undefined): value is NonNullable<T> {
   return value !== null && value !== undefined;
-}
-
-function imageUrl(image: ImageLike) {
-  return image?.asset?.url || "/images/placeholder.svg";
-}
-
-function imageAlt(image: ImageLike, fallback: string) {
-  return image?.alt || fallback;
 }
 
 export function FestivalCityPage({
@@ -110,13 +96,12 @@ export function FestivalCityPage({
 
           {/* Hero image */}
           <div className="relative z-10 aspect-square overflow-hidden rounded-[2rem] border border-border/50 bg-muted shadow-2xl">
-            <Image
-              alt={imageAlt(city.heroImage, city.cityName || city.title || "Місто фестивалю")}
-              className="object-cover transition-transform duration-700 hover:scale-105 motion-reduce:transition-none"
-              fill
+            <SanityImageFill
+              alt={city.cityName || city.title || "Місто фестивалю"}
+              className="transition-transform duration-700 hover:scale-105 motion-reduce:transition-none"
+              image={city.heroImage}
               priority
               sizes="(min-width: 768px) 50vw, calc(100vw - 32px)"
-              src={imageUrl(city.heroImage)}
             />
             {/* Gradient overlay */}
             <div className="absolute inset-0 bg-gradient-to-tr from-black/10 to-transparent" aria-hidden="true" />

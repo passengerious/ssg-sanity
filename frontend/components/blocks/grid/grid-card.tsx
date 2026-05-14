@@ -1,8 +1,7 @@
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
-import Image from "next/image";
-import { urlFor } from "@/sanity/lib/image";
+import { SanityImageFill } from "@/components/sanity-image";
 import { PAGE_QUERY_RESULT, ColorVariant } from "@/sanity.types";
 
 type Block = NonNullable<NonNullable<PAGE_QUERY_RESULT>["blocks"]>[number];
@@ -39,15 +38,10 @@ export default function GridCard({
         <div>
           {image && image.asset?._id && (
             <div className="mb-4 relative h-[15rem] sm:h-[20rem] md:h-[25rem] lg:h-[9.5rem] xl:h-[12rem] rounded-2xl overflow-hidden">
-              <Image
-                src={urlFor(image).url()}
+              <SanityImageFill
                 alt={image.alt || ""}
-                placeholder={image?.asset?.metadata?.lqip ? "blur" : undefined}
-                blurDataURL={image?.asset?.metadata?.lqip || ""}
-                fill
+                image={image}
                 sizes="(min-width: 1024px) 25vw, (min-width: 640px) 50vw, 100vw"
-                className="object-cover"
-                quality={100}
               />
             </div>
           )}

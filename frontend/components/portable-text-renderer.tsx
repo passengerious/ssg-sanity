@@ -1,29 +1,24 @@
 import { PortableText, PortableTextProps } from "@portabletext/react";
-import Image from "next/image";
 import Link from "next/link";
 import { YouTubeEmbed } from "@next/third-parties/google";
 import { Highlight, themes } from "prism-react-renderer";
+import { SanityImage } from "@/components/sanity-image";
 import { CopyButton } from "@/components/ui/copy-button";
 
 const portableTextComponents: PortableTextProps["components"] = {
   types: {
     image: ({ value }) => {
-      const { url, metadata } = value.asset;
-      const { lqip, dimensions } = metadata;
       return (
-        <Image
-          src={url}
+        <SanityImage
           alt={value.alt || "Image"}
-          width={dimensions.width}
-          height={dimensions.height}
-          placeholder={lqip ? "blur" : undefined}
-          blurDataURL={lqip || undefined}
+          image={value}
+          quality={100}
+          src={value.asset.url}
           style={{
             borderRadius: "1rem",
             marginLeft: "auto",
             marginRight: "auto",
           }}
-          quality={100}
         />
       );
     },

@@ -1,4 +1,4 @@
-import Blocks from "@/components/blocks";
+import { Blocks } from "@/components/blocks";
 import { FestivalCityPage } from "@/components/festival-city/festival-city-page";
 import { resolveTicketUrl } from "@/lib/tickets";
 import {

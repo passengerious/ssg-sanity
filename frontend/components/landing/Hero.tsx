@@ -1,8 +1,8 @@
 "use client";
 
-import Image from "next/image";
 import Link from "next/link";
 import { useRef } from "react";
+import { SanityImageFill } from "@/components/sanity-image";
 import { isFestivalTheme, type FestivalTheme } from "@/lib/festival-themes";
 import type { LANDING_CITIES_QUERY_RESULT } from "@/sanity.types";
 
@@ -89,12 +89,11 @@ export const Hero = ({ cities, onThemeChange, onThemeReset, theme }: HeroProps) 
                 >
                   {/* Image is decorative; visible text below supplies the link label. */}
                   <div className="relative aspect-[16/10] overflow-hidden">
-                    <Image
+                    <SanityImageFill
                       alt=""
-                      className="object-cover transition-transform duration-700 group-hover:scale-110 motion-reduce:transition-none"
-                      fill
+                      className="transition-transform duration-700 group-hover:scale-110 motion-reduce:transition-none"
+                      image={card.heroImage}
                       sizes="(min-width: 768px) 384px, calc(100vw - 80px)"
-                      src={card.heroImage?.asset?.url || "/images/placeholder.svg"}
                     />
                     {/* Gradient overlay on image */}
                     <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/45 to-transparent" aria-hidden="true" />
