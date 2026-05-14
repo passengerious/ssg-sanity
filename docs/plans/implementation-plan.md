@@ -287,6 +287,65 @@ Exit criteria:
 - `pnpm typegen`, `pnpm --filter frontend typecheck`, `pnpm --filter frontend lint`, and `pnpm --filter frontend build` pass.
 - Exported `/` includes artist/partner content or accessible empty states without requiring runtime APIs.
 
+### Phase 5.7 — Code consistency and pattern standardization
+
+Owner: `react-next-component-specialist` with `code-reviewer`
+
+Status: Implemented. All six pattern standardization tasks completed on 2026-05-12.
+
+1. **Component Export Patterns — Standardize on named exports**
+   - Landing components currently use `export const` while block components use `export default`.
+   - Standardize all components on named exports for better tree-shaking and explicit APIs.
+   - Optionally re-export a default alias for backward compatibility during migration.
+   - Affected areas: `frontend/components/blocks/**/*.tsx`, `frontend/components/ui/**/*.tsx`.
+
+2. **GROQ Query Patterns — Barrel exports and naming convention**
+   - 2.1 Add `frontend/sanity/queries/index.ts` as a barrel file to centralize query imports.
+   - 2.2 Standardize query export names to `SCREAMING_SNAKE_CASE` (e.g., `PAGE_QUERY`, `LANDING_CITIES_QUERY`) and deprecate mixed `camelCase` names.
+   - Update all consumers (fetch functions, route files) to import from the barrel.
+
+3. **Data Fetching Patterns — Consistent error handling**
+   - Currently only `fetchSanityTicketInfo` wraps its call in `try/catch`.
+   - Add graceful `try/catch` wrappers to all `fetchSanity*` functions in `frontend/sanity/lib/fetch.ts`.
+   - Return `null` on failure and log a contextual warning; avoid throwing unhandled errors during static generation.
+
+4. **Error Handling Patterns — Unified error boundary strategy**
+   - Block rendering (`components/blocks/index.tsx`) currently falls back to a silent empty `<div>` with `console.warn`.
+   - Replace silent fallback with an `ErrorBoundary` wrapper around each block render.
+   - Provide a visible fallback UI (e.g., `<BlockError type={block._type} />`) in production so missing blocks do not silently disappear.
+
+5. **Tailwind CSS Patterns — Extract recurring combinations**
+   - Recurring token combinations were identified across landing sections:
+     - Section padding: `px-4 py-10 md:px-12 md:py-16`
+     - Decorative divider: three-part rule with `bg-secondary`
+     - Card hover: `transition-all duration-300 hover:-translate-y-1 hover:shadow-xl motion-reduce:transition-none`
+     - Focus ring: `focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2`
+   - Extract these into `frontend/lib/tailwind-patterns.ts` (or similar) as shared constants or small helper functions.
+   - Keep Tailwind class strings in source for JIT discovery; constants can be string variables, not utility classes.
+
+6. **Image Handling Patterns — Create `SanityImage` wrapper**
+   - Image rendering logic is duplicated across `ArtistsLineup`, `Hero`, `FestivalCityPage`, and other components.
+   - Create a reusable `SanityImage` component that handles:
+     - Sanity CDN `src` with unoptimized Next.js Image
+     - Placeholder fallback (`/images/placeholder.svg`)
+     - Proper `alt` handling (CMS alt when real image, empty string when placeholder)
+     - Standard `sizes` and `fill` behavior
+   - Replace ad-hoc `Image` usages with the wrapper where Sanity asset data is passed.
+
+**What was not included (intentionally lower priority):**
+- Schema shared-fields registry — the Studio already extracts shared fields into `blocks/shared/*.ts`; editorial-facing, not frontend-blocking.
+- No global state — this is a strength for a static site; no action needed.
+
+Exit criteria:
+
+- All components use named exports consistently.
+- All GROQ queries are importable from a single barrel file with standardized naming.
+- All `fetchSanity*` functions handle failures gracefully without unhandled errors.
+- Block rendering uses error boundaries instead of silent empty `<div>` fallbacks.
+- Recurring Tailwind combinations are extracted into shared constants.
+- A reusable `SanityImage` component exists and replaces duplicated image logic.
+- `pnpm --filter frontend typecheck`, `pnpm --filter frontend lint`, and `pnpm --filter frontend build` pass.
+
 ### Phase 6 — Integration and UX polish
 
 Owner: `react-next-component-specialist`
@@ -372,4 +431,4 @@ Exit criteria:
 
 ## Completion notes
 
-In progress. Landing MVP, `ticketInfo`/`/tickets` MVP, root landing route, Phase 5 cinematic UI MVP, and Phase 5.6 Sanity-backed landing artists/partners are implemented as static-safe work. Static export compatibility is implemented for the current MVP and `frontend/out/` is generated. Frontend validation (`typecheck`, `lint`, `build`) passes after clearing stale `.next` route types. Phase 2 content modeling uses dedicated `festivalCity` documents with city-owned references to locations, artists, and partners. ADR 0004 is implemented: `/` renders the festival landing without requiring a generic Sanity `page` slug `index`, `/landing` is removed, and sitemap output includes `/` as the code-owned landing URL. Current build generates `/kamianets` and `/lviv` from Sanity slugs. Deployment automation, content rebuild workflow, homepage SEO ownership, real asset replacement, and final city content validation remain open.
+In progress. Landing MVP, `ticketInfo`/`/tickets` MVP, root landing route, Phase 5 cinematic UI MVP, Phase 5.6 Sanity-backed landing artists/partners, and Phase 5.7 code consistency patterns are implemented as static-safe work. Static export compatibility is implemented for the current MVP and `frontend/out/` is generated. Frontend validation (`typecheck`, `lint`, `build`) passes after clearing stale `.next` route types. Phase 2 content modeling uses dedicated `festivalCity` documents with city-owned references to locations, artists, and partners. ADR 0004 is implemented: `/` renders the festival landing without requiring a generic Sanity `page` slug `index`, `/landing` is removed, and sitemap output includes `/` as the code-owned landing URL. Current build generates `/kamianets` and `/lviv` from Sanity slugs. Phase 5.7 added: queries barrel file (`sanity/queries/index.ts`), consistent fetch error handling, `SanityImage` wrapper, shared Tailwind pattern constants, `ErrorBoundary` for block rendering, and named export standardization for `Blocks`. Deployment automation, content rebuild workflow, homepage SEO ownership, real asset replacement, and final city content validation remain open.

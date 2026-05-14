@@ -1,7 +1,7 @@
 "use client";
 import PortableTextRenderer from "@/components/portable-text-renderer";
 import { Badge } from "@/components/ui/badge";
-import Image from "next/image";
+import { SanityImage } from "@/components/sanity-image";
 import { urlFor } from "@/sanity/lib/image";
 import { motion, useInView } from "motion/react";
 import { useRef } from "react";
@@ -44,18 +44,10 @@ export default function SplitCardsItem({
         <div className="flex items-center gap-2">
           {image && image.asset?._id && (
             <div className="shrink-0 w-10 h-10 flex items-center justify-center">
-              <Image
-                src={urlFor(image).url()}
+              <SanityImage
                 alt={image.alt || ""}
-                placeholder={
-                  image?.asset?.metadata?.lqip &&
-                  image?.asset?.mimeType !== "image/svg+xml"
-                    ? "blur"
-                    : undefined
-                }
-                blurDataURL={image?.asset?.metadata?.lqip || ""}
-                width={image.asset?.metadata?.dimensions?.width || 40}
-                height={image?.asset?.metadata?.dimensions?.height || 40}
+                image={image}
+                src={urlFor(image).url()}
               />
             </div>
           )}

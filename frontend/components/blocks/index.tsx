@@ -1,4 +1,5 @@
 import { PAGE_QUERY_RESULT } from "@/sanity.types";
+import { ErrorBoundary } from "@/components/error-boundary";
 import Hero1 from "@/components/blocks/hero/hero-1";
 import Hero2 from "@/components/blocks/hero/hero-2";
 import SectionHeader from "@/components/blocks/section-header";
@@ -33,20 +34,43 @@ const componentMap: {
   "all-posts": AllPosts,
 };
 
-export default function Blocks({ blocks }: { blocks: Block[] }) {
+export function Blocks({ blocks }: { blocks: Block[] }) {
   return (
     <>
       {blocks?.map((block) => {
         const Component = componentMap[block._type];
         if (!Component) {
-          // Fallback for development/debugging of new component types
           console.warn(
             `No component implemented for block type: ${block._type}`,
           );
-          return <div data-type={block._type} key={block._key} />;
+          return (
+            <div
+              className="rounded-lg border border-border bg-muted/30 p-4 text-sm text-muted-foreground"
+              data-type={block._type}
+              key={block._key}
+            >
+              Missing block: {block._type}
+            </div>
+          );
         }
-        return <Component {...(block as any)} key={block._key} />;
+        return (
+          <ErrorBoundary
+            fallback={
+              <div
+                className="rounded-lg border border-destructive/30 bg-destructive/5 p-4 text-sm text-destructive"
+                data-type={block._type}
+              >
+                Failed to render block: {block._type}
+              </div>
+            }
+            key={block._key}
+          >
+            <Component {...(block as any)} />
+          </ErrorBoundary>
+        );
       })}
     </>
   );
 }
+
+export default Blocks;

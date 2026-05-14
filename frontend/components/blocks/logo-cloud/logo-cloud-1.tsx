@@ -1,6 +1,6 @@
 "use client";
 import SectionContainer from "@/components/ui/section-container";
-import Image from "next/image";
+import { SanityImage } from "@/components/sanity-image";
 import { urlFor } from "@/sanity/lib/image";
 import { Fragment } from "react";
 import { motion } from "motion/react";
@@ -47,19 +47,11 @@ export default function LogoCloud1({
                   key={`${image.asset?._id}-${arrayIndex}-${index}`}
                   className="shrink-0 w-24 h-24 flex items-center justify-center"
                 >
-                  <Image
-                    src={urlFor(image).url()}
+                  <SanityImage
                     alt={image.alt || ""}
+                    image={image}
                     priority={arrayIndex === 0 && index < 3}
-                    placeholder={
-                      image?.asset?.metadata?.lqip &&
-                      image?.asset?.mimeType !== "image/svg+xml"
-                        ? "blur"
-                        : undefined
-                    }
-                    blurDataURL={image?.asset?.metadata?.lqip || ""}
-                    width={image.asset?.metadata?.dimensions?.width || 220}
-                    height={image?.asset?.metadata?.dimensions?.height || 90}
+                    src={urlFor(image).url()}
                   />
                 </div>
               ))}

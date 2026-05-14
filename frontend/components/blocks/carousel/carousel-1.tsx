@@ -8,8 +8,7 @@ import {
   CarouselDots,
   CarouselCounter,
 } from "@/components/ui/carousel";
-import Image from "next/image";
-import { urlFor } from "@/sanity/lib/image";
+import { SanityImageFill } from "@/components/sanity-image";
 import { cn } from "@/lib/utils";
 import { PAGE_QUERY_RESULT } from "@/sanity.types";
 
@@ -65,17 +64,10 @@ export default function Carousel1({
                       size === "one" ? "max-w-[35rem]" : undefined,
                     )}
                   >
-                    <Image
-                      className="object-cover"
-                      src={urlFor(image).url()}
+                    <SanityImageFill
                       alt={image.alt || ""}
-                      fill
-                      placeholder={
-                        image?.asset?.metadata?.lqip ? "blur" : undefined
-                      }
-                      blurDataURL={image.asset?.metadata?.lqip || ""}
+                      image={image}
                       sizes="(min-width: 1024px) 25vw, (min-width: 640px) 50vw, 100vw"
-                      quality={100}
                     />
                   </div>
                 )}
