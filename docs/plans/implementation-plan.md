@@ -1,8 +1,8 @@
 # Plan: Festival static site implementation
 
 Date: 2026-05-07
-Updated: 2026-05-11
-Status: Draft
+Updated: 2026-05-15
+Status: Phase 6 completed; Phase 7 pending
 Owner: Architect
 Implementing agents: `nextjs-ssg-architect`, `sanity-schema-architect`, `sanity-groq-specialist`, `tailwind-ui-implementer`, `accessibility-ui-tester`, `deployment-vercel-engineer`, `test-automator`
 
@@ -93,6 +93,7 @@ The landing and ticket MVP routes are static-safe. Before launch, the festival l
 ### Phase 6 — Integration and UX polish
 
 Owner: `react-next-component-specialist`
+Status: Completed 2026-05-15
 
 1. Configure `next/link` usage for smooth client-side navigation between city pages.
 2. Ensure city theme transitions are smooth and do not depend on page reloads.
@@ -103,7 +104,7 @@ Owner: `react-next-component-specialist`
 
 Exit criteria:
 
-- Navigation, theme transitions, forms, images, and metadata work in local static build output.
+- Navigation, theme transitions, forms, images, and metadata work in production-like static build output.
 
 ### Phase 7 — Testing, export validation, and deployment
 
@@ -138,13 +139,13 @@ Exit criteria:
 - [x] `pnpm --filter frontend build` passes.
 - [x] `frontend/out/` contains expected route files.
 - [x] No exported route depends on Next.js API routes or server actions.
-- [ ] Sanity images render from `cdn.sanity.io` with unoptimized Next image output.
+- [x] Sanity images render from `cdn.sanity.io` with unoptimized Next image output.
 - [x] `/` renders the festival landing without requiring a generic Sanity `page` document with slug `index`.
 - [x] `/landing` is removed, repurposed, or excluded from canonical discovery after the root route swap.
 - [x] `/` renders artists from Sanity data instead of the hardcoded `ArtistsLineup` array.
 - [x] `/` includes a visible Sanity-backed partners section.
-- [ ] `/kamianets` and `/lviv` render city-specific data and themes.
-- [ ] Newsletter/subscription flow works without exposing secrets.
+- [x] `/kamianets` and `/lviv` render city-specific data and themes.
+- [x] Newsletter/subscription flow works without exposing secrets.
 - [x] Accessibility review passes for Phase 5 hero cards, buttons, links, lists, and heading hierarchy.
 - [x] SEO metadata routes build statically (`robots.txt`, `sitemap.xml`).
 - [ ] GitHub Actions deployment to `adm.tools` is tested.
@@ -175,4 +176,4 @@ Exit criteria:
 
 ## Completion notes
 
-In progress. Landing MVP, `ticketInfo`/`/tickets` MVP, root landing route, Phase 5 cinematic UI MVP, Phase 5.6 Sanity-backed landing artists/partners, and Phase 5.7 code consistency patterns are implemented as static-safe work. Static export compatibility is implemented for the current MVP and `frontend/out/` is generated. Frontend validation (`typecheck`, `lint`, `build`) passes after clearing stale `.next` route types. Phase 2 content modeling uses dedicated `festivalCity` documents with city-owned references to locations, artists, and partners. ADR 0004 is implemented: `/` renders the festival landing without requiring a generic Sanity `page` slug `index`, `/landing` is removed, and sitemap output includes `/` as the code-owned landing URL. Current build generates `/kamianets` and `/lviv` from Sanity slugs. Phase 5.7 added: queries barrel file (`sanity/queries/index.ts`), consistent fetch error handling, `SanityImage` wrapper, shared Tailwind pattern constants, `ErrorBoundary` for block rendering, and named export standardization for `Blocks`. Deployment automation, content rebuild workflow, homepage SEO ownership, real asset replacement, and final city content validation remain open.
+In progress. Landing MVP, `ticketInfo`/`/tickets` MVP, root landing route, Phase 5 cinematic UI MVP, Phase 5.6 Sanity-backed landing artists/partners, Phase 5.7 code consistency patterns, and Phase 6 integration/UX polish are implemented as static-safe work. Static export compatibility is implemented for the current MVP and `frontend/out/` is generated. Frontend validation (`typegen`, `typecheck`, `lint`, `build`) passes. Phase 2 content modeling uses dedicated `festivalCity` documents with city-owned references to locations, artists, and partners. ADR 0004 is implemented: `/` renders the festival landing without requiring a generic Sanity `page` slug `index`, `/landing` is removed, and sitemap output includes `/` as the code-owned landing URL. Current production-like build generates `/`, `/kamianets`, `/lviv`, `/tickets`, `404.html`, `sitemap.xml`, and `robots.txt`; canonical, Open Graph, Twitter, sitemap, and robots URLs resolve against `https://adm.tools` when `NEXT_PUBLIC_SITE_URL=https://adm.tools` and `NEXT_PUBLIC_SITE_ENV=production` are set. Phase 6 added static-safe site URL helpers, city-to-city navigation, smooth theme transitions, production metadata hardening, static-safe newsletter configuration, accessible newsletter/city-nav fixes, and query/type updates for page titles and post excerpts. Deployment automation, content rebuild workflow, homepage SEO ownership, real asset replacement, and final `adm.tools` host behavior validation remain open.
