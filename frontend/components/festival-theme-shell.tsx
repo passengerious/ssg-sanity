@@ -11,7 +11,13 @@ export function FestivalThemeShell({
   theme: FestivalTheme;
 }) {
   return (
-    <div className={cn("festival-theme", className)} data-theme={theme}>
+    <div
+      className={cn(
+        "festival-theme transition-colors duration-300 motion-reduce:transition-none",
+        className,
+      )}
+      data-theme={theme}
+    >
       {children}
     </div>
   );

@@ -71,7 +71,7 @@ export const Hero = ({ cities, onThemeChange, onThemeReset, theme }: HeroProps) 
           ref={cityGridRef}
           tabIndex={-1}
         >
-          {cityCards.map((card) => {
+          {cityCards.map((card, index) => {
             const cardTheme = card.themeKey;
             const selected = theme === cardTheme;
 
@@ -86,6 +86,7 @@ export const Hero = ({ cities, onThemeChange, onThemeReset, theme }: HeroProps) 
                   data-selected={selected ? "true" : undefined}
                   href={`/${card.slug}`}
                   onMouseEnter={() => onThemeChange(cardTheme)}
+                  prefetch
                 >
                   {/* Image is decorative; visible text below supplies the link label. */}
                   <div className="relative aspect-[16/10] overflow-hidden">
@@ -93,6 +94,7 @@ export const Hero = ({ cities, onThemeChange, onThemeReset, theme }: HeroProps) 
                       alt=""
                       className="transition-transform duration-700 group-hover:scale-110 motion-reduce:transition-none"
                       image={card.heroImage}
+                      priority={index < 2}
                       sizes="(min-width: 768px) 384px, calc(100vw - 80px)"
                     />
                     {/* Gradient overlay on image */}
