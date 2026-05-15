@@ -1,17 +1,37 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { ArrowLeft, ExternalLink, Ticket } from "lucide-react";
+import { absoluteUrl } from "@/lib/site-url";
 import { fetchSanityTicketInfo } from "@/sanity/lib/fetch";
 
 export const metadata: Metadata = {
   title: "Квитки",
   description:
     "Інформація про квитки на етно-фестиваль Країна Мрій 2026 та посилання на зовнішній сервіс продажу.",
+  alternates: {
+    canonical: "/tickets",
+  },
   openGraph: {
     title: "Квитки — Країна Мрій 2026",
     description:
       "Дізнайтеся актуальну ціну та перейдіть до зовнішнього сервісу продажу квитків.",
+    images: [
+      {
+        url: absoluteUrl("/images/og-image.jpg"),
+        width: 1200,
+        height: 630,
+      },
+    ],
     locale: "uk_UA",
+    type: "website",
+    url: "/tickets",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Квитки — Країна Мрій 2026",
+    description:
+      "Дізнайтеся актуальну ціну та перейдіть до зовнішнього сервісу продажу квитків.",
+    images: [absoluteUrl("/images/og-image.jpg")],
   },
 };
 

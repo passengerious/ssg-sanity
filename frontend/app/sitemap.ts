@@ -1,5 +1,6 @@
 import type { MetadataRoute } from "next";
 import { groq } from "next-sanity";
+import { getSiteUrl } from "@/lib/site-url";
 import { client } from "@/sanity/lib/client";
 
 const VIEWABLE_TYPES = ["page", "post", "festivalCity"] as const;
@@ -35,7 +36,7 @@ const SITEMAP_QUERY = groq`
 `;
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL!.replace(/\/$/, "");
+  const baseUrl = getSiteUrl();
   const data = await client.withConfig({ stega: false }).fetch(SITEMAP_QUERY, {
     baseUrl,
     viewableTypes: [...VIEWABLE_TYPES],
@@ -47,6 +48,12 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       lastModified: new Date(),
       changeFrequency: "daily",
       priority: 1,
+    },
+    {
+      url: `${baseUrl}/tickets`,
+      lastModified: new Date(),
+      changeFrequency: "weekly",
+      priority: 0.9,
     },
     ...(data || []),
   ];

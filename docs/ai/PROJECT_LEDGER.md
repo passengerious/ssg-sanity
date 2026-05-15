@@ -1,17 +1,17 @@
 # Project Ledger
 
-Last updated: 2026-05-12
+Last updated: 2026-05-15
 
 ## Current phase
 
-UI implementation / launch polish
+Phase 7 testing, export validation, and deployment preparation
 
 ## Active priorities
 
-1. Validate the canonical `/` landing export and decide whether `/landing` needs a host-level redirect.
-2. Validate and deploy `frontend/out/` to `adm.tools`.
+1. Validate and deploy `frontend/out/` to `adm.tools` with `NEXT_PUBLIC_SITE_URL=https://adm.tools` and `NEXT_PUBLIC_SITE_ENV=production`.
+2. Confirm `adm.tools` serves flat export files such as `kamianets.html`, `lviv.html`, and `tickets.html` for clean URLs.
 3. Define the rebuild workflow for Sanity content updates.
-4. Validate Sanity-backed `festivalCity` content at `/kamianets` and `/lviv` in the exported build.
+4. Decide whether `/landing` needs a host-level redirect to `/`.
 5. Replace placeholder imagery with approved festival assets where available.
 6. Treat `.stitch/DESIGN.md` as the source of truth for festival UI design tokens and page styling.
 7. Use the new `ticketInfo` singleton as the MVP source for `/tickets` ticket CTA content.
@@ -20,7 +20,7 @@ UI implementation / launch polish
 
 | Plan                                | Status          | Owner     | Updated    |
 | ----------------------------------- | --------------- | --------- | ---------- |
-| `docs/plans/implementation-plan.md` | Draft           | Architect | 2026-05-11 |
+| `docs/plans/implementation-plan.md` | Phase 6 completed; Phase 7 pending | Architect | 2026-05-15 |
 | `docs/plans/stitch-task.md`         | MVP implemented | UI agent  | 2026-05-08 |
 | `docs/logs/fix-hero-visibility.md`  | Completed       | Architect | 2026-05-09 |
 
@@ -53,11 +53,13 @@ UI implementation / launch polish
 | Legacy inbound links to `/landing` may 404 after route removal |      Low | Architect  | Add a host-level redirect to `/` if `/landing` was externally shared                                     |
 | Placeholder imagery limits cinematic polish                    |   Medium | UI/content | Replace `/images/placeholder.svg` with approved city, artist, founder, and festival assets before launch |
 | Landing artist and partner cards lose multi-city context when the same reference appears in multiple cities | Low | UI/GROQ | Current MVP de-duplicates by `_id` and keeps first city context; aggregate city labels later if editorial needs require it |
+| `adm.tools` clean URL behavior for flat export files is unverified | Medium | Deployment | Validate `/kamianets`, `/lviv`, and `/tickets` against deployed `frontend/out/`; consider `trailingSlash` only if host requires directories |
 
 ## Recent significant changes
 
 | Date       | Change                                                                       | Log                                                                |
 | ---------- | ---------------------------------------------------------------------------- | ------------------------------------------------------------------ |
+| 2026-05-15 | Completed Phase 6 integration/UX polish for static-safe metadata, city navigation, newsletter behavior, and production-like export validation | `docs/logs/2026-05.md` |
 | 2026-05-12 | Implemented Phase 5.7 code consistency patterns (barrel exports, error handling, SanityImage, Tailwind patterns, ErrorBoundary) | `docs/plans/implementation-plan.md` |
 | 2026-05-09 | Standardized section spacing and fixed hero visibility project-wide  | `docs/logs/fix-hero-visibility.md`                                |
 | 2026-05-11 | Implemented Sanity-backed landing artists and visible partners section | `docs/logs/landing-sanity-artists-partners-plan.md`                |

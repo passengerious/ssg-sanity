@@ -4,6 +4,7 @@ import { resolveTicketUrl } from "@/lib/tickets";
 import {
   fetchSanityFestivalCitiesStaticParams,
   fetchSanityFestivalCityBySlug,
+  fetchSanityLandingCities,
   fetchSanityPageBySlug,
   fetchSanityPagesStaticParams,
   fetchSanityTicketInfo,
@@ -53,10 +54,7 @@ export async function generateMetadata(props: {
   const page = await fetchSanityPageBySlug({ slug: params.slug });
 
   if (!page) {
-    return {
-      title: `Missing Sanity page: ${params.slug}`,
-      robots: "noindex, nofollow",
-    };
+    notFound();
   }
 
   return generatePageMetadata({ page, slug: params.slug });
@@ -69,10 +67,15 @@ export default async function Page(props: {
   const city = await fetchSanityFestivalCityBySlug({ slug: params.slug });
 
   if (city) {
-    const ticketInfo = await fetchSanityTicketInfo();
+    const [ticketInfo, festivalCities] = await Promise.all([
+      fetchSanityTicketInfo(),
+      fetchSanityLandingCities(),
+    ]);
+
     return (
       <FestivalCityPage
         city={city}
+        festivalCities={festivalCities}
         ticketUrl={resolveTicketUrl(city, ticketInfo)}
       />
     );
