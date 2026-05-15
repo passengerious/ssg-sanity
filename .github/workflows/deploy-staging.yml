@@ -1,0 +1,213 @@
+name: Deploy staging static site
+
+on:
+  workflow_dispatch:
+    inputs:
+      confirm_deploy:
+        description: Type "deploy" to confirm staging deployment
+        required: true
+        type: string
+
+permissions:
+  contents: read
+
+concurrency:
+  group: deploy-staging
+  cancel-in-progress: false
+
+env:
+  NODE_VERSION: 24
+  PNPM_VERSION: 10.19.0
+
+jobs:
+  build-and-deploy:
+    name: Build and deploy staging
+    runs-on: ubuntu-latest
+    environment:
+      name: staging
+      url: ${{ vars.NEXT_PUBLIC_SITE_URL }}
+    env:
+      NEXT_PUBLIC_SITE_URL: ${{ vars.NEXT_PUBLIC_SITE_URL }}
+      NEXT_PUBLIC_SITE_ENV: ${{ vars.NEXT_PUBLIC_SITE_ENV }}
+      NEXT_PUBLIC_SANITY_API_VERSION: ${{ vars.NEXT_PUBLIC_SANITY_API_VERSION }}
+      NEXT_PUBLIC_SANITY_PROJECT_ID: ${{ vars.NEXT_PUBLIC_SANITY_PROJECT_ID }}
+      NEXT_PUBLIC_SANITY_DATASET: ${{ vars.NEXT_PUBLIC_SANITY_DATASET }}
+      NEXT_PUBLIC_STUDIO_URL: ${{ vars.NEXT_PUBLIC_STUDIO_URL }}
+      SANITY_STUDIO_PROJECT_ID: ${{ vars.NEXT_PUBLIC_SANITY_PROJECT_ID }}
+      SANITY_STUDIO_DATASET: ${{ vars.NEXT_PUBLIC_SANITY_DATASET }}
+      SSH_HOST: ${{ vars.SSH_HOST }}
+      SSH_USER: ${{ vars.SSH_USER }}
+      SSH_PORT: ${{ vars.SSH_PORT }}
+      DEPLOY_PATH: ${{ vars.DEPLOY_PATH }}
+
+    steps:
+      - name: Confirm deployment
+        if: ${{ inputs.confirm_deploy != 'deploy' }}
+        run: |
+          echo 'Deployment not confirmed. Re-run and type "deploy".'
+          exit 1
+
+      - name: Validate required environment
+        env:
+          HAS_SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY != '' }}
+          HAS_SSH_KNOWN_HOSTS: ${{ secrets.SSH_KNOWN_HOSTS != '' }}
+        run: |
+          set -euo pipefail
+          required_vars=(
+            NEXT_PUBLIC_SITE_URL
+            NEXT_PUBLIC_SITE_ENV
+            NEXT_PUBLIC_SANITY_PROJECT_ID
+            NEXT_PUBLIC_SANITY_DATASET
+            SSH_HOST
+            SSH_USER
+            SSH_PORT
+            DEPLOY_PATH
+          )
+
+          for name in "${required_vars[@]}"; do
+            if [ -z "${!name:-}" ]; then
+              echo "Missing required GitHub environment variable: $name"
+              exit 1
+            fi
+          done
+
+          if [ "$HAS_SSH_PRIVATE_KEY" != "true" ]; then
+            echo "Missing required GitHub secret: SSH_PRIVATE_KEY"
+            exit 1
+          fi
+
+          if [ "$HAS_SSH_KNOWN_HOSTS" != "true" ]; then
+            echo "Missing required GitHub secret: SSH_KNOWN_HOSTS"
+            exit 1
+          fi
+
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: ${{ env.PNPM_VERSION }}
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Generate Sanity types
+        run: pnpm typegen
+
+      - name: Typecheck frontend
+        run: pnpm --filter frontend typecheck
+
+      - name: Lint frontend
+        run: pnpm --filter frontend lint
+
+      - name: Build frontend static export
+        run: pnpm --filter frontend build
+
+      - name: Verify static export output
+        run: |
+          set -euo pipefail
+          OUT="frontend/out"
+
+          for file in index.html 404.html sitemap.xml robots.txt; do
+            test -f "$OUT/$file" || {
+              echo "Missing required export file: $OUT/$file"
+              exit 1
+            }
+          done
+
+          for file in kamianets.html lviv.html tickets.html; do
+            test -f "$OUT/$file" || {
+              echo "Missing expected route file: $OUT/$file"
+              exit 1
+            }
+          done
+
+          test -d "$OUT/_next" || {
+            echo "Missing static assets directory: $OUT/_next"
+            exit 1
+          }
+
+          if grep -R "http://localhost:3000" "$OUT"; then
+            echo "Export contains localhost canonical/metadata URLs."
+            exit 1
+          fi
+
+          if find "$OUT" -path "*/api/*" -print -quit | grep -q .; then
+            echo "Export contains an api/ runtime path."
+            exit 1
+          fi
+
+          echo "Static export verified."
+          find "$OUT" -maxdepth 2 -type f | sort
+
+      - name: Configure SSH
+        run: |
+          set -euo pipefail
+          mkdir -p ~/.ssh
+          printf '%s\n' "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/deploy_key
+          printf '%s\n' "${{ secrets.SSH_KNOWN_HOSTS }}" > ~/.ssh/known_hosts
+          chmod 700 ~/.ssh
+          chmod 600 ~/.ssh/deploy_key ~/.ssh/known_hosts
+
+      - name: Backup current webroot
+        run: |
+          set -euo pipefail
+          TIMESTAMP="$(date -u +%Y%m%d-%H%M%S)"
+          echo "DEPLOY_BACKUP_PATH=${DEPLOY_PATH%/}.backup-${TIMESTAMP}" >> "$GITHUB_ENV"
+
+          ssh -i ~/.ssh/deploy_key \
+            -p "$SSH_PORT" \
+            -o StrictHostKeyChecking=yes \
+            "$SSH_USER@$SSH_HOST" \
+            "DEPLOY_PATH='$DEPLOY_PATH' TIMESTAMP='$TIMESTAMP' bash -s" <<'REMOTE'
+          set -euo pipefail
+          BACKUP_PATH="${DEPLOY_PATH%/}.backup-${TIMESTAMP}"
+
+          test -d "$DEPLOY_PATH" || {
+            echo "Deploy path does not exist: $DEPLOY_PATH"
+            exit 1
+          }
+
+          test -w "$DEPLOY_PATH" || {
+            echo "Deploy path is not writable: $DEPLOY_PATH"
+            exit 1
+          }
+
+          cp -a "$DEPLOY_PATH" "$BACKUP_PATH"
+          echo "Backup created: $BACKUP_PATH"
+          REMOTE
+
+      - name: Deploy static files
+        run: |
+          set -euo pipefail
+          rsync -az --delete \
+            -e "ssh -i ~/.ssh/deploy_key -p $SSH_PORT -o StrictHostKeyChecking=yes" \
+            frontend/out/ \
+            "$SSH_USER@$SSH_HOST:$DEPLOY_PATH/"
+
+      - name: Verify deployed webroot
+        run: |
+          set -euo pipefail
+          ssh -i ~/.ssh/deploy_key \
+            -p "$SSH_PORT" \
+            -o StrictHostKeyChecking=yes \
+            "$SSH_USER@$SSH_HOST" \
+            "DEPLOY_PATH='$DEPLOY_PATH' bash -s" <<'REMOTE'
+          set -euo pipefail
+          test -f "$DEPLOY_PATH/index.html"
+          test -f "$DEPLOY_PATH/404.html"
+          test -f "$DEPLOY_PATH/sitemap.xml"
+          test -f "$DEPLOY_PATH/robots.txt"
+          test -d "$DEPLOY_PATH/_next"
+          ls -la "$DEPLOY_PATH" | sed -n '1,40p'
+          REMOTE
+
+          echo "Staging deploy complete."
+          echo "Backup retained at: $DEPLOY_BACKUP_PATH"

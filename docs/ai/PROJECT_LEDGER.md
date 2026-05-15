@@ -8,19 +8,20 @@ Phase 7 testing, export validation, and deployment preparation
 
 ## Active priorities
 
-1. Validate and deploy `frontend/out/` to `adm.tools` with `NEXT_PUBLIC_SITE_URL=https://adm.tools` and `NEXT_PUBLIC_SITE_ENV=production`.
-2. Confirm `adm.tools` serves flat export files such as `kamianets.html`, `lviv.html`, and `tickets.html` for clean URLs.
-3. Define the rebuild workflow for Sanity content updates.
-4. Decide whether `/landing` needs a host-level redirect to `/`.
-5. Replace placeholder imagery with approved festival assets where available.
-6. Treat `.stitch/DESIGN.md` as the source of truth for festival UI design tokens and page styling.
-7. Use the new `ticketInfo` singleton as the MVP source for `/tickets` ticket CTA content.
+1. Implement GitHub Actions deployment that builds `frontend/out/` and syncs its contents to `/home/admin/<STAGING-DOMAIN>/www/`.
+2. Build staging with the actual staging website URL in `NEXT_PUBLIC_SITE_URL` and `NEXT_PUBLIC_SITE_ENV=development` unless staging should be indexable.
+3. Confirm the static host serves flat export files such as `kamianets.html`, `lviv.html`, and `tickets.html` for clean URLs.
+4. Define the rebuild workflow for Sanity content updates.
+5. Decide whether `/landing` needs a host-level redirect to `/`.
+6. Replace placeholder imagery with approved festival assets where available.
+7. Treat `.stitch/DESIGN.md` as the source of truth for festival UI design tokens and page styling.
+8. Use the new `ticketInfo` singleton as the MVP source for `/tickets` ticket CTA content.
 
 ## Active plans
 
 | Plan                                | Status          | Owner     | Updated    |
 | ----------------------------------- | --------------- | --------- | ---------- |
-| `docs/plans/implementation-plan.md` | Phase 6 completed; Phase 7 pending | Architect | 2026-05-15 |
+| `docs/plans/implementation-plan.md` | Phase 7 workflow added; staging deployment pending | Architect | 2026-05-15 |
 | `docs/plans/stitch-task.md`         | MVP implemented | UI agent  | 2026-05-08 |
 | `docs/logs/fix-hero-visibility.md`  | Completed       | Architect | 2026-05-09 |
 
@@ -53,12 +54,13 @@ Phase 7 testing, export validation, and deployment preparation
 | Legacy inbound links to `/landing` may 404 after route removal |      Low | Architect  | Add a host-level redirect to `/` if `/landing` was externally shared                                     |
 | Placeholder imagery limits cinematic polish                    |   Medium | UI/content | Replace `/images/placeholder.svg` with approved city, artist, founder, and festival assets before launch |
 | Landing artist and partner cards lose multi-city context when the same reference appears in multiple cities | Low | UI/GROQ | Current MVP de-duplicates by `_id` and keeps first city context; aggregate city labels later if editorial needs require it |
-| `adm.tools` clean URL behavior for flat export files is unverified | Medium | Deployment | Validate `/kamianets`, `/lviv`, and `/tickets` against deployed `frontend/out/`; consider `trailingSlash` only if host requires directories |
+| Static host clean URL behavior for flat export files is unverified | Medium | Deployment | Validate `/kamianets`, `/lviv`, and `/tickets` against deployed `frontend/out/`; consider `trailingSlash` only if host requires directories |
 
 ## Recent significant changes
 
 | Date       | Change                                                                       | Log                                                                |
 | ---------- | ---------------------------------------------------------------------------- | ------------------------------------------------------------------ |
+| 2026-05-15 | Scoped Phase 7 GitHub Actions deployment plan for syncing `frontend/out/` to host `www/` webroot | `docs/logs/2026-05.md` |
 | 2026-05-15 | Completed Phase 6 integration/UX polish for static-safe metadata, city navigation, newsletter behavior, and production-like export validation | `docs/logs/2026-05.md` |
 | 2026-05-12 | Implemented Phase 5.7 code consistency patterns (barrel exports, error handling, SanityImage, Tailwind patterns, ErrorBoundary) | `docs/plans/implementation-plan.md` |
 | 2026-05-09 | Standardized section spacing and fixed hero visibility project-wide  | `docs/logs/fix-hero-visibility.md`                                |
