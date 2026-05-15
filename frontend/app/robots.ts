@@ -1,4 +1,5 @@
 import { MetadataRoute } from "next";
+import { absoluteUrl } from "@/lib/site-url";
 
 export const dynamic = "force-static";
 
@@ -10,6 +11,6 @@ export default function robots(): MetadataRoute.Robots {
         allow: "/",
       },
     ],
-    sitemap: [`${process.env.NEXT_PUBLIC_SITE_URL}/sitemap.xml`],
+    sitemap: [absoluteUrl("/sitemap.xml")],
   };
 }

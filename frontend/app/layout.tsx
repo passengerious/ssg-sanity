@@ -1,13 +1,14 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import { cn } from "@/lib/utils";
+import { absoluteUrl, getSiteUrl } from "@/lib/site-url";
 import { ThemeProvider } from "@/components/theme-provider";
 import { Toaster } from "@/components/ui/sonner";
 
 const isProduction = process.env.NEXT_PUBLIC_SITE_ENV === "production";
 
 export const metadata: Metadata = {
-  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL!),
+  metadataBase: new URL(getSiteUrl()),
   title: {
     template: "%s | Країна Мрій",
     default: "Країна Мрій 2026",
@@ -23,7 +24,7 @@ export const metadata: Metadata = {
       "Етно-фестиваль, де традиції творять майбутнє української культури.",
     images: [
       {
-        url: `${process.env.NEXT_PUBLIC_SITE_URL}/images/og-image.jpg`,
+        url: absoluteUrl("/images/og-image.jpg"),
         width: 1200,
         height: 630,
       },
