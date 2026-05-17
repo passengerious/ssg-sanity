@@ -96,7 +96,7 @@ export function FestivalCityPage({
                 href="/tickets/"
               >
                 <Ticket aria-hidden="true" className="size-5" />
-                Деталі квитків
+                КУПИТИ КВИТКИ
                 <ArrowRight
                   aria-hidden="true"
                   className="size-4 transition-transform duration-300 group-hover:translate-x-1 motion-reduce:transition-none"

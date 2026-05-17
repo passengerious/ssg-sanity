@@ -62,6 +62,7 @@ Phase 7 staging route-output fix and update-loop validation
 
 | Date       | Change                                                                       | Log                                                                |
 | ---------- | ---------------------------------------------------------------------------- | ------------------------------------------------------------------ |
+| 2026-05-17 | Replaced landing-wide hover theme mutation with local Epic/Heroic city-card accents while keeping plain-anchor city navigation | `docs/logs/2026-05.md` |
 | 2026-05-17 | Added deploy-managed `.htaccess` generation to preserve HTTPS route redirects and custom 404 handling across `rsync --delete` | `docs/logs/2026-05.md` |
 | 2026-05-17 | Locally validated directory-style static export route output before staging redeploy | `docs/logs/2026-05.md` |
 | 2026-05-17 | Accepted directory-style static export after staging host mixed-content and navigation failures with flat route files | `docs/logs/2026-05.md` |

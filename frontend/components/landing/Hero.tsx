@@ -1,19 +1,38 @@
 "use client";
 
-import { useRef } from "react";
 import { SanityImageFill } from "@/components/sanity-image";
 import { isFestivalTheme, type FestivalTheme } from "@/lib/festival-themes";
+import { cn } from "@/lib/utils";
 import type { LANDING_CITIES_QUERY_RESULT } from "@/sanity.types";
 
 type HeroProps = {
   cities: LANDING_CITIES_QUERY_RESULT;
-  theme: FestivalTheme;
-  onThemeChange: (theme: FestivalTheme) => void;
-  onThemeReset: () => void;
 };
 
-export const Hero = ({ cities, onThemeChange, onThemeReset, theme }: HeroProps) => {
-  const cityGridRef = useRef<HTMLUListElement>(null);
+const cityCardTheme: Record<
+  FestivalTheme,
+  {
+    border: string;
+    glow: string;
+    overlay: string;
+    text: string;
+  }
+> = {
+  epic: {
+    border: "border-[#8C9B5C]/70 hover:border-[#8C9B5C] focus-visible:ring-[#8C9B5C]",
+    glow: "after:bg-[#8C9B5C]/20 group-hover:after:bg-[#8C9B5C]/30",
+    overlay: "from-[#1f2a16]/90 via-[#8C9B5C]/45 to-transparent",
+    text: "text-[#dce7b0]",
+  },
+  heroic: {
+    border: "border-[#BF2A26]/70 hover:border-[#BF2A26] focus-visible:ring-[#BF2A26]",
+    glow: "after:bg-[#BF2A26]/20 group-hover:after:bg-[#BF2A26]/30",
+    overlay: "from-[#32100e]/90 via-[#BF2A26]/45 to-transparent",
+    text: "text-[#ffd1c8]",
+  },
+};
+
+export const Hero = ({ cities }: HeroProps) => {
   const cityCards = cities.flatMap((city) => {
     if (!city.slug || !isFestivalTheme(city.themeKey)) return [];
     return [{ ...city, slug: city.slug, themeKey: city.themeKey }];
@@ -57,32 +76,19 @@ export const Hero = ({ cities, onThemeChange, onThemeReset, theme }: HeroProps) 
         <ul
           className="mx-auto mt-8 grid w-full max-w-4xl grid-cols-1 gap-6 md:grid-cols-2"
           id="cities"
-          onBlur={(event) => {
-            if (!event.currentTarget.contains(event.relatedTarget)) {
-              onThemeReset();
-            }
-          }}
-          onMouseLeave={() => {
-            if (!cityGridRef.current?.contains(document.activeElement)) {
-              onThemeReset();
-            }
-          }}
-          ref={cityGridRef}
-          tabIndex={-1}
         >
           {cityCards.map((card, index) => {
             const cardTheme = card.themeKey;
-            const selected = theme === cardTheme;
+            const accent = cityCardTheme[cardTheme];
 
             return (
               <li key={card._id || card.slug}>
                 <a
-                  className={`group relative block overflow-hidden rounded-2xl border bg-card p-0 text-left shadow-sm transition-all duration-300 hover:shadow-2xl focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-4 focus-visible:ring-offset-background motion-reduce:transition-none ${
-                    selected
-                      ? "border-primary ring-2 ring-primary shadow-lg"
-                      : "border-border hover:border-primary/40"
-                  }`}
-                  data-selected={selected ? "true" : undefined}
+                  className={cn(
+                    "group relative block overflow-hidden rounded-2xl border bg-card p-0 text-left shadow-sm transition-all duration-300 after:pointer-events-none after:absolute after:inset-0 after:opacity-0 after:transition-opacity after:duration-300 hover:-translate-y-1 hover:shadow-2xl hover:after:opacity-100 focus-visible:ring-2 focus-visible:ring-offset-4 focus-visible:ring-offset-background motion-reduce:transition-none motion-reduce:hover:translate-y-0",
+                    accent.border,
+                    accent.glow,
+                  )}
                   href={`/${card.slug}/`}
                 >
                   {/* Image is decorative; visible text below supplies the link label. */}
@@ -95,7 +101,7 @@ export const Hero = ({ cities, onThemeChange, onThemeReset, theme }: HeroProps) 
                       sizes="(min-width: 768px) 384px, calc(100vw - 80px)"
                     />
                     {/* Gradient overlay on image */}
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/45 to-transparent" aria-hidden="true" />
+                    <div className={cn("absolute inset-0 bg-gradient-to-t", accent.overlay)} aria-hidden="true" />
                   </div>
 
                   {/* Text overlay on image bottom */}
@@ -103,7 +109,13 @@ export const Hero = ({ cities, onThemeChange, onThemeReset, theme }: HeroProps) 
                     <span className="block font-serif text-2xl font-bold leading-tight text-white drop-shadow-lg md:text-3xl">
                       {card.title || card.cityName}
                     </span>
-                    <p className="mt-1 text-sm font-medium text-white/80">{card.cityName}</p>
+                    <p className={cn("mt-1 text-sm font-bold", accent.text)}>{card.cityName}</p>
+                    <span className="mt-4 inline-flex items-center text-xs font-bold uppercase tracking-[0.16em] text-white/85 transition-colors group-hover:text-white">
+                      Відкрити місто
+                      <span className="ml-2 transition-transform duration-300 group-hover:translate-x-1 motion-reduce:transition-none" aria-hidden="true">
+                        →
+                      </span>
+                    </span>
                   </div>
                 </a>
               </li>
