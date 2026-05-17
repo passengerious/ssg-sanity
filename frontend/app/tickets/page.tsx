@@ -9,7 +9,7 @@ export const metadata: Metadata = {
   description:
     "Інформація про квитки на етно-фестиваль Країна Мрій 2026 та посилання на зовнішній сервіс продажу.",
   alternates: {
-    canonical: "/tickets",
+    canonical: "/tickets/",
   },
   openGraph: {
     title: "Квитки — Країна Мрій 2026",
@@ -24,7 +24,7 @@ export const metadata: Metadata = {
     ],
     locale: "uk_UA",
     type: "website",
-    url: "/tickets",
+    url: "/tickets/",
   },
   twitter: {
     card: "summary_large_image",

@@ -37,7 +37,7 @@ export function generatePageMetadata({
   const title = page?.meta?.title || page?.title || page?.cityName;
   const description =
     page?.meta?.description || page?.description || page?.excerpt || page?.tagline;
-  const canonicalUrl = absoluteUrl(slug === "index" ? "/" : `/${slug}`);
+  const canonicalUrl = absoluteUrl(slug === "index" ? "/" : `/${slug}/`);
   const metadataImage = page?.meta?.image?.asset ? page.meta.image : null;
   const imageUrl = metadataImage
     ? urlFor(metadataImage).quality(100).url()

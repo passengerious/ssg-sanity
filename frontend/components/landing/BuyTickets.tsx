@@ -32,7 +32,7 @@ export const BuyTickets = () => {
           <Link
             aria-describedby="tickets-note"
             className="group inline-flex items-center gap-3 rounded-xl bg-background px-10 py-4 font-serif text-xl font-bold text-primary shadow-lg transition-all duration-300 hover:shadow-xl hover:shadow-black/20 focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-primary motion-reduce:transition-none md:px-12 md:py-5 md:text-2xl"
-            href="/tickets"
+            href="/tickets/"
           >
             ДЕТАЛІ КВИТКІВ
             <ArrowRight

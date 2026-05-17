@@ -1,27 +1,27 @@
 # Project Ledger
 
-Last updated: 2026-05-15
+Last updated: 2026-05-17
 
 ## Current phase
 
-Phase 7 testing, export validation, and deployment preparation
+Phase 7 staging route-output fix and update-loop validation
 
 ## Active priorities
 
-1. Implement GitHub Actions deployment that builds `frontend/out/` and syncs its contents to `/home/admin/<STAGING-DOMAIN>/www/`.
-2. Build staging with the actual staging website URL in `NEXT_PUBLIC_SITE_URL` and `NEXT_PUBLIC_SITE_ENV=development` unless staging should be indexable.
-3. Confirm the static host serves flat export files such as `kamianets.html`, `lviv.html`, and `tickets.html` for clean URLs.
-4. Define the rebuild workflow for Sanity content updates.
-5. Decide whether `/landing` needs a host-level redirect to `/`.
-6. Replace placeholder imagery with approved festival assets where available.
-7. Treat `.stitch/DESIGN.md` as the source of truth for festival UI design tokens and page styling.
-8. Use the new `ticketInfo` singleton as the MVP source for `/tickets` ticket CTA content.
+1. Redeploy staging with directory-style route output (`trailingSlash: true`) and verify `/kamianets/`, `/lviv/`, and `/tickets/` browser navigation.
+2. Resolve staging mixed-content browser errors by removing host redirects from HTTPS pages to `http://` slash routes.
+3. Verify the staging deployment/update loop: push or safe change → workflow build → `frontend/out/` sync to `/home/admin/<STAGING-DOMAIN>/www/` → public staging verification.
+4. Keep staging non-indexable with `NEXT_PUBLIC_SITE_ENV=development` unless explicitly changed.
+5. Define the rebuild workflow for Sanity content updates and decide whether it remains manual workflow dispatch or becomes webhook-triggered.
+6. Decide whether `/landing` needs a host-level redirect to `/`.
+7. Replace placeholder imagery with approved festival assets where available.
+8. Treat `.stitch/DESIGN.md` as the source of truth for festival UI design tokens and page styling.
 
 ## Active plans
 
 | Plan                                | Status          | Owner     | Updated    |
 | ----------------------------------- | --------------- | --------- | ---------- |
-| `docs/plans/implementation-plan.md` | Phase 7 workflow added; staging deployment pending | Architect | 2026-05-15 |
+| `docs/plans/implementation-plan.md` | Directory route output locally validated; staging redeploy pending | Architect | 2026-05-17 |
 | `docs/plans/stitch-task.md`         | MVP implemented | UI agent  | 2026-05-08 |
 | `docs/logs/fix-hero-visibility.md`  | Completed       | Architect | 2026-05-09 |
 
@@ -33,6 +33,7 @@ Phase 7 testing, export validation, and deployment preparation
 | `docs/adr/0002-festival-content-model.md`      | Accepted | Use dedicated `festivalCity` documents with city-owned references to locations, artists, and partners                  | 2026-05-08 |
 | `docs/adr/0003-root-slug-route-contract.md`    | Accepted | Use one root `[slug]` route; `festivalCity` takes precedence over generic `page`; static params come from Sanity slugs | 2026-05-08 |
 | `docs/adr/0004-root-festival-landing-route.md` | Accepted | Render the festival landing at `/` before launch instead of requiring generic Sanity `page` slug `index`               | 2026-05-09 |
+| `docs/adr/0005-directory-style-static-export.md` | Accepted | Use `trailingSlash: true` so static route pages export as directory indexes for host compatibility                    | 2026-05-17 |
 
 ## Open architecture questions
 
@@ -54,12 +55,16 @@ Phase 7 testing, export validation, and deployment preparation
 | Legacy inbound links to `/landing` may 404 after route removal |      Low | Architect  | Add a host-level redirect to `/` if `/landing` was externally shared                                     |
 | Placeholder imagery limits cinematic polish                    |   Medium | UI/content | Replace `/images/placeholder.svg` with approved city, artist, founder, and festival assets before launch |
 | Landing artist and partner cards lose multi-city context when the same reference appears in multiple cities | Low | UI/GROQ | Current MVP de-duplicates by `_id` and keeps first city context; aggregate city labels later if editorial needs require it |
-| Static host clean URL behavior for flat export files is unverified | Medium | Deployment | Validate `/kamianets`, `/lviv`, and `/tickets` against deployed `frontend/out/`; consider `trailingSlash` only if host requires directories |
+| Static host conflicts with flat export files and same-named route payload directories | High | Deployment | Use `trailingSlash: true` directory output; verify slash routes after redeploy |
+| Staging reports mixed-content browser console errors | High | Testing | Redeploy directory-style output; verify host no longer redirects slash routes to `http://` |
 
 ## Recent significant changes
 
 | Date       | Change                                                                       | Log                                                                |
 | ---------- | ---------------------------------------------------------------------------- | ------------------------------------------------------------------ |
+| 2026-05-17 | Locally validated directory-style static export route output before staging redeploy | `docs/logs/2026-05.md` |
+| 2026-05-17 | Accepted directory-style static export after staging host mixed-content and navigation failures with flat route files | `docs/logs/2026-05.md` |
+| 2026-05-17 | Staging deployment went live via GitHub Actions; Phase 7 moved into browser/host testing with mixed-content triage first | `docs/logs/2026-05.md` |
 | 2026-05-15 | Scoped Phase 7 GitHub Actions deployment plan for syncing `frontend/out/` to host `www/` webroot | `docs/logs/2026-05.md` |
 | 2026-05-15 | Completed Phase 6 integration/UX polish for static-safe metadata, city navigation, newsletter behavior, and production-like export validation | `docs/logs/2026-05.md` |
 | 2026-05-12 | Implemented Phase 5.7 code consistency patterns (barrel exports, error handling, SanityImage, Tailwind patterns, ErrorBoundary) | `docs/plans/implementation-plan.md` |

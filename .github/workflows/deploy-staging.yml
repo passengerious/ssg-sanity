@@ -139,9 +139,9 @@ jobs:
             }
           done
 
-          for file in kamianets.html lviv.html tickets.html; do
+          for file in kamianets/index.html lviv/index.html tickets/index.html; do
             test -f "$OUT/$file" || {
-              echo "Missing expected route file: $OUT/$file"
+              echo "Missing expected directory route file: $OUT/$file"
               exit 1
             }
           done
@@ -162,7 +162,7 @@ jobs:
           fi
 
           echo "Static export verified."
-          find "$OUT" -maxdepth 2 -type f | sort
+          find "$OUT" -maxdepth 3 -type f | sort
 
       - name: Configure SSH
         run: |
@@ -222,6 +222,9 @@ jobs:
           test -f "$DEPLOY_PATH/404.html"
           test -f "$DEPLOY_PATH/sitemap.xml"
           test -f "$DEPLOY_PATH/robots.txt"
+          test -f "$DEPLOY_PATH/kamianets/index.html"
+          test -f "$DEPLOY_PATH/lviv/index.html"
+          test -f "$DEPLOY_PATH/tickets/index.html"
           test -d "$DEPLOY_PATH/_next"
           ls -la "$DEPLOY_PATH" | sed -n '1,40p'
           REMOTE

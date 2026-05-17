@@ -84,7 +84,7 @@ export const Hero = ({ cities, onThemeChange, onThemeReset, theme }: HeroProps) 
                       : "border-border hover:border-primary/40"
                   }`}
                   data-selected={selected ? "true" : undefined}
-                  href={`/${card.slug}`}
+                  href={`/${card.slug}/`}
                   onMouseEnter={() => onThemeChange(cardTheme)}
                   prefetch
                 >

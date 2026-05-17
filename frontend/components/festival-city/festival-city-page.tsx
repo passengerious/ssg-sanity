@@ -93,7 +93,7 @@ export function FestivalCityPage({
             ) : (
               <Link
                 className="group inline-flex items-center gap-3 rounded-xl bg-primary px-8 py-4 font-serif text-xl font-bold text-primary-foreground shadow-lg transition-all duration-300 hover:shadow-xl hover:shadow-primary/20 focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background motion-reduce:transition-none"
-                href="/tickets"
+                href="/tickets/"
               >
                 <Ticket aria-hidden="true" className="size-5" />
                 Деталі квитків
@@ -123,7 +123,7 @@ export function FestivalCityPage({
                         ) : (
                           <Link
                             className="inline-flex rounded-full border border-border bg-card px-4 py-2 text-sm font-bold text-primary transition-colors hover:border-primary hover:bg-primary/5 focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background"
-                            href={`/${item.slug}`}
+                            href={`/${item.slug}/`}
                             prefetch
                           >
                             {item.cityName}

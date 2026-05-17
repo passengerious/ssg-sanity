@@ -1,8 +1,8 @@
 # Plan: Festival static site implementation
 
 Date: 2026-05-07
-Updated: 2026-05-15
-Status: Phase 7 workflow added; staging deployment pending
+Updated: 2026-05-17
+Status: Phase 7 directory-style export fix in progress
 Owner: Architect
 Implementing agents: `nextjs-ssg-architect`, `sanity-schema-architect`, `sanity-groq-specialist`, `tailwind-ui-implementer`, `accessibility-ui-tester`, `deployment-vercel-engineer`, `test-automator`
 
@@ -42,6 +42,7 @@ Relevant ADRs:
 - `docs/adr/0002-festival-content-model.md` — dedicated `festivalCity` documents with city-owned references.
 - `docs/adr/0003-root-slug-route-contract.md` — one root `/:slug` route where `festivalCity` resolves before generic `page`.
 - `docs/adr/0004-root-festival-landing-route.md` — root `/` renders the festival landing rather than requiring a generic Sanity `page` with slug `index`.
+- `docs/adr/0005-directory-style-static-export.md` — use `trailingSlash: true` so route pages export as directory indexes for static host compatibility.
 
 ## Key finding: `output: 'export'` is not the first safe code change
 
@@ -80,7 +81,7 @@ const nextConfig = {
 export default nextConfig;
 ```
 
-Decision needed: whether to add `trailingSlash: true` based on `adm.tools` URL behavior.
+Decision resolved in ADR 0005: use `trailingSlash: true` because the staging host does not reliably serve flat route files alongside same-named Next payload directories.
 
 ## Current architecture target
 
@@ -88,7 +89,7 @@ Static export readiness for `frontend/next.config.mjs` is implemented. `output: 
 
 The landing and ticket MVP routes are static-safe. Before launch, the festival landing should move from the temporary `/landing` verification route to `/` per ADR 0004. Sanity-backed city routes are generated from published `festivalCity` slugs only; `/kamianets` and `/lviv` require corresponding published documents before they appear in `frontend/out/`.
 
-Phase 7 deployment target: GitHub Actions builds the static frontend and deploys the **contents** of `frontend/out/` to the host webroot, not the `out/` directory itself. For the staging host, files live under `/home/admin/<STAGING-DOMAIN>/www/`. The canonical build URL must be the actual public website/staging domain, not the hosting provider control-plane/domain label.
+Phase 7 deployment target: GitHub Actions builds the static frontend and deploys the **contents** of `frontend/out/` to the host webroot, not the `out/` directory itself. For the staging host, files live under `/home/admin/<STAGING-DOMAIN>/www/`. The canonical build URL must be the actual public website/staging domain, not the hosting provider control-plane/domain label, and must use `https://` when the public site is served over HTTPS. Route pages now use directory-style output (`tickets/index.html`, `kamianets/index.html`, `lviv/index.html`) per ADR 0005.
 
 ## Implementation phases
 
@@ -111,7 +112,7 @@ Exit criteria:
 ### Phase 7 — Testing, export validation, and deployment
 
 Owner: `test-automator` with `deployment-vercel-engineer`
-Status: Workflow added 2026-05-15; staging deployment pending
+Status: Staging deployment live 2026-05-17; directory-style route output locally validated, staging redeploy pending
 
 1. Run repository validation before every deployment:
    - `pnpm typegen`
@@ -120,17 +121,17 @@ Status: Workflow added 2026-05-15; staging deployment pending
    - `NEXT_PUBLIC_SITE_URL=https://<STAGING-DOMAIN> NEXT_PUBLIC_SITE_ENV=development pnpm --filter frontend build`
 2. Inspect `frontend/out/` for expected static files:
    - `index.html`,
-   - `kamianets.html` or host-compatible equivalent,
-   - `lviv.html` or host-compatible equivalent,
-   - `tickets.html`,
+   - `kamianets/index.html`,
+   - `lviv/index.html`,
+   - `tickets/index.html`,
    - `404.html`,
    - `sitemap.xml`,
    - `robots.txt`,
    - `_next/` static assets.
 3. Confirm there is no required `api/` runtime in the exported output.
-4. Add GitHub Actions deployment workflow:
-   - trigger on `workflow_dispatch` for staging verification;
-   - later allow `push` to `main` after the host deploy path is proven;
+4. GitHub Actions deployment workflow is implemented in `.github/workflows/deploy-staging.yml`:
+   - currently triggers on `workflow_dispatch` for controlled staging verification;
+   - next testing objective is proving a stable push-to-main update loop before enabling automatic deploys on push;
    - use GitHub Environments for staging/production-specific secrets and variables;
    - build on GitHub-hosted `ubuntu-latest`, not on the web host;
    - deploy with SSH/`rsync` by copying `frontend/out/` contents into `/home/admin/<STAGING-DOMAIN>/www/`.
@@ -145,12 +146,18 @@ Status: Workflow added 2026-05-15; staging deployment pending
    - SSH and `rsync` must be available for automated deployment;
    - `/home/admin/<STAGING-DOMAIN>/www/` must exist and be writable by the SSH user used by GitHub Actions.
 7. Deploy and verify staging:
-   - deploy `frontend/out/` contents to `www/`;
-   - confirm clean URLs resolve (`/`, `/kamianets`, `/lviv`, `/tickets`);
-   - confirm direct file URLs resolve as a fallback (`/kamianets.html`, `/lviv.html`, `/tickets.html`);
-   - confirm `sitemap.xml`, `robots.txt`, and `404.html` are served;
-   - confirm staging uses staging-domain canonical URLs and `noindex` metadata when `NEXT_PUBLIC_SITE_ENV=development`.
-8. Document deployment and rollback steps:
+    - deploy `frontend/out/` contents to `www/`;
+    - confirm clean slash URLs resolve (`/`, `/kamianets/`, `/lviv/`, `/tickets/`);
+    - confirm non-slash URLs do not downgrade to `http://` if the host redirects them;
+    - confirm `sitemap.xml`, `robots.txt`, and `404.html` are served;
+    - confirm staging uses staging-domain canonical URLs and `noindex` metadata when `NEXT_PUBLIC_SITE_ENV=development`.
+8. Test the constant-update loop:
+   - make a small safe content/code/docs change;
+   - push to `main`;
+   - dispatch staging deploy manually;
+   - verify the new build reaches `/home/admin/<STAGING-DOMAIN>/www/` and the public staging site;
+   - only after this is proven, consider adding `push` to `main` as an automatic workflow trigger.
+9. Document deployment and rollback steps:
    - retain a timestamped backup of `www/` before each `rsync --delete` deployment;
    - rollback by restoring the latest backup into `www/`;
    - document how Sanity content updates trigger a rebuild: manual GitHub Actions dispatch first, webhook-triggered dispatch later if needed.
@@ -161,6 +168,18 @@ Exit criteria:
 - Staging deployment succeeds and serves expected routes/assets from the public staging domain.
 - Content update workflow is documented, at minimum as manual workflow dispatch.
 - Rollback procedure is known and tested with a copied backup.
+
+#### Active staging testing focus
+
+1. **Mixed content triage — current first blocker.** Chrome reports repeated errors: `Mixed Content: The page was loaded over HTTPS, but requested an insecure resource`. Capture at least one blocked request URL from DevTools Network/Console. First suspects are:
+   - GitHub environment variable `NEXT_PUBLIC_SITE_URL` accidentally configured with `http://` instead of `https://`;
+   - Sanity content URL fields such as `ticketInfo.boxOfficeUrl`, `festivalCity.ticketUrlOverride`, `artist.externalUrl`, `partner.url`, Portable Text external links, or navigation links containing `http://` values;
+   - generated/static output containing `http://` resource URLs other than safe SVG namespace strings such as `http://www.w3.org/2000/svg`.
+2. **Deployment URL correctness.** Verify `sitemap.xml`, `robots.txt`, canonical links, `og:url`, and `og:image` use the actual staging domain over HTTPS.
+3. **Clean URL behavior.** Verify `/kamianets/`, `/lviv/`, and `/tickets/` resolve from directory index files without route rewrites.
+4. **Noindex staging behavior.** Verify staging builds with `NEXT_PUBLIC_SITE_ENV=development` unless staging is intentionally indexable.
+5. **Content/update loop.** Confirm a repeat workflow run replaces `www/` with the newest `frontend/out/` output and preserves a timestamped backup.
+6. **Browser smoke tests.** Validate homepage, city pages, tickets page, 404 page, anchors, keyboard navigation, hero theme hover behavior, and disabled newsletter messaging.
 
 #### Host preflight commands
 
@@ -219,12 +238,12 @@ After the first deployment, verify public serving from the host or any external 
 export SITE_URL="https://<STAGING-DOMAIN>"
 
 curl -I "$SITE_URL/"
+curl -I "$SITE_URL/kamianets/"
+curl -I "$SITE_URL/lviv/"
+curl -I "$SITE_URL/tickets/"
 curl -I "$SITE_URL/kamianets"
 curl -I "$SITE_URL/lviv"
 curl -I "$SITE_URL/tickets"
-curl -I "$SITE_URL/kamianets.html"
-curl -I "$SITE_URL/lviv.html"
-curl -I "$SITE_URL/tickets.html"
 curl -I "$SITE_URL/sitemap.xml"
 curl -I "$SITE_URL/robots.txt"
 curl -I "$SITE_URL/not-a-real-page"
@@ -251,7 +270,9 @@ curl -s "$SITE_URL/" | grep -E 'canonical|robots|og:url' | head
 - [x] Newsletter/subscription flow works without exposing secrets.
 - [x] Accessibility review passes for Phase 5 hero cards, buttons, links, lists, and heading hierarchy.
 - [x] SEO metadata routes build statically (`robots.txt`, `sitemap.xml`).
-- [ ] GitHub Actions deployment to the staging host webroot is tested.
+- [x] GitHub Actions deployment to the staging host webroot is tested.
+- [ ] Mixed-content browser console errors are resolved on staging after directory-style export redeploy.
+- [ ] Repeat staging deployment verifies the update loop for ongoing pushes/content changes.
 
 ## Risks
 
@@ -263,7 +284,8 @@ curl -s "$SITE_URL/" | grep -E 'canonical|robots|og:url' | head
 | `/index` redirect currently depends on Next.js runtime redirect config                                      | Medium | Configure host-level redirect or static fallback                                                                                             |
 | New Sanity slugs 404 until rebuild                                                                          | Medium | Add Sanity webhook or documented rebuild process                                                                                             |
 | Build fails when Sanity is unavailable                                                                      | Medium | Keep build-time data fetching simple, typed, and observable in CI                                                                            |
-| Static host clean URL behavior for flat export files is unknown                                             | Medium | Confirm staging host maps `/kamianets`, `/lviv`, and `/tickets` to flat `.html` files before final `next.config.mjs` settings                |
+| Static host conflicts with flat route files plus same-named payload directories                             | High   | Use ADR 0005 directory-style output with `trailingSlash: true`; verify `/kamianets/`, `/lviv/`, and `/tickets/` after redeploy               |
+| Staging currently reports mixed-content browser console errors                                              | High   | Redeploy directory-style export; ensure host does not redirect slash routes to `http://`; add export/deployment checks if needed             |
 | Theme changes cause hydration mismatch                                                                      | Medium | Derive initial theme deterministically from route/static data                                                                                |
 | Legacy inbound links to `/landing` may 404 after route removal                                              |    Low | Add a host-level redirect to `/` if `/landing` was externally shared                                                                         |
 | Root SEO metadata drifts because the homepage is code-owned                                                 | Medium | Add a Sanity-editable landing/site settings model or document code-owned metadata before launch                                              |
@@ -276,7 +298,8 @@ curl -s "$SITE_URL/" | grep -E 'canonical|robots|og:url' | head
 3. Should a separate preview deployment remain server-capable for editorial previews?
 4. What is the expected rebuild trigger after Sanity content changes?
 5. Should homepage SEO metadata remain code-owned for MVP or move into a Sanity singleton before launch?
+6. After the repeat-update loop is verified, should staging deploy automatically on every `main` push or remain manual `workflow_dispatch`?
 
 ## Completion notes
 
-In progress. Landing MVP, `ticketInfo`/`/tickets` MVP, root landing route, Phase 5 cinematic UI MVP, Phase 5.6 Sanity-backed landing artists/partners, Phase 5.7 code consistency patterns, and Phase 6 integration/UX polish are implemented as static-safe work. Static export compatibility is implemented for the current MVP and `frontend/out/` is generated. Frontend validation (`typegen`, `typecheck`, `lint`, `build`) passes. Phase 2 content modeling uses dedicated `festivalCity` documents with city-owned references to locations, artists, and partners. ADR 0004 is implemented: `/` renders the festival landing without requiring a generic Sanity `page` slug `index`, `/landing` is removed, and sitemap output includes `/` as the code-owned landing URL. Current production-like build generates `/`, `/kamianets`, `/lviv`, `/tickets`, `404.html`, `sitemap.xml`, and `robots.txt`; canonical, Open Graph, Twitter, sitemap, and robots URLs resolve against the build-time `NEXT_PUBLIC_SITE_URL`. Phase 6 added static-safe site URL helpers, city-to-city navigation, smooth theme transitions, production metadata hardening, static-safe newsletter configuration, accessible newsletter/city-nav fixes, and query/type updates for page titles and post excerpts. Phase 7 is now scoped around GitHub Actions building on GitHub-hosted runners and deploying `frontend/out/` contents to `/home/admin/<STAGING-DOMAIN>/www/` over SSH/rsync. Deployment automation, content rebuild workflow, homepage SEO ownership, real asset replacement, and final staging host behavior validation remain open.
+In progress. Landing MVP, `ticketInfo`/`/tickets` MVP, root landing route, Phase 5 cinematic UI MVP, Phase 5.6 Sanity-backed landing artists/partners, Phase 5.7 code consistency patterns, and Phase 6 integration/UX polish are implemented as static-safe work. Static export compatibility is implemented for the current MVP and `frontend/out/` is generated. Frontend validation (`typegen`, `typecheck`, `lint`, `build`) passes. Phase 2 content modeling uses dedicated `festivalCity` documents with city-owned references to locations, artists, and partners. ADR 0004 is implemented: `/` renders the festival landing without requiring a generic Sanity `page` slug `index`, `/landing` is removed, and sitemap output includes `/` as the code-owned landing URL. Phase 6 added static-safe site URL helpers, city-to-city navigation, smooth theme transitions, production metadata hardening, static-safe newsletter configuration, accessible newsletter/city-nav fixes, and query/type updates for page titles and post excerpts. Phase 7 GitHub Actions staging deployment is implemented and the staging site is live from `/home/admin/<STAGING-DOMAIN>/www/`. Staging host testing showed that flat files (`tickets.html`, `lviv.html`, `kamianets.html`) conflict with same-named Next payload directories and host slash redirects, producing mixed-content errors and broken navigation. ADR 0005 switches the site to directory-style output (`trailingSlash: true`) so route pages deploy as `*/index.html`. Local validation confirms the directory route output shape and no flat city/tickets route files; next validation is redeploying staging, confirming slash routes, confirming mixed-content errors are gone, and then proving the deployment/update loop.

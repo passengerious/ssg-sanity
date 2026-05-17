@@ -5,7 +5,7 @@ export const linkQuery = `
       isExternal => href,
       defined(href) && !defined(internalLink) => href,
       @.internalLink->slug.current == "index" => "/",
-      @.internalLink->_type == "post" => "/blog/" + @.internalLink->slug.current,
-      "/" + @.internalLink->slug.current
+      @.internalLink->_type == "post" => "/blog/" + @.internalLink->slug.current + "/",
+      "/" + @.internalLink->slug.current + "/"
     )
 `;

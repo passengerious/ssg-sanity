@@ -52,7 +52,7 @@ export const Header = () => {
           ПАРТНЕРИ
         </Link>
       </nav>
-      <Link className="rounded-lg bg-primary px-5 py-2 text-sm font-semibold text-primary-foreground shadow-sm transition-all duration-300 hover:shadow-md hover:shadow-primary/20 hover:opacity-90 focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background motion-reduce:transition-none md:px-6" href="/tickets">
+      <Link className="rounded-lg bg-primary px-5 py-2 text-sm font-semibold text-primary-foreground shadow-sm transition-all duration-300 hover:shadow-md hover:shadow-primary/20 hover:opacity-90 focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background motion-reduce:transition-none md:px-6" href="/tickets/">
         КВИТКИ
       </Link>
     </header>

@@ -107,7 +107,7 @@ function ArtistCardItem({ artist }: { artist: ArtistCard }) {
           {artist.citySlug && artist.cityName ? (
             <Link
               className="rounded-full bg-white/15 px-3 py-1 transition-colors hover:bg-white/25 focus-visible:ring-2 focus-visible:ring-white motion-reduce:transition-none"
-              href={`/${artist.citySlug}`}
+              href={`/${artist.citySlug}/`}
             >
               {artist.cityName}
             </Link>

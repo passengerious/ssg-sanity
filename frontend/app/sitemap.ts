@@ -9,9 +9,9 @@ export const dynamic = "force-static";
 
 const urlQuery = `
   'url': select(
-    _type == "post" => $baseUrl + "/blog/" + slug.current,
-    _type == "festivalCity" => $baseUrl + "/" + slug.current,
-    $baseUrl + "/" + slug.current
+    _type == "post" => $baseUrl + "/blog/" + slug.current + "/",
+    _type == "festivalCity" => $baseUrl + "/" + slug.current + "/",
+    $baseUrl + "/" + slug.current + "/"
   )
 `;
 
@@ -50,7 +50,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       priority: 1,
     },
     {
-      url: `${baseUrl}/tickets`,
+      url: `${baseUrl}/tickets/`,
       lastModified: new Date(),
       changeFrequency: "weekly",
       priority: 0.9,
