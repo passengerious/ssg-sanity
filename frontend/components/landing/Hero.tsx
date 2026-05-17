@@ -1,6 +1,5 @@
 "use client";
 
-import Link from "next/link";
 import { useRef } from "react";
 import { SanityImageFill } from "@/components/sanity-image";
 import { isFestivalTheme, type FestivalTheme } from "@/lib/festival-themes";
@@ -77,7 +76,7 @@ export const Hero = ({ cities, onThemeChange, onThemeReset, theme }: HeroProps) 
 
             return (
               <li key={card._id || card.slug}>
-                <Link
+                <a
                   className={`group relative block overflow-hidden rounded-2xl border bg-card p-0 text-left shadow-sm transition-all duration-300 hover:shadow-2xl focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-4 focus-visible:ring-offset-background motion-reduce:transition-none ${
                     selected
                       ? "border-primary ring-2 ring-primary shadow-lg"
@@ -85,8 +84,6 @@ export const Hero = ({ cities, onThemeChange, onThemeReset, theme }: HeroProps) 
                   }`}
                   data-selected={selected ? "true" : undefined}
                   href={`/${card.slug}/`}
-                  onMouseEnter={() => onThemeChange(cardTheme)}
-                  prefetch
                 >
                   {/* Image is decorative; visible text below supplies the link label. */}
                   <div className="relative aspect-[16/10] overflow-hidden">
@@ -108,7 +105,7 @@ export const Hero = ({ cities, onThemeChange, onThemeReset, theme }: HeroProps) 
                     </span>
                     <p className="mt-1 text-sm font-medium text-white/80">{card.cityName}</p>
                   </div>
-                </Link>
+                </a>
               </li>
             );
           })}

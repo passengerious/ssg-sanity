@@ -1,5 +1,4 @@
 import React from "react";
-import Link from "next/link";
 import { ExternalLink, Music } from "lucide-react";
 import { SanityImageFill } from "@/components/sanity-image";
 import {
@@ -105,12 +104,12 @@ function ArtistCardItem({ artist }: { artist: ArtistCard }) {
         </h3>
         <div className="mt-3 flex flex-wrap items-center gap-2 text-xs font-semibold text-white/80">
           {artist.citySlug && artist.cityName ? (
-            <Link
+            <a
               className="rounded-full bg-white/15 px-3 py-1 transition-colors hover:bg-white/25 focus-visible:ring-2 focus-visible:ring-white motion-reduce:transition-none"
               href={`/${artist.citySlug}/`}
             >
               {artist.cityName}
-            </Link>
+            </a>
           ) : null}
           {artist.dateRange ? <span>{artist.dateRange}</span> : null}
         </div>
