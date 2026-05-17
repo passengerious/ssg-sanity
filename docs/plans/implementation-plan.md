@@ -112,7 +112,7 @@ Exit criteria:
 ### Phase 7 — Testing, export validation, and deployment
 
 Owner: `test-automator` with `deployment-vercel-engineer`
-Status: Staging deployment live 2026-05-17; directory-style route output locally validated, staging redeploy pending
+Status: Staging deployment live 2026-05-17; deploy-managed host rules pending verification
 
 1. Run repository validation before every deployment:
    - `pnpm typegen`
@@ -120,6 +120,7 @@ Status: Staging deployment live 2026-05-17; directory-style route output locally
    - `pnpm --filter frontend lint`
    - `NEXT_PUBLIC_SITE_URL=https://<STAGING-DOMAIN> NEXT_PUBLIC_SITE_ENV=development pnpm --filter frontend build`
 2. Inspect `frontend/out/` for expected static files:
+   - `.htaccess`,
    - `index.html`,
    - `kamianets/index.html`,
    - `lviv/index.html`,
@@ -134,7 +135,8 @@ Status: Staging deployment live 2026-05-17; directory-style route output locally
    - next testing objective is proving a stable push-to-main update loop before enabling automatic deploys on push;
    - use GitHub Environments for staging/production-specific secrets and variables;
    - build on GitHub-hosted `ubuntu-latest`, not on the web host;
-   - deploy with SSH/`rsync` by copying `frontend/out/` contents into `/home/admin/<STAGING-DOMAIN>/www/`.
+   - deploy with SSH/`rsync` by copying `frontend/out/` contents into `/home/admin/<STAGING-DOMAIN>/www/`;
+   - generate `frontend/out/.htaccess` during the workflow so host route rules and custom 404 handling survive `rsync --delete` deployments.
 5. Configure GitHub environment variables/secrets for staging:
    - Variables: `NEXT_PUBLIC_SITE_URL`, `NEXT_PUBLIC_SITE_ENV=development`, `DEPLOY_PATH=/home/<SSH_USER>/<STAGING-DOMAIN>/www`, `SSH_HOST`, `SSH_USER`, `SSH_PORT`.
    - Sanity variables required by the build/typegen: `NEXT_PUBLIC_SANITY_PROJECT_ID`, `NEXT_PUBLIC_SANITY_DATASET`, optional `NEXT_PUBLIC_SANITY_API_VERSION`, optional `NEXT_PUBLIC_STUDIO_URL`.
@@ -149,7 +151,8 @@ Status: Staging deployment live 2026-05-17; directory-style route output locally
     - deploy `frontend/out/` contents to `www/`;
     - confirm clean slash URLs resolve (`/`, `/kamianets/`, `/lviv/`, `/tickets/`);
     - confirm non-slash URLs do not downgrade to `http://` if the host redirects them;
-    - confirm `sitemap.xml`, `robots.txt`, and `404.html` are served;
+    - confirm `sitemap.xml`, `robots.txt`, `404.html`, and deployed `.htaccess` are present;
+    - confirm arbitrary missing routes use the exported 404 body instead of the host default 404 template;
     - confirm staging uses staging-domain canonical URLs and `noindex` metadata when `NEXT_PUBLIC_SITE_ENV=development`.
 8. Test the constant-update loop:
    - make a small safe content/code/docs change;

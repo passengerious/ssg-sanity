@@ -127,12 +127,31 @@ jobs:
       - name: Build frontend static export
         run: pnpm --filter frontend build
 
+      - name: Write static host rules
+        run: |
+          cat > frontend/out/.htaccess <<'HTACCESS'
+          Options -MultiViews
+          DirectoryIndex index.html
+          ErrorDocument 404 /404.html
+
+          <IfModule mod_rewrite.c>
+            RewriteEngine On
+
+            # Canonicalize known static routes to HTTPS trailing-slash URLs before
+            # the host's directory-slash redirect can downgrade them to http://.
+            RewriteRule ^(tickets|lviv|kamianets)$ https://%{HTTP_HOST}/$1/ [R=302,L,NE]
+
+            # Same protection for statically exported blog posts.
+            RewriteRule ^blog/([^/]+)$ https://%{HTTP_HOST}/blog/$1/ [R=302,L,NE]
+          </IfModule>
+          HTACCESS
+
       - name: Verify static export output
         run: |
           set -euo pipefail
           OUT="frontend/out"
 
-          for file in index.html 404.html sitemap.xml robots.txt; do
+          for file in .htaccess index.html 404.html sitemap.xml robots.txt; do
             test -f "$OUT/$file" || {
               echo "Missing required export file: $OUT/$file"
               exit 1
@@ -219,6 +238,7 @@ jobs:
             "DEPLOY_PATH='$DEPLOY_PATH' bash -s" <<'REMOTE'
           set -euo pipefail
           test -f "$DEPLOY_PATH/index.html"
+          test -f "$DEPLOY_PATH/.htaccess"
           test -f "$DEPLOY_PATH/404.html"
           test -f "$DEPLOY_PATH/sitemap.xml"
           test -f "$DEPLOY_PATH/robots.txt"
