@@ -71,6 +71,23 @@ jobs:
             fi
           done
 
+          if [[ "$SSH_HOST" == *@* || "$SSH_HOST" == *://* || "$SSH_HOST" == */* ]]; then
+            echo "Invalid SSH_HOST: use only the hostname or IP, without user, protocol, port, or path."
+            echo "Example: SSH_HOST=example.com, not ariast@example.com or ssh://example.com"
+            exit 1
+          fi
+
+          if [[ ! "$SSH_PORT" =~ ^[0-9]+$ ]]; then
+            echo "Invalid SSH_PORT: use only the numeric port, usually 22."
+            exit 1
+          fi
+
+          if [[ ! "$SSH_USER" =~ ^[A-Za-z0-9._-]+$ ]]; then
+            echo "Invalid SSH_USER: use only the remote Linux username, without @host or spaces."
+            echo "Example: SSH_USER=ariast"
+            exit 1
+          fi
+
           if [ "$HAS_SSH_PRIVATE_KEY" != "true" ]; then
             echo "Missing required GitHub secret: SSH_PRIVATE_KEY"
             exit 1
