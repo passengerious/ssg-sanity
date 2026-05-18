@@ -103,37 +103,6 @@ export function FestivalCityPage({
                 />
               </Link>
             )}
-
-            {cityNavItems.length > 1 ? (
-              <nav aria-label="Міста фестивалю">
-                <ul className="flex flex-wrap gap-2">
-                  {cityNavItems.map((item) => {
-                    const isCurrent = item.slug === currentSlug;
-
-                    return (
-                      <li key={item._id}>
-                        {isCurrent ? (
-                          <span
-                            aria-current="page"
-                            className="inline-flex rounded-full border border-primary bg-primary px-4 py-2 text-sm font-bold text-primary-foreground"
-                          >
-                            {item.cityName}
-                            <span className="sr-only"> — поточна сторінка</span>
-                          </span>
-                        ) : (
-                          <a
-                            className="inline-flex rounded-full border border-border bg-card px-4 py-2 text-sm font-bold text-primary transition-colors hover:border-primary hover:bg-primary/5 focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background"
-                            href={`/${item.slug}/`}
-                          >
-                            {item.cityName}
-                          </a>
-                        )}
-                      </li>
-                    );
-                  })}
-                </ul>
-              </nav>
-            ) : null}
           </div>
 
           {/* Hero image */}
