@@ -161,15 +161,15 @@ Status: Staging deployment live 2026-05-17; deploy-managed host rules pending ve
    - verify the new build reaches `/home/admin/<STAGING-DOMAIN>/www/` and the public staging site;
    - only after this is proven, consider adding `push` to `main` as an automatic workflow trigger.
 9. Document deployment and rollback steps:
-   - retain a timestamped backup of `www/` before each `rsync --delete` deployment;
-   - rollback by restoring the latest backup into `www/`;
-   - document how Sanity content updates trigger a rebuild: manual GitHub Actions dispatch first, webhook-triggered dispatch later if needed.
+    - retain a timestamped backup of `www/` before each `rsync --delete` deployment;
+    - rollback by restoring the latest backup into `www/`;
+    - document how Sanity content updates trigger a rebuild: manual GitHub Actions dispatch first, webhook-triggered dispatch later if needed. Current process is documented in `workflow.md`.
 
 Exit criteria:
 
 - GitHub Actions can build the frontend and deploy `frontend/out/` contents to `/home/admin/<STAGING-DOMAIN>/www/`.
 - Staging deployment succeeds and serves expected routes/assets from the public staging domain.
-- Content update workflow is documented, at minimum as manual workflow dispatch.
+- Content update workflow is documented, at minimum as manual workflow dispatch. See `workflow.md`.
 - Rollback procedure is known and tested with a copied backup.
 
 #### Active staging testing focus
@@ -299,10 +299,10 @@ curl -s "$SITE_URL/" | grep -E 'canonical|robots|og:url' | head
 1. Does the staging/production static host support host-level redirects, custom 404 pages, and clean URLs for flat `.html` route files?
 2. Which subscription/newsletter backend is approved for static hosting if newsletter signup is reintroduced?
 3. Should a separate preview deployment remain server-capable for editorial previews?
-4. What is the expected rebuild trigger after Sanity content changes?
+4. What is the expected rebuild trigger after Sanity content changes? Current MVP answer: manual GitHub Actions dispatch after a published content batch; future enhancement: Sanity webhook to GitHub dispatch.
 5. Should homepage SEO metadata remain code-owned for MVP or move into a Sanity singleton before launch?
 6. After the repeat-update loop is verified, should staging deploy automatically on every `main` push or remain manual `workflow_dispatch`?
 
 ## Completion notes
 
-In progress. Landing MVP, `ticketInfo`/`/tickets` MVP, root landing route, Phase 5 cinematic UI MVP, Phase 5.6 Sanity-backed landing artists/partners, Phase 5.7 code consistency patterns, and Phase 6 integration/UX polish are implemented as static-safe work. Static export compatibility is implemented for the current MVP and `frontend/out/` is generated. Frontend validation (`typegen`, `typecheck`, `lint`, `build`) passes. Phase 2 content modeling uses dedicated `festivalCity` documents with city-owned references to locations, artists, and partners. ADR 0004 is implemented: `/` renders the festival landing without requiring a generic Sanity `page` slug `index`, `/landing` is removed, and sitemap output includes `/` as the code-owned landing URL. Phase 6 added static-safe site URL helpers, city-to-city navigation, smooth theme transitions, production metadata hardening, static-safe newsletter configuration, accessible newsletter/city-nav fixes, and query/type updates for page titles and post excerpts. Phase 7 GitHub Actions staging deployment is implemented and the staging site is live from `/home/admin/<STAGING-DOMAIN>/www/`. Staging host testing showed that flat files (`tickets.html`, `lviv.html`, `kamianets.html`) conflict with same-named Next payload directories and host slash redirects, producing mixed-content errors and broken navigation. ADR 0005 switches the site to directory-style output (`trailingSlash: true`) so route pages deploy as `*/index.html`. Local validation confirms the directory route output shape and no flat city/tickets route files. Landing city cards now keep reliable plain-anchor navigation and express Epic/Kamianets and Heroic/Lviv through local card accents rather than global hover theme mutation. Next validation is redeploying staging, confirming slash routes and custom 404 handling, confirming mixed-content errors are gone, and then proving the deployment/update loop.
+In progress. Landing MVP, `ticketInfo`/`/tickets` MVP, root landing route, Phase 5 cinematic UI MVP, Phase 5.6 Sanity-backed landing artists/partners, Phase 5.7 code consistency patterns, and Phase 6 integration/UX polish are implemented as static-safe work. Static export compatibility is implemented for the current MVP and `frontend/out/` is generated. Frontend validation (`typegen`, `typecheck`, `lint`, `build`) passes. Phase 2 content modeling uses dedicated `festivalCity` documents with city-owned references to locations, artists, and partners. ADR 0004 is implemented: `/` renders the festival landing without requiring a generic Sanity `page` slug `index`, `/landing` is removed, and sitemap output includes `/` as the code-owned landing URL. Phase 6 added static-safe site URL helpers, city-to-city navigation, smooth theme transitions, production metadata hardening, static-safe newsletter configuration, accessible newsletter/city-nav fixes, and query/type updates for page titles and post excerpts. Phase 7 GitHub Actions staging deployment is implemented and the staging site is live from `/home/admin/<STAGING-DOMAIN>/www/`. Staging host testing showed that flat files (`tickets.html`, `lviv.html`, `kamianets.html`) conflict with same-named Next payload directories and host slash redirects, producing mixed-content errors and broken navigation. ADR 0005 switches the site to directory-style output (`trailingSlash: true`) so route pages deploy as `*/index.html`. Local validation confirms the directory route output shape and no flat city/tickets route files. Landing city cards now keep reliable plain-anchor navigation and express Epic/Kamianets and Heroic/Lviv through local card accents rather than global hover theme mutation. `workflow.md` documents manual GitHub Actions rebuilds for both code and Sanity Studio content batches, with webhook-triggered rebuilds reserved as a future enhancement. Next validation is redeploying staging, confirming slash routes and custom 404 handling, confirming mixed-content errors are gone, and then proving the deployment/update loop.
