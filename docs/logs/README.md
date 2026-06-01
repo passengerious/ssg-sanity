@@ -4,13 +4,13 @@ This directory contains project logs organized by task or feature implementation
 
 ## Naming
 
-Use kebab-case filenames derived from the task header (e.g., `### Task: {short-name}`).
+Use kebab-case filenames derived from the task header appended with the date in `_DD.MM` format (e.g., `### Task: {short-name}`).
 
 ```text
-task-short-name.md
+task-short-name_DD.MM.md
 ```
 
-Example: `static-export-compatibility-implementation.md`
+Example: `static-export-compatibility-implementation_08.05.md`
 
 ## Entry rules
 

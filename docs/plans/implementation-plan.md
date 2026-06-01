@@ -172,6 +172,36 @@ Exit criteria:
 - Content update workflow is documented, at minimum as manual workflow dispatch. See `workflow.md`.
 - Rollback procedure is known and tested with a copied backup.
 
+### Phase 8 — Production deployment and launch readiness
+
+Owner: Architect with deployment maintainer
+Status: Scoped 2026-06-01; not implemented
+
+1. Reuse the existing GitHub Actions deploy workflow with a different GitHub Environment for production.
+   - Keep deployment manual-only for now.
+   - Use the same host and the same domain-directory webroot pattern: `/home/<SSH_USER>/<PRODUCTION-DOMAIN>/www/`.
+   - Do not add automatic push deploys or Sanity webhooks in this phase.
+2. Configure production GitHub Environment values.
+   - `NEXT_PUBLIC_SITE_URL` must be the production public URL with `https://`.
+   - `NEXT_PUBLIC_SITE_ENV=production` so production can be indexable.
+   - `DEPLOY_PATH` must point to the production domain webroot, not the staging domain webroot.
+   - `SSH_HOST`, `SSH_USER`, `SSH_PORT`, `SSH_PRIVATE_KEY`, and `SSH_KNOWN_HOSTS` may match staging if the same host/account/key is used, but should still be set on the production GitHub Environment.
+   - Sanity project/dataset variables can match staging if production should read the same published Sanity dataset.
+   - Keep `NEXT_PUBLIC_NEWSLETTER_ACTION_URL` unset unless an approved external form backend is selected later.
+3. Keep broader content refresh as a separate future wave.
+   - Placeholder imagery and final editorial content should be handled after production deployment mechanics are stable.
+   - A single Sanity content update loop should still be tested before launch.
+4. Keep homepage SEO metadata code-owned for MVP; moving it into Sanity is a later enhancement.
+5. Do not add a `/landing` redirect; no one is expecting that legacy route.
+6. Treat Kyiv Region and Kobzar KS font usage as confirmed for the current launch path.
+
+Exit criteria:
+
+- The same workflow can deploy staging or production based on the selected GitHub Environment.
+- Production deploy is manual and writes `frontend/out/` contents into the production domain `www/` directory.
+- Production public pages use production canonical URLs and production indexing metadata.
+- Staging remains non-indexable.
+
 #### Active staging testing focus
 
 1. **Mixed content triage — current first blocker.** Chrome reports repeated errors: `Mixed Content: The page was loaded over HTTPS, but requested an insecure resource`. Capture at least one blocked request URL from DevTools Network/Console. First suspects are:
@@ -283,25 +313,22 @@ curl -s "$SITE_URL/" | grep -E 'canonical|robots|og:url' | head
 | ----------------------------------------------------------------------------------------------------------- | -----: | -------------------------------------------------------------------------------------------------------------------------------------------- |
 | Reintroducing runtime features after static export breaks static hosting                                    |   High | Keep API routes, Draft Mode, runtime redirects, and server actions out of the frontend                                                       |
 | Draft preview/live editing is unavailable on a pure static export                                           |   High | Document editorial workflow and use publish-triggered rebuilds                                                                               |
-| Newsletter currently depends on a server-side API route and secrets                                         |   High | Move to external backend/form service before static export                                                                                   |
+| Newsletter is disabled unless an external static-safe backend is configured                                 |    Low | Keep disabled for MVP; consider an external form provider or separate backend later                                                          |
 | `/index` redirect currently depends on Next.js runtime redirect config                                      | Medium | Configure host-level redirect or static fallback                                                                                             |
 | New Sanity slugs 404 until rebuild                                                                          | Medium | Add Sanity webhook or documented rebuild process                                                                                             |
 | Build fails when Sanity is unavailable                                                                      | Medium | Keep build-time data fetching simple, typed, and observable in CI                                                                            |
 | Static host conflicts with flat route files plus same-named payload directories                             | High   | Use ADR 0005 directory-style output with `trailingSlash: true`; verify `/kamianets/`, `/lviv/`, and `/tickets/` after redeploy               |
 | Staging currently reports mixed-content browser console errors                                              | High   | Redeploy directory-style export; ensure host does not redirect slash routes to `http://`; add export/deployment checks if needed             |
 | Theme changes cause hydration mismatch                                                                      | Medium | Derive initial theme deterministically from route/static data                                                                                |
-| Legacy inbound links to `/landing` may 404 after route removal                                              |    Low | Add a host-level redirect to `/` if `/landing` was externally shared                                                                         |
+| Production deployment could target the wrong domain webroot                                                 | Medium | Use a separate production GitHub Environment and verify `DEPLOY_PATH` before first production deploy                                         |
 | Root SEO metadata drifts because the homepage is code-owned                                                 | Medium | Add a Sanity-editable landing/site settings model or document code-owned metadata before launch                                              |
 | Landing artist and partner cards lose multi-city context when the same reference appears in multiple cities |    Low | Current MVP de-duplicates by `_id` and keeps first city context; aggregate city labels in a future enhancement if editorial needs require it |
 
 ## Open questions
 
-1. Does the staging/production static host support host-level redirects, custom 404 pages, and clean URLs for flat `.html` route files?
-2. Which subscription/newsletter backend is approved for static hosting if newsletter signup is reintroduced?
+1. Which subscription/newsletter backend is approved for static hosting if newsletter signup is reintroduced?
 3. Should a separate preview deployment remain server-capable for editorial previews?
-4. What is the expected rebuild trigger after Sanity content changes? Current MVP answer: manual GitHub Actions dispatch after a published content batch; future enhancement: Sanity webhook to GitHub dispatch.
-5. Should homepage SEO metadata remain code-owned for MVP or move into a Sanity singleton before launch?
-6. After the repeat-update loop is verified, should staging deploy automatically on every `main` push or remain manual `workflow_dispatch`?
+4. Should homepage SEO metadata move into a Sanity singleton after launch?
 
 ## Completion notes
 

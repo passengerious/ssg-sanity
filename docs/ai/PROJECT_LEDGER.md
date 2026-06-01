@@ -8,14 +8,12 @@ Phase 7 staging route-output fix and update-loop validation
 
 ## Active priorities
 
-1. Redeploy staging with directory-style route output (`trailingSlash: true`) and verify `/kamianets/`, `/lviv/`, and `/tickets/` browser navigation.
-2. Resolve staging mixed-content browser errors by removing host redirects from HTTPS pages to `http://` slash routes.
-3. Verify the staging deployment/update loop: push or safe change → workflow build → `frontend/out/` sync to `/home/admin/<STAGING-DOMAIN>/www/` → public staging verification.
-4. Keep staging non-indexable with `NEXT_PUBLIC_SITE_ENV=development` unless explicitly changed.
-5. Test the documented Sanity content update loop: publish a content batch → manually dispatch staging deploy → verify public staging output.
-6. Decide whether `/landing` needs a host-level redirect to `/`.
-7. Replace placeholder imagery with approved festival assets where available.
-8. Treat `.stitch/DESIGN.md` as the source of truth for festival UI design tokens and page styling.
+1. Finish Phase 7 staging validation: browser smoke tests, custom 404 body, and repeat deployment/update loop.
+2. Prepare Phase 8 production deployment using the same manual GitHub Actions workflow with a different GitHub Environment and production domain.
+3. Keep staging non-indexable with `NEXT_PUBLIC_SITE_ENV=development`; production must use `NEXT_PUBLIC_SITE_ENV=production`.
+4. Test the documented Sanity content update loop once, then treat broader content refresh as a separate future wave.
+5. Replace placeholder imagery with approved festival assets in the future content wave.
+6. Treat `.stitch/DESIGN.md` as the source of truth for festival UI design tokens and page styling.
 
 ## Active plans
 
@@ -40,8 +38,7 @@ Phase 7 staging route-output fix and update-loop validation
 | Question                                                                  | Impact | Needed decision                                                                              |
 | ------------------------------------------------------------------------- | -----: | -------------------------------------------------------------------------------------------- |
 | How should newsletter submissions work on static hosting if reintroduced? | Medium | External provider or separate backend that does not expose secrets                           |
-| When should Sanity rebuilds become automated?                             | Medium | Current MVP uses manual GitHub Actions dispatch after content batches; consider webhook-triggered rebuilds when editorial frequency increases |
-| How should Kyiv Region and Kobzar KS fonts be licensed and served?        | Medium | Use approved self-hosted font files or documented fallbacks before launch                    |
+| When should Sanity rebuilds become automated?                             | Low | Skipped for now; current MVP uses manual GitHub Actions dispatch after content batches        |
 | Should homepage SEO metadata remain code-owned for MVP?                   | Medium | Keep code-owned metadata documented or move SEO fields into a Sanity singleton before launch |
 
 ## Current risks
@@ -52,7 +49,7 @@ Phase 7 staging route-output fix and update-loop validation
 | Newsletter signup is disabled on static hosting                |   Medium | Architect  | Choose external form backend or separate endpoint before enabling newsletter collection                  |
 | Sanity content updates require rebuilds                        |   Medium | Architect  | Use documented manual GitHub Actions rebuild workflow in `workflow.md`; consider webhook automation later |
 | Festival UI can drift from updated `.stitch/DESIGN.md` tokens  |   Medium | UI agents  | Keep landing/city styling aligned to Brand Red, Natural Green, Warm Beige, Dark Grey tokens              |
-| Legacy inbound links to `/landing` may 404 after route removal |      Low | Architect  | Add a host-level redirect to `/` if `/landing` was externally shared                                     |
+| Newsletter signup is not connected yet                         |      Low | Product    | Keep disabled for MVP; implement an external form/backend later if needed                                |
 | Placeholder imagery limits cinematic polish                    |   Medium | UI/content | Replace `/images/placeholder.svg` with approved city, artist, founder, and festival assets before launch |
 | Landing artist and partner cards lose multi-city context when the same reference appears in multiple cities | Low | UI/GROQ | Current MVP de-duplicates by `_id` and keeps first city context; aggregate city labels later if editorial needs require it |
 | Static host conflicts with flat export files and same-named route payload directories | High | Deployment | Use `trailingSlash: true` directory output; verify slash routes after redeploy |
@@ -62,6 +59,7 @@ Phase 7 staging route-output fix and update-loop validation
 
 | Date       | Change                                                                       | Log                                                                |
 | ---------- | ---------------------------------------------------------------------------- | ------------------------------------------------------------------ |
+| 2026-06-01 | Scoped next phase: production uses same manual workflow with a separate GitHub Environment; content refresh and newsletter remain future waves | `docs/logs/2026-06.md` |
 | 2026-05-17 | Documented manual code and Sanity content update workflows in `workflow.md`, with webhook automation deferred | `docs/logs/2026-05.md` |
 | 2026-05-17 | Replaced landing-wide hover theme mutation with local Epic/Heroic city-card accents while keeping plain-anchor city navigation | `docs/logs/2026-05.md` |
 | 2026-05-17 | Added deploy-managed `.htaccess` generation to preserve HTTPS route redirects and custom 404 handling across `rsync --delete` | `docs/logs/2026-05.md` |

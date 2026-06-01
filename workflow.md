@@ -25,7 +25,23 @@ Manual rebuild is the preferred MVP workflow because it is predictable, avoids w
 | --- | --- | --- | --- |
 | Local development | local files + Sanity dataset | developer commands | Used for code validation before commit. |
 | Staging | `main` branch + published Sanity content at build time | manual GitHub Actions dispatch | Staging should remain `noindex`. |
-| Production | future production workflow | manual first, automation later | Mirror staging only after staging workflow is stable. |
+| Production | `main` branch + published Sanity content at build time | manual GitHub Actions dispatch with production GitHub Environment | Same host/directory pattern as staging, but different production domain webroot. |
+
+Production should reuse the same deploy workflow with a different GitHub Environment. It remains manual-only for now. Do not add automatic push deploys or Sanity webhook deploys until editorial frequency or launch operations require them.
+
+Production values that should differ from staging:
+
+- `NEXT_PUBLIC_SITE_URL`: production public URL, with `https://`.
+- `NEXT_PUBLIC_SITE_ENV`: `production` instead of `development`.
+- `DEPLOY_PATH`: production domain webroot, for example `/home/<SSH_USER>/<PRODUCTION-DOMAIN>/www/`.
+
+Values that may be the same as staging when the same host/account/dataset is used:
+
+- `SSH_HOST`, `SSH_USER`, `SSH_PORT`.
+- `SSH_PRIVATE_KEY`, `SSH_KNOWN_HOSTS`.
+- `NEXT_PUBLIC_SANITY_PROJECT_ID`, `NEXT_PUBLIC_SANITY_DATASET`, `NEXT_PUBLIC_SANITY_API_VERSION`, `NEXT_PUBLIC_STUDIO_URL`.
+
+Keep `NEXT_PUBLIC_NEWSLETTER_ACTION_URL` unset unless newsletter collection is intentionally enabled with an approved static-safe backend.
 
 ## Codebase update workflow
 
