@@ -4,7 +4,12 @@ import { ArrowRight, Ticket } from "lucide-react";
 
 export const BuyTickets = () => {
   return (
-    <section className="px-4 py-10 md:px-12 md:py-16" id="tickets">
+    <section
+      aria-labelledby="tickets-heading"
+      className="px-4 py-10 scroll-mt-32 md:px-12 md:py-16 md:scroll-mt-20"
+      id="tickets"
+      tabIndex={-1}
+    >
       <div className="relative mx-auto max-w-5xl overflow-hidden rounded-3xl bg-primary shadow-2xl">
         {/* Decorative corner accent */}
         <div
@@ -15,6 +20,11 @@ export const BuyTickets = () => {
           className="absolute -bottom-20 -left-20 size-72 rounded-full bg-black/10 blur-3xl"
           aria-hidden="true"
         />
+        {/* Subtle green ornamental accent */}
+        <div
+          className="absolute right-8 top-8 h-1 w-12 rounded-full bg-secondary/40"
+          aria-hidden="true"
+        />
 
         <div className="relative z-10 flex flex-col items-center justify-between gap-8 px-8 py-12 text-primary-foreground md:flex-row md:px-16 md:py-16">
           <div className="max-w-xl text-center md:text-left">
@@ -22,7 +32,7 @@ export const BuyTickets = () => {
               <Ticket aria-hidden="true" className="size-3.5" />
               Квитки
             </div>
-            <h2 className="mb-3 font-serif text-3xl font-bold leading-tight md:text-5xl">
+            <h2 className="mb-3 font-serif text-3xl font-bold leading-tight md:text-5xl" id="tickets-heading">
               Схопи свій шанс!
             </h2>
             <p className="text-lg leading-relaxed opacity-90 md:text-xl" id="tickets-note">

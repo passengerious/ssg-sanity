@@ -45,3 +45,5 @@ skills-lock.json
 AGENTS.md
 .cursor/
 data/
+artifacts/img
+.stitch/

@@ -1,19 +1,19 @@
 import type { Metadata } from "next";
 import { LandingExperience } from "@/components/landing/LandingExperience";
 import { absoluteUrl } from "@/lib/site-url";
-import { fetchSanityLandingCities } from "@/sanity/lib/fetch";
+import { fetchSanityHomepageFestivalCity } from "@/sanity/lib/fetch";
 
 export const metadata: Metadata = {
-  title: "Країна Мрій 2026",
+  title: "Країна Мрій 2026 — Львів",
   description:
-    "Країна Мрій 2026 — етно-фестиваль у Кам'янці-Подільському та Львові.",
+    "Країна Мрій 2026 — етно-фестиваль у Львові. 15–16 серпня 2026 року, парк культури та відпочинку імені Богдана Хмельницького.",
   alternates: {
     canonical: "/",
   },
   openGraph: {
-    title: "Країна Мрій 2026",
+    title: "Країна Мрій 2026 — Львів",
     description:
-      "Територія свободи, де традиції творять майбутнє української культури.",
+      "Територія свободи, де традиції творять майбутнє української культури. 15–16 серпня 2026 року у Львові.",
     images: [
       {
         url: absoluteUrl("/images/og-image.jpg"),
@@ -27,15 +27,15 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Країна Мрій 2026",
+    title: "Країна Мрій 2026 — Львів",
     description:
-      "Країна Мрій 2026 — етно-фестиваль у Кам'янці-Подільському та Львові.",
+      "Країна Мрій 2026 — етно-фестиваль у Львові. 15–16 серпня 2026 року.",
     images: [absoluteUrl("/images/og-image.jpg")],
   },
 };
 
 export default async function HomePage() {
-  const cities = await fetchSanityLandingCities();
+  const city = await fetchSanityHomepageFestivalCity();
 
-  return <LandingExperience cities={cities} />;
+  return <LandingExperience city={city} />;
 }

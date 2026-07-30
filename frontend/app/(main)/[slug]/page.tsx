@@ -1,16 +1,11 @@
 import { Blocks } from "@/components/blocks";
-import { FestivalCityPage } from "@/components/festival-city/festival-city-page";
-import { resolveTicketUrl } from "@/lib/tickets";
 import {
-  fetchSanityFestivalCitiesStaticParams,
-  fetchSanityFestivalCityBySlug,
-  fetchSanityLandingCities,
   fetchSanityPageBySlug,
   fetchSanityPagesStaticParams,
-  fetchSanityTicketInfo,
 } from "@/sanity/lib/fetch";
 import { notFound } from "next/navigation";
 import { generatePageMetadata } from "@/sanity/lib/metadata";
+import { isReservedRootSlug } from "@/lib/reserved-root-slugs";
 
 export const dynamic = "force-static";
 export const dynamicParams = false;
@@ -18,20 +13,13 @@ export const dynamicParams = false;
 const EMPTY_ROOT_SLUG_PLACEHOLDER = "__static-export-placeholder";
 
 export async function generateStaticParams() {
-  const [cities, pages] = await Promise.all([
-    fetchSanityFestivalCitiesStaticParams(),
-    fetchSanityPagesStaticParams(),
-  ]);
+  const pages = await fetchSanityPagesStaticParams();
 
   const slugs = new Set<string>();
 
-  cities.forEach((city) => {
-    if (city.slug) slugs.add(city.slug);
-  });
-
   pages.forEach((page) => {
     const slug = page.slug?.current;
-    if (slug && slug !== "index") slugs.add(slug);
+    if (slug && !isReservedRootSlug(slug)) slugs.add(slug);
   });
 
   if (!slugs.size) {
@@ -45,12 +33,6 @@ export async function generateMetadata(props: {
   params: Promise<{ slug: string }>;
 }) {
   const params = await props.params;
-  const city = await fetchSanityFestivalCityBySlug({ slug: params.slug });
-
-  if (city) {
-    return generatePageMetadata({ page: city, slug: params.slug });
-  }
-
   const page = await fetchSanityPageBySlug({ slug: params.slug });
 
   if (!page) {
@@ -64,23 +46,6 @@ export default async function Page(props: {
   params: Promise<{ slug: string }>;
 }) {
   const params = await props.params;
-  const city = await fetchSanityFestivalCityBySlug({ slug: params.slug });
-
-  if (city) {
-    const [ticketInfo, festivalCities] = await Promise.all([
-      fetchSanityTicketInfo(),
-      fetchSanityLandingCities(),
-    ]);
-
-    return (
-      <FestivalCityPage
-        city={city}
-        festivalCities={festivalCities}
-        ticketUrl={resolveTicketUrl(city, ticketInfo)}
-      />
-    );
-  }
-
   const page = await fetchSanityPageBySlug({ slug: params.slug });
 
   if (!page) {

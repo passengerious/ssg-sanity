@@ -6,6 +6,8 @@ Owner: Architect
 
 ## Context
 
+> **2026-07-28:** ADR 0006 preserves this content model but supersedes its multi-city frontend routing and theme-switching consequences. One Lviv `festivalCity` document now supplies the root `/` experience.
+
 The festival site needs Sanity-managed city experiences for `/kamianets` and `/lviv`, with room for future cities. Phase 1 enabled static export, so all dynamic routes must be generated from build-time Sanity content.
 
 The existing generic `page` document can model flexible marketing pages, but city festival pages need stable, domain-specific content: city name, theme key, venues/stages, artists, partners, and optional city-specific ticket links.

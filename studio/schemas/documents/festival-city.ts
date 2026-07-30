@@ -128,6 +128,15 @@ export default defineType({
       group: "content",
     }),
     defineField({
+      name: "history",
+      title: "History & Heritage",
+      type: "array",
+      group: "content",
+      description:
+        "Ordered historical milestones for this city's festival narrative. Use approved Ukrainian wording only, keep descriptions concise, and add a source for numerical, financial, or unusual claims. Do not add facts outside the approved editorial brief without review.",
+      of: [defineArrayMember({ type: "festivalMilestone" })],
+    }),
+    defineField({
       name: "locations",
       title: "Locations / Stages",
       type: "array",

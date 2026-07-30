@@ -6,6 +6,8 @@ Status: Phase 7 directory-style export fix in progress
 Owner: Architect
 Implementing agents: `nextjs-ssg-architect`, `sanity-schema-architect`, `sanity-groq-specialist`, `tailwind-ui-implementer`, `accessibility-ui-tester`, `deployment-vercel-engineer`, `test-automator`
 
+> **Scope update — 2026-07-28:** ADR 0006 and `docs/plans/single-city-lviv-pivot.md` supersede this plan's multi-city frontend targets. `/` now renders the complete Lviv festival, while `/:slug` handles generic Sanity pages only. Historical `/kamianets/` and `/lviv/` implementation and verification notes below describe the earlier phase and are no longer current launch requirements.
+
 ## Goal
 
 Build a Sanity-driven, statically exported Next.js festival site for static hosting, with city-specific experiences for `/kamianets` and `/lviv`, cinematic Tailwind UI, and GitHub Actions deployment automation that publishes `frontend/out/` into the host webroot.

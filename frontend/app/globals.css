@@ -126,11 +126,11 @@
   --popover-foreground: #232323;
   --primary: #bf2a26; /* Brand Red */
   --primary-foreground: #ffffff;
-  --secondary: #8c9b5c; /* Natural Green */
+  --secondary: #5a6b38; /* Natural Green — AA-safe on Warm Beige (5.15 : 1) */
   --secondary-foreground: #ffffff;
   --muted: #f5dfc2;
   --muted-foreground: #5c5146;
-  --accent: #8c9b5c;
+  --accent: #5a6b38;
   --accent-foreground: #ffffff;
   --destructive: #bf2a26;
   --border: #8e706c;
@@ -140,7 +140,7 @@
   --sidebar-foreground: #232323;
   --sidebar-primary: #bf2a26;
   --sidebar-primary-foreground: #ffffff;
-  --sidebar-accent: #8c9b5c;
+  --sidebar-accent: #5a6b38;
   --sidebar-accent-foreground: #ffffff;
   --sidebar-border: #8e706c;
   --sidebar-ring: #bf2a26;
@@ -189,11 +189,11 @@
   --popover-foreground: #232323;
   --primary: #bf2a26;
   --primary-foreground: #ffffff;
-  --secondary: #8c9b5c;
+  --secondary: #5a6b38;
   --secondary-foreground: #ffffff;
   --muted: #f5dfc2;
   --muted-foreground: #5c5146;
-  --accent: #8c9b5c;
+  --accent: #5a6b38;
   --accent-foreground: #ffffff;
   --border: #8e706c;
   --input: #8e706c;
@@ -202,9 +202,9 @@
 }
 
 .festival-theme[data-theme="epic"] {
-  --primary: #8c9b5c;
-  --accent: #8c9b5c;
-  --ring: #8c9b5c;
+  --primary: #5a6b38;
+  --accent: #5a6b38;
+  --ring: #5a6b38;
 }
 
 .festival-theme[data-theme="heroic"] {
@@ -235,6 +235,26 @@
     padding-left: 4rem;
     padding-right: 4rem;
   }
+}
+
+@utility scrollbar-hidden {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.scrollbar-hidden::-webkit-scrollbar,
+.scrollbar-hidden::-webkit-scrollbar-button,
+.scrollbar-hidden::-webkit-scrollbar-thumb,
+.scrollbar-hidden::-webkit-scrollbar-track {
+  display: none !important;
+  width: 0 !important;
+  height: 0 !important;
+  background: transparent !important;
+}
+
+.scrollbar-hidden {
+  -ms-overflow-style: none !important;
+  scrollbar-width: none !important;
 }
 
 @layer base {

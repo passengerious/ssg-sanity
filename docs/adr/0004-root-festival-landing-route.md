@@ -6,6 +6,8 @@ Owner: Architect
 
 ## Context
 
+> **2026-07-28:** ADR 0006 keeps `/` as the festival route but replaces the multi-city landing with the complete single-city Lviv experience. `festivalCity` documents no longer generate `/:slug` routes.
+
 The festival landing experience currently exists on `/landing` for MVP verification. The root route `/` still depends on a generic Sanity `page` document with slug `index`, but the current dataset has no generic `page` documents. This makes the public homepage dependent on placeholder CMS content even though the festival landing is the intended launch experience.
 
 ADR 0003 defines the dynamic root `/:slug` contract for `festivalCity` and generic `page` documents. That contract intentionally excludes `/`, which is implemented by `frontend/app/page.tsx`.

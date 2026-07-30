@@ -6,30 +6,13 @@ import {
   decorativeDivider,
   sectionPadding,
 } from "@/lib/tailwind-patterns";
-import type { LANDING_CITIES_QUERY_RESULT } from "@/sanity.types";
+import type { FESTIVAL_CITY_QUERY_RESULT } from "@/sanity.types";
 
-type LandingCity = LANDING_CITIES_QUERY_RESULT[number];
-type LandingPartner = NonNullable<NonNullable<LandingCity["partners"]>[number]>;
-type PartnerCard = LandingPartner & {
-  cityName?: string | null;
-};
+type Partner = NonNullable<
+  NonNullable<FESTIVAL_CITY_QUERY_RESULT>["partners"]
+>[number];
 
-function getPartnerCards(cities: LANDING_CITIES_QUERY_RESULT): PartnerCard[] {
-  const seen = new Set<string>();
-
-  return cities.flatMap((city) => {
-    const partners = city.partners?.filter(Boolean) ?? [];
-
-    return partners.flatMap((partner) => {
-      if (!partner?._id || !partner.name || seen.has(partner._id)) return [];
-      seen.add(partner._id);
-
-      return [{ ...partner, cityName: city.cityName }];
-    });
-  });
-}
-
-const partnerLevelLabels: Partial<Record<NonNullable<PartnerCard["level"]>, string>> = {
+const partnerLevelLabels: Partial<Record<NonNullable<Partner["level"]>, string>> = {
   title: "Титульний партнер",
   gold: "Золотий партнер",
   silver: "Срібний партнер",
@@ -38,30 +21,31 @@ const partnerLevelLabels: Partial<Record<NonNullable<PartnerCard["level"]>, stri
   friend: "Друг фестивалю",
 };
 
-function partnerLabel(partner: PartnerCard) {
-  const level = partner.level ? partnerLevelLabels[partner.level] || partner.level : null;
-
-  return [level, partner.cityName].filter(Boolean).join(" · ");
+function partnerLabel(partner: Partner) {
+  return partner.level ? partnerLevelLabels[partner.level] || partner.level : null;
 }
 
 export function PartnersSection({
-  cities,
+  partners,
 }: {
-  cities: LANDING_CITIES_QUERY_RESULT;
+  partners: Partner[];
 }) {
-  const partners = getPartnerCards(cities);
-
   return (
-    <section className={sectionPadding} id="partners" tabIndex={-1}>
+    <section
+      aria-labelledby="partners-heading"
+      className={`${sectionPadding} scroll-mt-32 md:scroll-mt-20`}
+      id="partners"
+      tabIndex={-1}
+    >
       <div className="mx-auto max-w-5xl text-center">
         <span className="mb-3 inline-flex items-center gap-2 text-xs font-bold uppercase tracking-[0.2em] text-secondary">
           <Handshake aria-hidden="true" className="size-3.5" />
           Партнери
         </span>
-        <h2 className="font-serif text-4xl font-bold leading-tight text-foreground md:text-5xl lg:text-6xl">
+        <h2 className="font-serif text-4xl font-bold leading-tight text-foreground md:text-5xl lg:text-6xl" id="partners-heading">
           Разом творимо Країну Мрій
         </h2>
-        <div className="mx-auto mt-4 flex items-center justify-center gap-4">
+        <div aria-hidden="true" className="mx-auto mt-4 flex items-center justify-center gap-4">
           <div className={decorativeDivider.start} />
           <div className={decorativeDivider.dot} />
           <div className={decorativeDivider.end} />
@@ -97,7 +81,7 @@ export function PartnersSection({
                     {partner.name}
                   </h3>
                   {label ? (
-                    <p className="mt-1 text-xs font-bold uppercase tracking-[0.12em] text-primary">
+                    <p className="mt-1 text-xs font-bold uppercase tracking-[0.12em] text-secondary">
                       {label}
                     </p>
                   ) : null}
@@ -118,7 +102,7 @@ export function PartnersSection({
                   >
                     {card}
                     <span className="sr-only" id={descriptionId}>Відкриється у новій вкладці</span>
-                    <span className="mt-4 inline-flex items-center gap-2 text-sm font-bold text-primary">
+                    <span className="mt-4 inline-flex items-center gap-2 text-sm font-bold text-secondary">
                       Перейти до партнера
                       <ExternalLink aria-hidden="true" className="size-4 transition-transform group-hover:translate-x-1 motion-reduce:transition-none" />
                     </span>

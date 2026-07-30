@@ -10,7 +10,7 @@ const portableTextComponents: PortableTextProps["components"] = {
     image: ({ value }) => {
       return (
         <SanityImage
-          alt={value.alt || "Image"}
+          alt={value.alt || "Зображення"}
           image={value}
           quality={100}
           src={value.asset.url}
@@ -25,7 +25,11 @@ const portableTextComponents: PortableTextProps["components"] = {
     youtube: ({ value }) => {
       const { videoId } = value;
       return (
-        <div className="aspect-video max-w-[45rem] rounded-xl overflow-hidden mb-4">
+        <div
+          aria-label="Відео YouTube"
+          className="mb-4 aspect-video max-w-[45rem] overflow-hidden rounded-xl"
+          role="region"
+        >
           <YouTubeEmbed videoid={videoId} params="rel=0" />
         </div>
       );
@@ -99,10 +103,11 @@ const portableTextComponents: PortableTextProps["components"] = {
         <Link
           href={value?.href || "#"}
           target={target}
-          rel={target ? "noopener" : undefined}
+          rel={target ? "noopener noreferrer" : undefined}
           style={{ textDecoration: "underline" }}
         >
           {children}
+          {target ? <span className="sr-only">, відкриється у новій вкладці</span> : null}
         </Link>
       );
     },

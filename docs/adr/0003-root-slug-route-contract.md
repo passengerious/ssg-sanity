@@ -1,10 +1,12 @@
 # ADR 0003: Root slug route contract
 
 Date: 2026-05-08
-Status: Accepted
+Status: Superseded by ADR 0006
 Owner: Architect
 
 ## Context
+
+> **2026-07-28:** ADR 0006 supersedes this route contract for `festivalCity` documents. The root `/:slug` route now handles generic Sanity `page` documents only; the single Lviv `festivalCity` document is rendered at `/`.
 
 The static frontend serves both generic Sanity `page` documents and domain-specific `festivalCity` documents at root-level slugs such as `/kamianets` and `/lviv`.
 

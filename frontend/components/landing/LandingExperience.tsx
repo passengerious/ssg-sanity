@@ -1,27 +1,54 @@
-"use client";
-
 import { AboutFestival } from "@/components/landing/AboutFestival";
-import { ArtistsLineup } from "@/components/landing/ArtistsLineup";
+import {
+  ArtistsLineup,
+  type DayGroup,
+} from "@/components/landing/ArtistsLineup";
 import { BuyTickets } from "@/components/landing/BuyTickets";
 import { Footer } from "@/components/landing/Footer";
 import { Founder } from "@/components/landing/Founder";
+import { FestivalAboutContent } from "@/components/landing/FestivalAboutContent";
+import { FestivalPhotoGallery } from "@/components/landing/FestivalPhotoGallery";
 import { Header } from "@/components/landing/Header";
 import { Hero } from "@/components/landing/Hero";
+import { HistoryTimeline } from "@/components/landing/HistoryTimeline";
 import { LocationsGrid } from "@/components/landing/LocationsGrid";
 import { PartnersSection } from "@/components/landing/PartnersSection";
 import { FestivalThemeShell } from "@/components/festival-theme-shell";
-import { DEFAULT_FESTIVAL_THEME } from "@/lib/festival-themes";
-import type { LANDING_CITIES_QUERY_RESULT } from "@/sanity.types";
+import type { FESTIVAL_CITY_QUERY_RESULT } from "@/sanity.types";
+
+/**
+ * First N artists in the CMS-ordered array belong to Day 1 (15 Aug).
+ * Remaining artists belong to Day 2 (16 Aug).
+ * See the day-group convention in docs/plans/lineup.md.
+ */
+export const DAY_1_ARTIST_COUNT = 3;
 
 export function LandingExperience({
-  cities,
+  city,
 }: {
-  cities: LANDING_CITIES_QUERY_RESULT;
+  city: FESTIVAL_CITY_QUERY_RESULT | null;
 }) {
+  const locations = city?.locations?.filter(Boolean) ?? [];
+  const artists = city?.artists?.filter(Boolean) ?? [];
+  const partners = city?.partners?.filter(Boolean) ?? [];
+  const history = city?.history?.filter(Boolean) ?? [];
+  const hasHistory = history.length > 0;
+  const body =
+    city?.body?.map((block) =>
+      block._type === "block" && block.style === "h1"
+        ? { ...block, style: "h2" as const }
+        : block,
+    ) ?? [];
+
+  const days: DayGroup[] = [
+    { label: "15 серпня, Субота", artists: artists.slice(0, DAY_1_ARTIST_COUNT) },
+    { label: "16 серпня, Неділя", artists: artists.slice(DAY_1_ARTIST_COUNT) },
+  ].filter((d) => d.artists.length > 0);
+
   return (
     <FestivalThemeShell
       className="min-h-screen bg-background text-foreground font-sans"
-      theme={DEFAULT_FESTIVAL_THEME}
+      theme="heroic"
     >
       <a
         className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[100] focus:rounded-md focus:bg-background focus:px-4 focus:py-2 focus:text-foreground focus:shadow-lg focus:outline-2 focus:outline-primary"
@@ -29,15 +56,18 @@ export function LandingExperience({
       >
         Перейти до основного вмісту
       </a>
-      <Header />
+      <Header hasHistory={hasHistory} />
       <main className="mx-auto max-w-7xl" id="main-content" tabIndex={-1}>
-        <Hero cities={cities} />
+        <Hero city={city} />
         <BuyTickets />
         <AboutFestival />
         <Founder />
-        <LocationsGrid />
-        <ArtistsLineup cities={cities} />
-        <PartnersSection cities={cities} />
+        <HistoryTimeline history={history} />
+        <FestivalPhotoGallery />
+        <LocationsGrid locations={locations} />
+        <ArtistsLineup days={days} />
+        <PartnersSection partners={partners} />
+        {body.length ? <FestivalAboutContent body={body} /> : null}
       </main>
       <Footer />
     </FestivalThemeShell>

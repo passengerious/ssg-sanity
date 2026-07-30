@@ -1,16 +1,16 @@
 import type { MetadataRoute } from "next";
 import { groq } from "next-sanity";
 import { getSiteUrl } from "@/lib/site-url";
+import { RESERVED_ROOT_SLUGS } from "@/lib/reserved-root-slugs";
 import { client } from "@/sanity/lib/client";
 
-const VIEWABLE_TYPES = ["page", "post", "festivalCity"] as const;
+const VIEWABLE_TYPES = ["page", "post"] as const;
 
 export const dynamic = "force-static";
 
 const urlQuery = `
   'url': select(
     _type == "post" => $baseUrl + "/blog/" + slug.current + "/",
-    _type == "festivalCity" => $baseUrl + "/" + slug.current + "/",
     $baseUrl + "/" + slug.current + "/"
   )
 `;
@@ -21,14 +21,12 @@ const SITEMAP_QUERY = groq`
     _type in $viewableTypes
     && meta.noindex != true
     && defined(slug.current)
-    && !(_type == "page" && slug.current == "index")
-    && !(_type == "page" && slug.current in *[_type == "festivalCity" && defined(slug.current)].slug.current)
+    && !(_type == "page" && slug.current in $reservedRootSlugs)
   ] {
     ${urlQuery},
     "lastModified": _updatedAt,
     "changeFrequency": select(_type == "page" => "daily", "weekly"),
     "priority": select(
-      _type == "festivalCity" => 0.8,
       _type == "page" => 0.5,
       0.7
     )
@@ -39,6 +37,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const baseUrl = getSiteUrl();
   const data = await client.withConfig({ stega: false }).fetch(SITEMAP_QUERY, {
     baseUrl,
+    reservedRootSlugs: [...RESERVED_ROOT_SLUGS],
     viewableTypes: [...VIEWABLE_TYPES],
   });
 

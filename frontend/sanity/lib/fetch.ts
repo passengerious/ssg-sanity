@@ -8,9 +8,7 @@ import {
   NAVIGATION_QUERY,
   SETTINGS_QUERY,
   TICKET_INFO_QUERY,
-  FESTIVAL_CITIES_SLUGS_QUERY,
   FESTIVAL_CITY_QUERY,
-  LANDING_CITIES_QUERY,
 } from "@/sanity/queries";
 import {
   PAGE_QUERY_RESULT,
@@ -21,9 +19,7 @@ import {
   NAVIGATION_QUERY_RESULT,
   SETTINGS_QUERY_RESULT,
   TICKET_INFO_QUERY_RESULT,
-  FESTIVAL_CITIES_SLUGS_QUERY_RESULT,
   FESTIVAL_CITY_QUERY_RESULT,
-  LANDING_CITIES_QUERY_RESULT,
 } from "@/sanity.types";
 
 function warn(label: string, error: unknown) {
@@ -66,25 +62,9 @@ export const fetchSanityFestivalCityBySlug = async ({
   }
 };
 
-export const fetchSanityFestivalCitiesStaticParams =
-  async (): Promise<FESTIVAL_CITIES_SLUGS_QUERY_RESULT> => {
-    try {
-      return await client.fetch(FESTIVAL_CITIES_SLUGS_QUERY);
-    } catch (error) {
-      warn("Failed to fetch festival city slugs", error);
-      return [];
-    }
-  };
-
-export const fetchSanityLandingCities =
-  async (): Promise<LANDING_CITIES_QUERY_RESULT> => {
-    try {
-      return await client.fetch(LANDING_CITIES_QUERY);
-    } catch (error) {
-      warn("Failed to fetch landing cities", error);
-      return [];
-    }
-  };
+export const fetchSanityHomepageFestivalCity = async (): Promise<FESTIVAL_CITY_QUERY_RESULT> => {
+  return fetchSanityFestivalCityBySlug({ slug: "lviv" });
+};
 
 export const fetchSanityPosts = async (): Promise<POSTS_QUERY_RESULT> => {
   try {

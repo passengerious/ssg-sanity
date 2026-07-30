@@ -3,12 +3,6 @@ import { bodyQuery } from "./shared/body";
 import { imageQuery } from "./shared/image";
 import { metaQuery } from "./shared/meta";
 
-export const FESTIVAL_CITIES_SLUGS_QUERY = groq`
-  *[_type == "festivalCity" && defined(slug.current)]{
-    "slug": slug.current
-  }
-`;
-
 export const FESTIVAL_CITY_QUERY = groq`
   *[_type == "festivalCity" && slug.current == $slug][0]{
     _id,
@@ -57,46 +51,17 @@ export const FESTIVAL_CITY_QUERY = groq`
         ${imageQuery}
       }
     },
+    history[]{
+      _key,
+      year,
+      title,
+      description,
+      sourceUrl,
+      sourceLabel
+    },
     body[]{
       ${bodyQuery}
     },
     ${metaQuery}
-  }
-`;
-
-export const LANDING_CITIES_QUERY = groq`
-  *[_type == "festivalCity" && defined(slug.current)] | order(orderRank asc){
-    _id,
-    "slug": slug.current,
-    title,
-    cityName,
-    themeKey,
-    dateRange,
-    heroImage{
-      ${imageQuery}
-    },
-    artists[]->{
-      _id,
-      name,
-      genre,
-      externalUrl,
-      photo{
-        alt,
-        asset->{
-          url
-        }
-      }
-    },
-    partners[]->{
-      _id,
-      name,
-      level,
-      url,
-      logo{
-        asset->{
-          url
-        }
-      }
-    }
   }
 `;

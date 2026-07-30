@@ -1,10 +1,21 @@
 import React from "react";
 import Link from "next/link";
+import { CampaignArtwork } from "@/components/landing/CampaignArtwork";
 
 export const Footer = () => {
   return (
-    <footer className="w-full border-t border-border/50 bg-muted/30 px-4 py-12 md:px-12 md:py-16">
-      <div className="mx-auto max-w-5xl">
+    <footer className="w-full border-t border-border/50 bg-muted/30">
+      {/* Decorative ethnic border motif — aria-hidden, not content */}
+      <div aria-hidden="true" className="h-6 w-full overflow-hidden opacity-40">
+        <CampaignArtwork
+          alt=""
+          className="size-full object-cover"
+          height={300}
+          src="/images/festival/30-07/motif-border.webp"
+          width={1150}
+        />
+      </div>
+      <div className="mx-auto max-w-5xl px-4 py-12 md:px-12 md:py-16">
         <div className="flex flex-col items-center gap-6 text-center">
           {/* Logo / brand */}
           <Link
@@ -40,7 +51,7 @@ export const Footer = () => {
 
           {/* Description */}
           <p className="max-w-lg text-sm leading-relaxed text-muted-foreground">
-            Посилання на партнерів і соціальні мережі будуть додані після затвердження офіційних каналів.
+            Посилання на соціальні мережі будуть додані після затвердження офіційних каналів.
           </p>
 
           {/* Social placeholders */}
@@ -55,11 +66,11 @@ export const Footer = () => {
             ))}
           </ul>
 
-          {/* Decorative divider */}
-          <div className="mt-2 flex items-center gap-4">
-            <div className="h-px w-16 bg-border/50" />
-            <div className="size-1.5 rounded-full bg-border/50" />
-            <div className="h-px w-16 bg-border/50" />
+          {/* Decorative divider — green nature accent */}
+          <div aria-hidden="true" className="mt-2 flex items-center gap-4">
+            <div className="h-px w-16 bg-secondary/30" />
+            <div className="size-1.5 rounded-full bg-secondary/50" />
+            <div className="h-px w-16 bg-secondary/30" />
           </div>
 
           {/* Copyright */}

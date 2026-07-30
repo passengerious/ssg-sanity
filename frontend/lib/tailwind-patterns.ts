@@ -4,7 +4,7 @@
 export const sectionPadding = "px-4 py-10 md:px-12 md:py-16";
 
 export const cardHover =
-  "transition-all duration-300 hover:-translate-y-1 hover:shadow-xl motion-reduce:transition-none";
+  "transition-all duration-300 hover:-translate-y-1 hover:shadow-xl motion-reduce:transition-none motion-reduce:hover:translate-y-0 motion-reduce:hover:shadow-none";
 
 export const focusRing =
   "focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background";

@@ -13,6 +13,9 @@ import location from "./schemas/documents/location";
 import artist from "./schemas/documents/artist";
 import partner from "./schemas/documents/partner";
 
+// Festival content objects
+import festivalMilestone from "./schemas/objects/festival-milestone";
+
 // Schema UI shared objects
 import blockContent from "./schemas/blocks/shared/block-content";
 import link from "./schemas/blocks/shared/link";
@@ -59,6 +62,8 @@ export const schemaTypes = [
   location,
   artist,
   partner,
+  // festival content objects
+  festivalMilestone,
   // shared objects
   blockContent,
   link,
