@@ -4,11 +4,11 @@ Last updated: 2026-07-31
 
 ## Current phase
 
-Phase 7 staging route-output fix and update-loop validation; Phase 8 single-city Lviv pivot — architecture, frontend, published eight-location catalog, six-artist lineup, twelve-milestone history, and 2024 Kyiv photo rewind completed locally; partners, manual browser checks, and deployment remain pending
+Phase 7 staging route-output fix and update-loop validation; Phase 8 single-city Lviv pivot — architecture, interactive fixed two-poster Hero, published nine-location catalog, six-artist lineup, twelve-milestone history, 2024 Kyiv photo rewind, and five-logo static partner fallback completed locally; CMS partner metadata, manual browser checks, and deployment remain pending
 
 ## Active priorities
 
-1. Complete and publish the remaining approved single Lviv `festivalCity` content: partners. The eight active locations, six-artist lineup, and twelve history milestones are published and ordered; an approved static hero fallback is integrated.
+1. Decide whether to replace the approved five-logo static partner fallback with complete published Lviv `partner` references, including verified URLs, levels, and order. The fallback currently renders whenever Sanity returns no partners.
 2. Finish Phase 7 staging validation: root-page browser smoke tests, custom 404 body, and repeat deployment/update loop.
 3. Prepare Phase 8 production deployment using the same manual GitHub Actions workflow with a different GitHub Environment and production domain.
 4. Keep staging non-indexable with `NEXT_PUBLIC_SITE_ENV=development`; production must use `NEXT_PUBLIC_SITE_ENV=production`.
@@ -25,12 +25,14 @@ Phase 7 staging route-output fix and update-loop validation; Phase 8 single-city
 | `docs/plans/stitch-task.md`         | MVP implemented | UI agent  | 2026-05-08 |
 | `docs/logs/fix-hero-visibility.md`  | Completed       | Architect | 2026-05-09 |
 | `docs/plans/single-city-lviv-pivot.md` | Completed | Architect | 2026-07-28 |
-| `docs/plans/places.md` | Content population and export verification complete; browser/staging smoke test pending | Architect | 2026-07-29 |
-| `docs/plans/lineup.md` | Content population and export verification complete; browser/staging smoke test pending | Architect | 2026-07-29 |
+| `docs/plans/places.md` | Nine-location content correction and export verification complete; browser/staging smoke test pending | Architect | 2026-07-31 |
+| `docs/plans/lineup.md` | Content, partial artist-image publication, and export verification complete; browser/staging crop/responsive smoke tests pending | Architect | 2026-07-31 |
 | `docs/plans/poster-led-brand-rebalance.md` | Implemented locally; browser/staging smoke test pending | Architect | 2026-07-29 |
 | `docs/plans/festival-history-facts.md` | Implemented and published; public source-link verification and browser/staging smoke test pending | Architect | 2026-07-29 |
 | `docs/plans/landing-visual-asset-integration.md` | Implemented locally; manual browser/staging smoke tests pending | Architect | 2026-07-30 |
-| `docs/plans/festival-photo-rewind-gallery.md` | Implemented locally and content published; manual browser/staging smoke tests pending | Architect | 2026-07-31 |
+| `docs/plans/festival-photo-rewind-gallery.md` | Implemented locally; nine-location correction published; manual browser/staging smoke tests pending | Architect | 2026-07-31 |
+| `docs/plans/homepage-sanity-type-boundary.md` | Completed; Hero decoupled and unused query projections removed | Architect | 2026-07-31 |
+| `docs/plans/partner-logo-integration.md` | Completed; five optimized static fallback logos render when CMS partners are empty | Architect | 2026-07-31 |
 
 ## Architecture decisions
 
@@ -61,15 +63,14 @@ Phase 7 staging route-output fix and update-loop validation; Phase 8 single-city
 | Sanity content updates require rebuilds                        |   Medium | Architect  | Use documented manual GitHub Actions rebuild workflow in `workflow.md`; consider webhook automation later |
 | Festival UI can drift from updated `.stitch/DESIGN.md` tokens  |   Medium | UI agents  | Keep landing/city styling aligned to Brand Red, Natural Green, Warm Beige, Dark Grey tokens              |
 | Newsletter signup is not connected yet                         |      Low | Product    | Keep disabled for MVP; implement an external form/backend later if needed                                |
-| Active Sanity Hero is an unresponsive 256 KB JPEG in static export | Medium | Performance/UI | Add Sanity CDN responsive variants or replace with an optimized approved CMS Hero before launch if LCP budgets require it |
-| Approved artist photos are incomplete                         |   Medium | Content    | Retain intentional no-photo placeholders until approved Ukrainian-described assets are available |
+| Artist-photo coverage is partial (3 of 6 cards)               |   Medium | Content    | Retain intentional placeholders for Braty Hadyukiny, Myroslav Kuvaldin + IBASH, and Burdon until exact approved Ukrainian-described assets are available; do not repurpose `Медовий полин.JPG` |
 | Static host conflicts with flat export files and same-named route payload directories | High | Deployment | Use `trailingSlash: true` directory output; verify slash routes after redeploy |
 | Staging reports mixed-content browser console errors | High | Testing | Redeploy directory-style output; verify host no longer redirects slash routes to `http://` |
-| Lviv partners may be incomplete at deployment | High | Content | Publish and smoke-test the remaining canonical `lviv` references before deployment |
-| Approved artist photos are not attached | Medium | Content | Retain intentional no-photo placeholders until approved Ukrainian-described assets are available |
+| Static partner fallback has no verified links or partnership levels | Medium | Content | Publish a complete ordered CMS partner set when approved metadata is available; CMS partners replace the fallback automatically |
 | Artist schema cannot represent daily performance schedule | Medium | Product/Architecture | Render CMS order only; create a future schema ADR if per-day grouping becomes mandatory |
 | Historical source brief contains strong or quantified claims | Medium | Product/Content | High-risk claims are qualified as editorial festival material; attach approved public source URLs before deployment when available |
 | Native-dialog gallery lightbox still needs manual assistive-technology testing | Medium | Accessibility/UI | Test keyboard, Escape/backdrop close, focus return, touch, screen readers, 200% zoom, and reduced motion before staging sign-off |
+| Interactive Hero poster swap still needs manual browser/assistive-technology validation | Medium | Accessibility/UI | Test keyboard activation, focus ring, dynamic screen-reader description, reduced motion, 320px/400% reflow, and cold-cache network behavior before staging sign-off |
 
 ## Recent significant changes
 
@@ -86,6 +87,11 @@ Phase 7 staging route-output fix and update-loop validation; Phase 8 single-city
 | 2026-07-30 | Audited the proposed rewind photo set and planned a curated static gallery, programme cleanup, and bottom About visual consolidation | `docs/logs/2026-07.md` |
 | 2026-07-30 | Implemented the licensed 2024 Kyiv photo rail/lightbox, linked Suspilne coverage, published the eight-location programme, and consolidated campaign art | `docs/logs/2026-07.md` |
 | 2026-07-31 | Refined the 2024 Kyiv gallery’s caption-free previews, hidden-scrollbar native rail controls, and resilient near-full-viewport lightbox; manual testing remains pending | `docs/logs/2026-07.md` |
+| 2026-07-31 | Restored the CMS-owned Ukrainian ethno-foodcourt as the ninth Lviv Programme card after correcting the mistaken removal; the separate static food callout/image remains removed | `docs/logs/2026-07.md` |
+| 2026-07-31 | Published exact-match photos for КОМУ ВНИЗ and ГАЙДАМАКИ; with the existing Oleg/VV image, lineup photo coverage is three of six cards | `docs/logs/2026-07.md` |
+| 2026-07-31 | Narrowed the Hero presentation contract and removed unused `slug`/`themeKey` fields from the generated homepage query result | `docs/logs/2026-07.md` |
+| 2026-07-31 | Converted five approved partner marks to compact WebP files and added a CMS-deferential static Partners fallback | `docs/logs/2026-07.md` |
+| 2026-07-31 | Replaced the Sanity Hero image path with an accessible two-poster local composition and deferred the full rear poster until interaction | `docs/logs/2026-07.md` |
 | 2026-06-01 | Scoped next phase: production uses same manual workflow with a separate GitHub Environment; content refresh and newsletter remain future waves | `docs/logs/2026-06.md` |
 | 2026-05-17 | Documented manual code and Sanity content update workflows in `workflow.md`, with webhook automation deferred | `docs/logs/2026-05.md` |
 | 2026-05-17 | Replaced landing-wide hover theme mutation with local Epic/Heroic city-card accents while keeping plain-anchor city navigation | `docs/logs/2026-05.md` |

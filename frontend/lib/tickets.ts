@@ -12,5 +12,5 @@ export function resolveTicketUrl(
   city: CityTicketSource,
   ticketInfo: TICKET_INFO_QUERY_RESULT | null,
 ) {
-  return city?.ticketUrlOverride || ticketInfo?.boxOfficeUrl || null;
+  return city?.ticketUrlOverride || ticketInfo?.boxOfficeUrl || "https://novosad.tibox.me/krayina-mrii";
 }

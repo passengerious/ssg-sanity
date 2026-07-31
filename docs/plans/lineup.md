@@ -1,13 +1,13 @@
 # Plan: Lviv lineup content and homepage presentation
 
-Date: 2026-07-29
-Status: Content and static-export verification complete; manual browser and staging smoke tests pending
+Date: 2026-07-31
+Status: Content, partial artist-image publication, and static-export verification complete; manual browser and staging smoke tests pending
 Owner: Architect
 Implementing agents: `sanity-schema-architect`, `react-next-component-specialist`
 
 ## Goal
 
-Publish the verified six-artist Lviv lineup in Sanity, preserve its approved two-day editorial order, and render it on `/` as an accessible Heroic-theme programme with day groups, intentional no-photo states, a 20th-anniversary Oleg/VV highlight, and an announcement banner.
+Publish the verified six-artist Lviv lineup in Sanity, preserve its approved two-day editorial order, and render it on `/` as an accessible Heroic-theme programme with available approved photos and intentional no-photo states, a 20th-anniversary Oleg/VV highlight, and an announcement banner.
 
 ## Non-goals
 
@@ -39,11 +39,11 @@ The schema does not contain a performance-day field. For this pre-launch six-art
 | 5 | 16 August | ГАЙДАМАКИ | `haydamaky` | Козак-рок | Підкреслити поєднання українського фольклору з потужною рок-енергією. |
 | 6 | 16 August | Олег Скрипка та гурт «ВВ» | `oleg-skrypka-ta-vv` | Етно-рок | Оновити наявний документ; наголосити на засновнику фестивалю, спадщині ВВ і 20-річчі «Країни Мрій». |
 
-Artist photos are optional for this release. When an approved photo is later attached, it must include Ukrainian alternative text. `externalUrl` remains empty until an approved official Spotify, YouTube, or artist URL is provided.
+Artist photos are optional for this release. Three of six cards now have photos: КОМУ ВНИЗ, ГАЙДАМАКИ, and Oleg/VV. On 2026-07-31, exact lineup matches from ignored local source directory `artifacts/img/30.07/artists/` (the user had referred to `artifacts/artists`) were uploaded and published for КОМУ ВНИЗ and ГАЙДАМАКИ with Ukrainian alternative text. `Медовий полин.JPG` was not attached: no artist by that name is among the six referenced Lviv cards. БРАТИ ГАДЮКІНИ, МИРОСЛАВ КУВАЛДІН та ІБАШ, and БУРДОН intentionally retain placeholders. `externalUrl` remains empty until an approved official Spotify, YouTube, or artist URL is provided.
 
 ### Announcement copy
 
-> І це лише перша частина програми! Незабаром ми оголосимо нових артистів, музичні гурти та спеціальних гостей фестивалю.
+> Основну програму фестивалю оголошено! Стежте за оновленнями розкладу та новинами події.
 
 ## Relevant files
 
@@ -91,7 +91,7 @@ Artist photos are optional for this release. When an approved photo is later att
    - Confirm six published Lviv references in exact order and no duplicates.
    - Confirm both day groups contain three artists.
    - Run frontend typecheck, lint, and a production-like static build.
-   - Inspect `frontend/out/index.html` and perform desktop/mobile/keyboard checks after photos are optionally added later.
+   - Inspect `frontend/out/index.html` for published artist-image asset hashes and card alternative text; perform desktop/mobile/keyboard crop and responsive checks.
 
 ## Verification
 
@@ -103,7 +103,10 @@ Artist photos are optional for this release. When an approved photo is later att
 - [x] `pnpm --filter frontend lint` passes.
 - [x] Production-like `pnpm --filter frontend build` passes.
 - [x] `frontend/out/index.html` contains all six names, both day labels, the anniversary badge, and the announcement copy.
-- [ ] Manual desktop/mobile/keyboard check passes; absent photos render intentional icon placeholders.
+- [x] Published Sanity query confirms the КОМУ ВНИЗ image asset `image-ff60ca6b889abd94d109bb139f7dd18521153153-800x450-jpg` (800×450) with alt `Учасники гурту «КОМУ ВНИЗ» у темному одязі та сонцезахисних окулярах.` and the ГАЙДАМАКИ image asset `image-a88871abd551337a136bb8070451040223f1b35e-790x526-jpg` (790×526) with alt `Учасники гурту «ГАЙДАМАКИ» з музичними інструментами на темному тлі.`
+- [x] Static output contains both new Sanity asset hashes and `alt="Фото артиста КОМУ ВНИЗ"` / `alt="Фото артиста ГАЙДАМАКИ"`.
+- [x] `git diff --check` passes after image publication.
+- [ ] Manual desktop/mobile/keyboard crop and responsive checks pass; the three remaining cards retain intentional icon placeholders.
 
 ## Risks
 
@@ -112,10 +115,10 @@ Artist photos are optional for this release. When an approved photo is later att
 | Studio reordering silently changes day assignment | Keep Day 1 references first and contiguous; document `DAY_1_ARTIST_COUNT = 3` in code and this plan. |
 | A seventh artist is announced | Update the reference-order convention and UI boundary deliberately, or create a schedule-model ADR when editorial control is required. |
 | Oleg/VV duplicate or slug collision | Reuse the current `oleg-skrypka-ta-vv` document. |
-| Photos arrive late | Publish records without images; the UI uses an intentional Music-icon placeholder. |
+| Artist-photo coverage is partial (3 of 6 cards) | Keep placeholders for БРАТИ ГАДЮКІНИ, МИРОСЛАВ КУВАЛДІН та ІБАШ, and БУРДОН until exact approved assets are available; do not repurpose `Медовий полин.JPG`. |
 | Unapproved external links are added | Leave `externalUrl` unset until an official URL is approved. |
 | Static host does not update after content publication | Dispatch the documented rebuild/deployment workflow after the verified static export. |
 
 ## Completion notes
 
-The six approved artists and their ordered references are published. The homepage renders the two explicit day groups, visible anniversary highlight, announcement banner, named nested day sections, and accessible no-photo states. Static output and local dev response were verified on 2026-07-29. The reference-order day grouping remains a temporary convention, not a durable performance schedule. Manual desktop/mobile/keyboard and staging smoke tests remain before deployment sign-off.
+The six approved artists and their ordered references are published. The homepage renders the two explicit day groups, visible anniversary highlight, announcement banner, named nested day sections, and accessible no-photo states. On 2026-07-31, photos for КОМУ ВНИЗ and ГАЙДАМАКИ were published; together with the existing Oleg/VV image, coverage is three of six cards. No schema, GROQ, TypeGen, component, or lineup-order change was made. Static output and local dev response were verified on 2026-07-29; the updated production-like eight-route export was verified after image publication. The reference-order day grouping remains a temporary convention, not a durable performance schedule. Manual desktop/mobile/keyboard crop, responsive, and staging smoke tests remain before deployment sign-off.

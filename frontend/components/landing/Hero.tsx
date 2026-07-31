@@ -21,6 +21,31 @@ const FALLBACK_DATES = "15–16 серпня 2026";
 const FALLBACK_VENUE = "Парк культури ім. Богдана Хмельницького";
 const FALLBACK_FOUNDER = "Автор та засновник — Олег Скрипка";
 
+type CampaignImage = {
+  src: string;
+  previewSrc?: string;
+  width: number;
+  height: number;
+  description: string;
+};
+
+const COMMUNITY_IMAGE: CampaignImage = {
+  src: "/images/festival/30-07/lineup-community.webp",
+  width: 720,
+  height: 900,
+  description:
+    "Плакат «Тут звучить світ»: люди танцюють просто неба в традиційному українському вбранні; «Музика, традиції й культури без кордонів. В ритмі це магічно».",
+};
+
+const POSTER_IMAGE: CampaignImage = {
+  src: "/images/festival/30-07/post-poster-2.webp",
+  previewSrc: "/images/festival/30-07/post-poster-2-preview.webp",
+  width: 1440,
+  height: 1800,
+  description:
+    "Плакат «Традиції, що звучать сьогодні»: червоний птах летить над горами; «Сучасний ритм, народжений з коріння. Країна Мрій».",
+};
+
 export const Hero = ({ content }: HeroProps) => {
   const [isSwapped, setIsSwapped] = useState(false);
   const rawTitle = content?.title || FALLBACK_TITLE;
@@ -29,33 +54,8 @@ export const Hero = ({ content }: HeroProps) => {
   const cityName = content?.cityName || FALLBACK_CITY;
   const dates = content?.dateRange || FALLBACK_DATES;
 
-  const primaryImage = isSwapped
-    ? {
-      src: "/images/festival/30-07/post-poster-2.webp",
-      alt: "Кампанійне плакатне мистецтво Країна Мрій 2026",
-      width: 1440,
-      height: 1800,
-    }
-    : {
-      src: "/images/festival/30-07/lineup-community.webp",
-      alt: "Люди танцюють просто неба в традиційному українському вбранні",
-      width: 720,
-      height: 900,
-    };
-
-  const secondaryImage = isSwapped
-    ? {
-      src: "/images/festival/30-07/lineup-community.webp",
-      alt: "Люди танцюють просто неба в традиційному українському вбранні",
-      width: 720,
-      height: 900,
-    }
-    : {
-      src: "/images/festival/30-07/post-poster-2.webp",
-      alt: "Кампанійне плакатне мистецтво Країна Мрій 2026",
-      width: 1440,
-      height: 1800,
-    };
+  const primaryImage = isSwapped ? POSTER_IMAGE : COMMUNITY_IMAGE;
+  const secondaryImage = isSwapped ? COMMUNITY_IMAGE : POSTER_IMAGE;
 
   return (
     <section
@@ -76,7 +76,7 @@ export const Hero = ({ content }: HeroProps) => {
       <div className="relative z-10 grid w-full max-w-6xl items-center gap-6 md:grid-cols-2 md:gap-10 lg:gap-14">
         {/* Text column — centered on mobile, left-aligned at md+ */}
         <div className="flex flex-col justify-center text-center md:text-left">
-          <span className="mb-3 inline-block rounded-full border border-secondary/40 bg-secondary/5 px-4 py-1 text-xs font-bold uppercase tracking-[0.25em] text-secondary transition-colors duration-300 md:mb-4 md:text-sm md:self-start">
+          <span className="mb-3 inline-block w-fit self-center rounded-full border border-secondary/40 bg-secondary/5 px-4 py-1 text-xs font-bold uppercase tracking-[0.25em] text-secondary transition-colors duration-300 md:mb-4 md:self-start md:text-sm">
             Етно-фестиваль
           </span>
 
@@ -116,42 +116,51 @@ export const Hero = ({ content }: HeroProps) => {
           </a>
         </div>
 
-        {/* Art column — interactive dual-poster campaign artwork composition */}
-        <div className="relative flex items-center justify-center p-2 sm:p-4">
-          {/* Secondary poster layered behind */}
+        {/* Art column — one accessible control for the dual-poster composition */}
+        <div className="flex items-center justify-center p-2 sm:p-4">
           <button
             type="button"
-            onClick={() => setIsSwapped((prev) => !prev)}
-            aria-label={`Поміняти плакати місцями. ${secondaryImage.alt}`}
-            className="absolute -right-1 -top-1 aspect-[4/5] w-3/4 overflow-hidden rounded-2xl border border-secondary/20 bg-card/60 shadow-md rotate-3 opacity-80 transition-all duration-500 hover:rotate-1 hover:opacity-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary motion-reduce:transition-none motion-reduce:hover:rotate-3 motion-reduce:hover:opacity-80 sm:-right-2 sm:-top-2"
+            onClick={() => setIsSwapped((previous) => !previous)}
+            aria-describedby="hero-artwork-description"
+            aria-label="Поміняти плакати місцями"
+            className="group relative aspect-[4/5] w-full text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-4 focus-visible:ring-offset-background sm:w-11/12"
           >
-            <CampaignArtwork
-              alt={secondaryImage.alt}
-              className="size-full object-cover"
-              fetchPriority="low"
-              height={secondaryImage.height}
-              src={secondaryImage.src}
-              width={secondaryImage.width}
-            />
-          </button>
+            <span className="sr-only" id="hero-artwork-description">
+              Попереду: {primaryImage.description} Позаду: {secondaryImage.description}
+            </span>
 
-          {/* Primary artwork card in foreground */}
-          <button
-            type="button"
-            onClick={() => setIsSwapped((prev) => !prev)}
-            aria-label={`Поміняти плакати місцями. ${primaryImage.alt}`}
-            className="relative z-10 aspect-[4/5] w-full overflow-hidden rounded-2xl border border-border bg-background text-left shadow-2xl transition-all duration-500 hover:scale-[1.01] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary motion-reduce:transition-none motion-reduce:hover:scale-100 sm:w-11/12"
-          >
-            <CampaignArtwork
-              alt={primaryImage.alt}
-              className="size-full object-contain"
-              fetchPriority="high"
-              height={primaryImage.height}
-              loading="eager"
-              sizes="(min-width: 1024px) 50vw, (min-width: 768px) 768px, calc(100vw - 32px)"
-              src={primaryImage.src}
-              width={primaryImage.width}
-            />
+            {/* Secondary poster layered behind */}
+            <div
+              aria-hidden="true"
+              className="absolute -right-1 -top-1 aspect-[4/5] w-3/4 overflow-hidden rounded-2xl border border-secondary/20 bg-card/60 shadow-md rotate-3 opacity-80 transition-all duration-500 group-hover:rotate-1 group-hover:opacity-100 motion-reduce:transition-none motion-reduce:group-hover:rotate-3 motion-reduce:group-hover:opacity-80 sm:-right-2 sm:-top-2"
+            >
+              <CampaignArtwork
+                alt=""
+                className="size-full object-cover"
+                fetchPriority="low"
+                height={secondaryImage.height}
+                loading="lazy"
+                src={secondaryImage.previewSrc ?? secondaryImage.src}
+                width={secondaryImage.width}
+              />
+            </div>
+
+            {/* Primary artwork card in foreground */}
+            <div
+              aria-hidden="true"
+              className="relative z-10 aspect-[4/5] w-full overflow-hidden rounded-2xl border border-border bg-background shadow-2xl transition-all duration-500 group-hover:scale-[1.01] motion-reduce:transition-none motion-reduce:group-hover:scale-100"
+            >
+              <CampaignArtwork
+                alt=""
+                className="size-full object-contain"
+                fetchPriority={!isSwapped ? "high" : "low"}
+                height={primaryImage.height}
+                loading={!isSwapped ? "eager" : "lazy"}
+                sizes="(min-width: 1024px) 50vw, (min-width: 768px) 768px, calc(100vw - 32px)"
+                src={primaryImage.src}
+                width={primaryImage.width}
+              />
+            </div>
           </button>
         </div>
       </div>

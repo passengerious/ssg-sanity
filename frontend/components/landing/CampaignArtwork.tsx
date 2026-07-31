@@ -7,13 +7,10 @@
  * @example
  * ```tsx
  * <CampaignArtwork
- *   src="/images/festival/30-07/hero-traditions-desktop.webp"
- *   mobileSrc="/images/festival/30-07/hero-traditions-mobile.webp"
- *   alt="Фестивальна сцена Країна Мрій"
- *   width={1920}
- *   height={1080}
- *   mobileWidth={768}
- *   mobileHeight={1024}
+ *   src="/images/festival/30-07/lineup-community.webp"
+ *   alt="Люди танцюють просто неба"
+ *   width={720}
+ *   height={900}
  *   sizes="(max-width: 767px) 100vw, (min-width: 1024px) 896px, 768px"
  *   loading="eager"
  *   fetchPriority="high"

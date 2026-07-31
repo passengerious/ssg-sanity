@@ -33,18 +33,18 @@ function HistoryMilestoneItem({ milestone }: { milestone: HistoryMilestone }) {
         className="absolute -left-[5px] top-0 size-2.5 rounded-full border-2 border-secondary bg-background"
       />
 
-      {/* Year badge — red primary accent */}
+      {/* Year badge — green secondary accent */}
       {milestone.year && (
         <time
-          className="mb-2 inline-block rounded-md bg-primary/10 px-3 py-1 font-mono text-sm font-bold text-primary"
+          className="mb-2 inline-block rounded-md bg-secondary/10 px-3 py-1 font-mono text-sm font-bold text-secondary"
           dateTime={firstYear ? String(firstYear) : undefined}
         >
           {milestone.year}
         </time>
       )}
 
-      {/* Title — H3 for semantic hierarchy */}
-      <h3 className="mb-2 font-serif text-xl font-bold leading-tight text-foreground md:text-2xl">
+      {/* Title — H3 with red primary accent */}
+      <h3 className="mb-2 font-serif text-xl font-bold leading-tight text-primary md:text-2xl">
         {milestone.title}
       </h3>
 

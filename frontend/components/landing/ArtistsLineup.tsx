@@ -63,14 +63,24 @@ export function ArtistsLineup({ days }: { days: DayGroup[] }) {
         <div className="mx-auto mt-12 max-w-5xl space-y-12">
           {days.map((day, index) => {
             const headingId = `artists-day-${index + 1}-heading`;
+            const parts = day.label.split(",").map((s) => s.trim());
+            const [datePart, dayPart] = parts;
 
             return (
               <section aria-labelledby={headingId} key={day.label}>
                 <h3
-                  className="mb-6 font-serif text-2xl font-semibold text-foreground md:text-3xl"
+                  className="mb-6 font-serif text-2xl font-bold md:text-3xl"
                   id={headingId}
                 >
-                  {day.label}
+                  {datePart && dayPart ? (
+                    <>
+                      <span className="text-secondary">{datePart}</span>
+                      <span className="text-muted-foreground/60">, </span>
+                      <span className="text-primary">{dayPart}</span>
+                    </>
+                  ) : (
+                    <span className="text-secondary">{day.label}</span>
+                  )}
                 </h3>
                 <ul className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
                   {day.artists.map((artist) => (
@@ -81,10 +91,9 @@ export function ArtistsLineup({ days }: { days: DayGroup[] }) {
             );
           })}
 
-          {/* Announcement banner — exact copy from docs/plans/lineup.md §2 */}
           <p className="rounded-2xl border border-border bg-card px-6 py-5 text-center text-sm leading-relaxed text-muted-foreground md:text-base">
-            І це лише перша частина програми! Незабаром ми оголосимо нових
-            артистів, музичні гурти та спеціальних гостей фестивалю.
+            Основну програму фестивалю оголошено! Стежте за оновленнями розкладу
+            та новинами події.
           </p>
         </div>
       ) : (
@@ -135,11 +144,6 @@ function ArtistCard({ artist }: { artist: Artist }) {
           </div>
         )}
 
-        {isHighlight ? (
-          <span className="absolute right-3 top-3 rounded-full bg-primary px-3 py-1 text-xs font-bold uppercase tracking-wider text-white shadow-md">
-            20 років Країні Мрій
-          </span>
-        ) : null}
       </div>
 
       {/* Content area (~40 % of card height) */}

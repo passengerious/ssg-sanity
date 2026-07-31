@@ -9,15 +9,10 @@ export const FESTIVAL_CITY_QUERY = groq`
     _type,
     title,
     cityName,
-    slug,
-    themeKey,
     tagline,
     dateRange,
     description,
     ticketUrlOverride,
-    heroImage{
-      ${imageQuery}
-    },
     locations[]->{
       _id,
       name,

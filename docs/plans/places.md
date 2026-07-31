@@ -7,7 +7,7 @@ Implementing agents: `sanity-schema-architect`, `react-next-component-specialist
 
 ## Goal
 
-Publish and display the approved Lviv festival locations in the CMS-driven `LocationsGrid`, preserving their editorial order, descriptions, responsive presentation, and the fixed Heroic homepage architecture. The active set was reduced from nine to eight on 2026-07-30 when product removed `Український етно-фудкорт`.
+Publish and display the approved nine Lviv festival locations in the CMS-driven `LocationsGrid`, preserving their editorial order, descriptions, responsive presentation, and the fixed Heroic homepage architecture. The ninth `Український етно-фудкорт` Programme card remains CMS-owned; only its separate static food-court callout and `program-food.webp` are removed.
 
 Record the approved two-day lineup as source content for the separate artist-population workflow without inventing schedule capabilities that the current schema cannot represent.
 
@@ -37,6 +37,7 @@ The 20th anniversary festival takes place in Lviv on 15–16 August 2026 at Bohd
 | 6 | Країна Містична | `other` | Територія духовного балансу й гармонії: йога, медитації та інші духовні практики. |
 | 7 | Зона народних гулянь | `other` | Інтерактивний майданчик українських танців, співів і обрядових дійств у сучасному ритмі. |
 | 8 | Дитяча галявина | `other` | Безпечний простір для наймолодших гостей з творчими заняттями, традиційними іграми, розвагами та піклуванням. |
+| 9 | Український етно-фудкорт | `other` | Гастрономічна подорож регіонами України: сучасна національна кухня, фермерські продукти, напої та страви локальних виробників. |
 
 ### Approved lineup source content
 
@@ -84,7 +85,7 @@ Site note: this is the first programme announcement; additional artists and gues
    - Preserve semantic list markup, responsive 1/2/3-column layout, focus styles, and reduced-motion behavior.
 
 4. **Verify content and export**
-   - Confirm the published Lviv document resolves exactly eight active locations in the expected order after the approved food-court removal.
+    - Confirm the published Lviv document resolves exactly nine active locations in the expected order, including the restored food-court reference as the final card.
    - Run TypeGen only if queries or schemas change.
    - Run frontend typecheck, lint, and production-like static build.
    - Inspect exported homepage content and test the Program anchor in a browser.
@@ -92,14 +93,14 @@ Site note: this is the first programme announcement; additional artists and gues
 ## Verification
 
 - [x] Sanity schema/query review confirms no schema change is required.
-- [x] Canonical Lviv document references the approved eight active locations in order.
+- [x] Canonical Lviv document references the approved nine active locations in order.
 - [x] Canceled Epic Stage is not referenced by the Lviv document.
 - [x] `LocationsGrid` renders all approved active locations from CMS content without a hardcoded catalog.
 - [x] TypeGen is not required because schemas and GROQ queries are unchanged.
 - [x] `pnpm --filter frontend typecheck` passes.
 - [x] `pnpm --filter frontend lint` passes.
 - [x] Production-like `pnpm --filter frontend build` passes.
-- [x] `frontend/out/index.html` contains the approved location titles after content publication.
+- [x] `frontend/out/index.html` contains the nine approved location titles and the food-court description after content publication; it does not contain `program-food.webp`.
 - [ ] Manual desktop/mobile/keyboard check confirms Program navigation, responsive cards, and visible focus states.
 
 ## Risks
@@ -118,4 +119,4 @@ The plan was refactored from approved Ukrainian editorial source material on 202
 
 On 2026-07-29, four missing `location` documents were created and nine approved records were published. At that point, the canonical Lviv document referenced all nine locations in the documented order; the canceled Epic Stage remained unreferenced. Sanity MCP verification, live dev-response verification, and a fresh production-like static export confirmed that catalog.
 
-On 2026-07-30, product removed `Український етно-фудкорт` from the active programme. Its reference was removed and published from the canonical Lviv document while the standalone location document was retained for rollback/history. Sanity and clean static-export verification confirm eight ordered locations, no food-court card, and continued inclusion of `Книжкова Країна Мрій`.
+On 2026-07-30, the food-court reference was mistakenly removed from the active programme. Its standalone location document was retained for rollback/history. On 2026-07-31, product clarified that only the separate food-court-specific static section/callout and `program-food.webp` were to be removed. The published location `a1e96ff0-f399-46ad-8c4f-1b5849c28c3b` was restored as the ninth/final reference on canonical Lviv document `e1841ff3-3179-44f8-b4cf-69508aa4fa3b` with key `locfoodcourt1`. Sanity and clean static-export verification confirm nine ordered locations, the food-court card and approved description, continued inclusion of `Книжкова Країна Мрій`, and no `program-food.webp` callout.

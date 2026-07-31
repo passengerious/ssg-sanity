@@ -260,30 +260,30 @@ export function FestivalPhotoGallery() {
       tabIndex={-1}
     >
       <div className="mx-auto max-w-7xl">
-        <div className="mx-auto mb-10 max-w-4xl text-center md:mb-12">
-          <span className="mb-3 inline-block text-xs font-bold uppercase tracking-[0.2em] text-secondary">
-            Київ · 2024
+        <div className="mb-10 max-w-4xl text-left md:mb-12">
+          <span className="mb-3 inline-block text-xs font-bold uppercase tracking-[0.2em] text-primary">
+            21–23 червня 2024 · Київ
           </span>
           <h2
             className="font-serif text-3xl font-bold leading-tight text-foreground md:text-4xl lg:text-5xl"
             id="photo-gallery-heading"
           >
-            Ретроспектива: Країна Мрій<br></br>Київ, 21–23 червня 2024
+            Ретроспектива: <span className="text-secondary">Країна Мрій 2024</span>
           </h2>
           <div
             aria-hidden="true"
-            className="mx-auto mt-4 flex items-center justify-center gap-4"
+            className="mt-4 flex items-center justify-start gap-4"
           >
             <div className={decorativeDivider.start} />
             <div className={decorativeDivider.dot} />
             <div className={decorativeDivider.end} />
           </div>
-          <p className="mt-6 text-base leading-relaxed text-muted-foreground md:text-lg">
+          <p className="mt-6 text-left text-base leading-relaxed text-muted-foreground md:text-lg">
             Фестиваль проходив у Національному ботанічному саду імені М. М.
             Гришка. Подія об’єднала виступи кримськотатарських артистів,
             поетичні читання та благодійні збори.
           </p>
-          <p className="mt-4 text-sm leading-relaxed text-muted-foreground md:text-base">
+          <p className="mt-4 text-left text-sm leading-relaxed text-muted-foreground md:text-base">
             Репортаж про Кримську сцену: {" "}
             <a
               className="rounded-sm font-semibold text-secondary underline decoration-secondary/40 underline-offset-4 transition-colors hover:decoration-2 hover:decoration-secondary focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background motion-reduce:transition-none"
@@ -366,7 +366,7 @@ export function FestivalPhotoGallery() {
                   className="font-serif text-xl font-bold leading-tight sm:text-2xl"
                   id="photo-dialog-heading"
                 >
-                  Фото фестивалю
+                  архівні фото фестивалю
                 </h2>
                 <p aria-live="polite" className="mt-0.5 text-xs font-semibold text-secondary sm:text-sm">
                   {activeIndex! + 1} з {photos.length}

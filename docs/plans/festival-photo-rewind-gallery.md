@@ -7,7 +7,7 @@ Proposed implementing agents: `react-next-component-specialist`, `tailwind-ui-im
 
 ## Goal
 
-Add a curated, accessible photo-rewind section to the Lviv landing using selected source photographs from `artifacts/img/30.07/rewind-2024/`, remove the published `Український етно-фудкорт` reference from the current Lviv programme, and consolidate the existing `history-rhythm.webp` and `lineup-community.webp` campaign visuals into the bottom CMS-backed `Про фестиваль` section.
+Add a curated, accessible photo-rewind section to the Lviv landing using selected source photographs from `artifacts/img/30.07/rewind-2024/`, remove only the separate static food-court callout and `program-food.webp` while preserving the CMS-driven `Український етно-фудкорт` Programme card, and consolidate the existing `history-rhythm.webp` and `lineup-community.webp` campaign visuals into the bottom CMS-backed `Про фестиваль` section.
 
 The gallery should show the breadth of festival life—music, shared ritual, crafts, reading, dance, and audience participation—without shipping all 30 source files or introducing a heavy carousel dependency.
 
@@ -112,9 +112,9 @@ Media context appears directly beneath the event paragraph:
 - URL: `https://suspilne.media/crimea/774365-na-miznarodnomu-etnofestivali-kraina-mrij-vidkrilasa-krimska-scena/`
 - The accessible external link identifies the publisher/title and announces that it opens in a new tab.
 
-## Remove `Український етно-фудкорт`
+## Remove the separate food-court callout, retain the CMS card
 
-Before implementation, the published canonical Lviv `festivalCity` referenced nine locations. The completed content update removed only the reference to:
+Product clarified on 2026-07-31 that the completed cleanup must remove only the separate static food-court callout and `program-food.webp`. The published canonical Lviv `festivalCity` must retain the ninth/final reference to:
 
 - location ID: `a1e96ff0-f399-46ad-8c4f-1b5849c28c3b`
 - slug: `ukrainskyi-etno-foodcourt`
@@ -122,14 +122,13 @@ Before implementation, the published canonical Lviv `festivalCity` referenced ni
 
 Content workflow:
 
-1. Patch the canonical Lviv draft with optimistic revision protection and remove the matching reference from `locations`.
-2. Publish the Lviv document.
-3. Keep the standalone `location` document for rollback/history unless product separately requests deletion; do not unpublish or delete it as part of this task.
-4. Verify the published Lviv location order now contains eight items and still includes `Книжкова Країна Мрій`.
-5. Remove the now-unneeded static `program-food.webp` callout and its conditional UI from `LocationsGrid`; retain the generic food category resolver only if it remains useful for future CMS entries.
-6. Update `docs/plans/places.md`, the project ledger, and the task log from nine to eight active locations.
+1. Preserve or restore the matching reference on canonical Lviv document `e1841ff3-3179-44f8-b4cf-69508aa4fa3b` as the ninth/final `locations` item with key `locfoodcourt1`, then publish the Lviv document.
+2. Keep the standalone `location` document published; do not unpublish or delete it as part of this task.
+3. Verify the published Lviv location order contains nine items, ends with `Український етно-фудкорт`, and still includes `Книжкова Країна Мрій`.
+4. Remove the now-unneeded static `program-food.webp` callout and its conditional UI from `LocationsGrid`; retain the generic food category resolver, which displays the ChefHat food treatment for this CMS entry.
+5. Update `docs/plans/places.md`, the project ledger, and the task log to reflect nine active locations and the static-callout-only removal.
 
-No schema or GROQ contract change is required for this content removal.
+No schema, GROQ, TypeGen, or frontend code change is required for this content correction.
 
 ## Move the existing campaign visuals
 
@@ -163,7 +162,7 @@ Create a named server-rendered bottom section, for example `FestivalAboutContent
 
 ## ADR assessment
 
-No ADR is needed for the proposed implementation because the gallery remains a local-static, code-curated, server-rendered presentation feature under ADR 0006, and the programme change only removes an existing reference.
+No ADR is needed for the proposed implementation because the gallery remains a local-static, code-curated, server-rendered presentation feature under ADR 0006, and the programme correction preserves the existing CMS reference contract.
 
 Create an ADR before implementation if the gallery becomes Sanity-managed, adds a persistent archival media content model, introduces a shared scripted carousel architecture, or changes the project-wide image pipeline.
 
@@ -172,8 +171,8 @@ Create an ADR before implementation if the gallery becomes Sanity-managed, adds 
 1. [x] Resolve photo year, event context, usage rights, and credit requirements; approve the final ten-image manifest and copy.
 2. [x] Generate optimized width-responsive derivatives in the approved public namespace and record byte sizes.
 3. [x] Implement and refine the semantic scroll-snap gallery, caption-free previews, desktop rail controls, native-dialog lightbox, and verified media link after History.
-4. [x] Patch and publish the canonical Lviv location references, removing only `Український етно-фудкорт`.
-5. [x] Remove the food-specific programme callout and unused derivative while preserving the remaining CMS-driven location grid.
+4. [x] Restore and publish `Український етно-фудкорт` as the ninth/final canonical Lviv location reference after the mistaken 30 July removal.
+5. [x] Remove the separate food-specific programme callout and unused derivative while preserving the nine-card CMS-driven location grid.
 6. [x] Create the bottom `FestivalAboutContent` composition and move both campaign visuals from History and Line-up into it.
 7. [x] Update `.stitch/DESIGN.md`, `docs/plans/places.md`, the project ledger, and monthly log.
 8. [x] Run automated checks, specialist reviews, and static-output assertions.
@@ -189,7 +188,7 @@ Create an ADR before implementation if the gallery becomes Sanity-managed, adds 
 - [x] Updated ten-image derivatives total approximately 1.5 MB and remain within the revised deployment/transfer budgets.
 - [ ] Gallery remains usable with touch, trackpad, mouse, keyboard, 200% zoom, screen reader, and reduced motion.
 - [x] There is no autoplay, infinite loop, carousel dependency, or client code outside the focused native-dialog lightbox island.
-- [x] Published Lviv content contains eight location references, excludes `Український етно-фудкорт`, and retains `Книжкова Країна Мрій`.
+- [x] Published Lviv content contains nine ordered location references, ends with `Український етно-фудкорт`, and retains `Книжкова Країна Мрій`.
 - [x] `program-food.webp` and the food-specific callout are absent from static output.
 - [x] `history-rhythm.webp` and `lineup-community.webp` appear only in the bottom `Про фестиваль` section.
 - [x] History chronology and CMS-owned Line-up remain semantically and editorially intact after removing their former supporting images.
@@ -210,4 +209,4 @@ Create an ADR before implementation if the gallery becomes Sanity-managed, adds 
 
 ## Completion notes
 
-Implemented locally on 2026-07-30 and refined on 2026-07-31. The sixth gallery selection now uses `DSC_3457.jpg` with responsive 600w/1200w WebP derivatives and updated Ukrainian alternative text/caption, replacing the earlier makers portrait while preserving the existing public filenames. The gallery intro now matches the History section’s narrow centered rhythm; preview captions are intentionally hidden while detailed Ukrainian alternative text, explicit thumbnail action names, and lightbox captions remain. The rail retains semantic list/proximity-snap native scrolling with a hidden scrollbar, visible guidance, partial-card/mobile affordance, and desktop-only one-card Previous/Next controls that respect endpoints and reduced motion. The native dialog is near-full-viewport with contained vertical overflow and high-contrast controls/caption surfaces. No dependency, schema, GROQ, image manifest/path, or architecture changed, so no ADR is required. Frontend typecheck, lint, the production-like eight-route build, and `git diff --check` passed; specialist code/accessibility review found no blocker or high issue after fixes. Manual desktop/mobile/touch/keyboard/screen-reader/200%-zoom/reduced-motion/staging checks remain pending.
+Implemented locally on 2026-07-30 and refined on 2026-07-31. The sixth gallery selection now uses `DSC_3457.jpg` with responsive 600w/1200w WebP derivatives and updated Ukrainian alternative text/caption, replacing the earlier makers portrait while preserving the existing public filenames. The gallery intro now matches the History section’s narrow centered rhythm; preview captions are intentionally hidden while detailed Ukrainian alternative text, explicit thumbnail action names, and lightbox captions remain. The rail retains semantic list/proximity-snap native scrolling with a hidden scrollbar, visible guidance, partial-card/mobile affordance, and desktop-only one-card Previous/Next controls that respect endpoints and reduced motion. The native dialog is near-full-viewport with contained vertical overflow and high-contrast controls/caption surfaces. On 2026-07-31, product corrected the earlier food-court removal: the CMS card was restored as the ninth/final Lviv location while only the separate static callout and `program-food.webp` remain absent. No dependency, schema, GROQ, TypeGen, frontend code, image manifest/path, or architecture changed, so no ADR is required. Published-query verification confirms nine ordered references; frontend typecheck, lint, the production-like eight-route build, static output assertions for the food-court card/description and absent `program-food.webp`, and `git diff --check` passed. Manual desktop/mobile/touch/keyboard/screen-reader/200%-zoom/reduced-motion/staging checks remain pending.

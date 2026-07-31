@@ -12,6 +12,72 @@ type Partner = NonNullable<
   NonNullable<FESTIVAL_CITY_QUERY_RESULT>["partners"]
 >[number];
 
+type PartnerCard = {
+  id: string;
+  name: string;
+  url: string | null;
+  label: string | null;
+  logo?: { src: string; width: number; height: number };
+};
+
+const fallbackPartners: PartnerCard[] = [
+  {
+    id: "concert-ua",
+    name: "Concert.ua",
+    url: null,
+    label: null,
+    logo: {
+      src: "/images/festival/30-07/partners/concert-ua.webp",
+      width: 168,
+      height: 128,
+    },
+  },
+  {
+    id: "radio-lvivska-khvylia",
+    name: "Радіо Львівська хвиля",
+    url: null,
+    label: null,
+    logo: {
+      src: "/images/festival/30-07/partners/radio-lvivska-khvylia.webp",
+      width: 384,
+      height: 93,
+    },
+  },
+  {
+    id: "so-good-company",
+    name: "So Good Company",
+    url: null,
+    label: null,
+    logo: {
+      src: "/images/festival/30-07/partners/so-good-company.webp",
+      width: 169,
+      height: 128,
+    },
+  },
+  {
+    id: "work-ua",
+    name: "Work.ua",
+    url: null,
+    label: null,
+    logo: {
+      src: "/images/festival/30-07/partners/work-ua.webp",
+      width: 120,
+      height: 102,
+    },
+  },
+  {
+    id: "novosad-and-company",
+    name: "Новосад і Компанія",
+    url: null,
+    label: null,
+    logo: {
+      src: "/images/festival/30-07/partners/novosad-and-company.webp",
+      width: 283,
+      height: 78,
+    },
+  },
+];
+
 const partnerLevelLabels: Partial<Record<NonNullable<Partner["level"]>, string>> = {
   title: "Титульний партнер",
   gold: "Золотий партнер",
@@ -25,11 +91,33 @@ function partnerLabel(partner: Partner) {
   return partner.level ? partnerLevelLabels[partner.level] || partner.level : null;
 }
 
+function partnerCards(partners: Partner[]): PartnerCard[] {
+  if (!partners.length) {
+    return fallbackPartners;
+  }
+
+  return partners.map((partner) => ({
+    id: partner._id,
+    name: partner.name?.trim() || "Партнер",
+    url: partner.url,
+    label: partnerLabel(partner),
+    logo: partner.logo?.asset?.url
+      ? {
+          src: partner.logo.asset.url,
+          width: partner.logo.asset.metadata?.dimensions?.width || 192,
+          height: partner.logo.asset.metadata?.dimensions?.height || 96,
+        }
+      : undefined,
+  }));
+}
+
 export function PartnersSection({
   partners,
 }: {
   partners: Partner[];
 }) {
+  const cards = partnerCards(partners);
+
   return (
     <section
       aria-labelledby="partners-heading"
@@ -52,23 +140,26 @@ export function PartnersSection({
         </div>
       </div>
 
-      {partners.length ? (
-        <ul className="mx-auto mt-12 grid max-w-5xl grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
-          {partners.map((partner) => {
-            const safeId = partner._id.replace(/[^a-zA-Z0-9_-]/g, "-");
+      {cards.length ? (
+        <ul
+          className="mx-auto mt-12 grid max-w-5xl grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3"
+          role="list"
+        >
+          {cards.map((partner) => {
+            const safeId = partner.id.replace(/[^a-zA-Z0-9_-]/g, "-");
             const headingId = `partner-${safeId}`;
             const descriptionId = `partner-${safeId}-new-tab`;
-            const label = partnerLabel(partner);
             const card = (
               <>
                 <div className="flex min-h-28 items-center justify-center rounded-2xl bg-background p-6">
-                  {partner.logo?.asset?.url ? (
+                  {partner.logo ? (
                     <SanityImage
                       alt=""
-                      className="max-h-16 w-auto object-contain"
-                      height={96}
-                      image={partner.logo}
-                      width={192}
+                      className="max-h-16 max-w-full w-auto object-contain"
+                      height={partner.logo.height}
+                      sizes="(min-width: 1024px) 288px, (min-width: 640px) calc((100vw - 4.25rem) / 2), calc(100vw - 4rem)"
+                      src={partner.logo.src}
+                      width={partner.logo.width}
                     />
                   ) : (
                     <span aria-hidden="true" className="font-serif text-2xl font-bold text-primary">
@@ -80,9 +171,9 @@ export function PartnersSection({
                   <h3 className="font-serif text-2xl font-bold text-foreground" id={headingId}>
                     {partner.name}
                   </h3>
-                  {label ? (
+                  {partner.label ? (
                     <p className="mt-1 text-xs font-bold uppercase tracking-[0.12em] text-secondary">
-                      {label}
+                      {partner.label}
                     </p>
                   ) : null}
                 </div>
@@ -90,7 +181,7 @@ export function PartnersSection({
             );
 
             return (
-              <li key={partner._id}>
+              <li key={partner.id}>
                 {partner.url ? (
                   <a
                     aria-describedby={descriptionId}
@@ -116,11 +207,7 @@ export function PartnersSection({
             );
           })}
         </ul>
-      ) : (
-        <p className="mx-auto mt-12 max-w-xl rounded-2xl border border-border bg-card px-6 py-8 text-center text-muted-foreground">
-          Партнерів буде оголошено.
-        </p>
-      )}
+      ) : null}
     </section>
   );
 }

@@ -22,16 +22,6 @@ export const AboutFestival = () => {
           {/* Subtle overlay gradient */}
           <div className="absolute inset-0 bg-gradient-to-tr from-black/10 to-transparent" aria-hidden="true" />
         </div>
-        {/* Ethnic folk border ornament strip */}
-        <div aria-hidden="true" className="relative mt-3 h-3 w-full overflow-hidden rounded-sm opacity-60">
-          <CampaignArtwork
-            alt=""
-            className="size-full object-cover"
-            height={300}
-            src="/images/festival/30-07/motif-border.webp"
-            width={1150}
-          />
-        </div>
       </div>
 
       {/* Text side */}

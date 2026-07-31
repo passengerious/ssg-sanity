@@ -109,7 +109,7 @@ export default async function TicketsPage() {
             {canBuy ? (
               <a
                 className="inline-flex items-center justify-center gap-3 rounded-xl bg-primary px-8 py-4 font-serif text-xl font-bold text-primary-foreground shadow-lg transition-opacity hover:opacity-85 focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background"
-                href={ticketInfo?.boxOfficeUrl || "#"}
+                href={ticketInfo?.boxOfficeUrl || "https://novosad.tibox.me/krayina-mrii"}
                 rel="noopener noreferrer"
                 target="_blank"
               >
