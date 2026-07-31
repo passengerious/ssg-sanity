@@ -139,7 +139,7 @@ jobs:
 
             # Canonicalize known static routes to HTTPS trailing-slash URLs before
             # the host's directory-slash redirect can downgrade them to http://.
-            RewriteRule ^(tickets|lviv)$ https://%{HTTP_HOST}/$1/ [R=302,L,NE]
+            RewriteRule ^tickets$ https://%{HTTP_HOST}/tickets/ [R=302,L,NE]
 
             # Same protection for statically exported blog posts.
             RewriteRule ^blog/([^/]+)$ https://%{HTTP_HOST}/blog/$1/ [R=302,L,NE]
@@ -158,7 +158,7 @@ jobs:
             }
           done
 
-          for file in lviv/index.html tickets/index.html; do
+          for file in tickets/index.html; do
             test -f "$OUT/$file" || {
               echo "Missing expected directory route file: $OUT/$file"
               exit 1
