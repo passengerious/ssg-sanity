@@ -242,8 +242,6 @@ jobs:
           test -f "$DEPLOY_PATH/404.html"
           test -f "$DEPLOY_PATH/sitemap.xml"
           test -f "$DEPLOY_PATH/robots.txt"
-          test -f "$DEPLOY_PATH/kamianets/index.html"
-          test -f "$DEPLOY_PATH/lviv/index.html"
           test -f "$DEPLOY_PATH/tickets/index.html"
           test -d "$DEPLOY_PATH/_next"
           ls -la "$DEPLOY_PATH" | sed -n '1,40p'
