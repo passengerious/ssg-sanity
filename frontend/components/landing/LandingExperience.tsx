@@ -6,10 +6,9 @@ import {
 import { BuyTickets } from "@/components/landing/BuyTickets";
 import { Footer } from "@/components/landing/Footer";
 import { Founder } from "@/components/landing/Founder";
-import { FestivalAboutContent } from "@/components/landing/FestivalAboutContent";
 import { FestivalPhotoGallery } from "@/components/landing/FestivalPhotoGallery";
 import { Header } from "@/components/landing/Header";
-import { Hero } from "@/components/landing/Hero";
+import { Hero, type HeroContent } from "@/components/landing/Hero";
 import { HistoryTimeline } from "@/components/landing/HistoryTimeline";
 import { LocationsGrid } from "@/components/landing/LocationsGrid";
 import { PartnersSection } from "@/components/landing/PartnersSection";
@@ -32,13 +31,15 @@ export function LandingExperience({
   const artists = city?.artists?.filter(Boolean) ?? [];
   const partners = city?.partners?.filter(Boolean) ?? [];
   const history = city?.history?.filter(Boolean) ?? [];
+  const heroContent: HeroContent | null = city
+    ? {
+        title: city.title,
+        tagline: city.tagline,
+        cityName: city.cityName,
+        dateRange: city.dateRange,
+      }
+    : null;
   const hasHistory = history.length > 0;
-  const body =
-    city?.body?.map((block) =>
-      block._type === "block" && block.style === "h1"
-        ? { ...block, style: "h2" as const }
-        : block,
-    ) ?? [];
 
   const days: DayGroup[] = [
     { label: "15 серпня, Субота", artists: artists.slice(0, DAY_1_ARTIST_COUNT) },
@@ -58,16 +59,15 @@ export function LandingExperience({
       </a>
       <Header hasHistory={hasHistory} />
       <main className="mx-auto max-w-7xl" id="main-content" tabIndex={-1}>
-        <Hero city={city} />
-        <BuyTickets />
+        <Hero content={heroContent} />
         <AboutFestival />
         <Founder />
+        <ArtistsLineup days={days} />
+        <BuyTickets />
+        <LocationsGrid locations={locations} />
         <HistoryTimeline history={history} />
         <FestivalPhotoGallery />
-        <LocationsGrid locations={locations} />
-        <ArtistsLineup days={days} />
         <PartnersSection partners={partners} />
-        {body.length ? <FestivalAboutContent body={body} /> : null}
       </main>
       <Footer />
     </FestivalThemeShell>

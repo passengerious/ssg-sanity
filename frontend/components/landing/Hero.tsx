@@ -1,10 +1,17 @@
-import Link from "next/link";
-import { SanityImageFill } from "@/components/sanity-image";
+"use client";
+
+import { useState } from "react";
 import { CampaignArtwork } from "@/components/landing/CampaignArtwork";
-import type { FESTIVAL_CITY_QUERY_RESULT } from "@/sanity.types";
+
+export type HeroContent = {
+  title?: string | null;
+  tagline?: string | null;
+  cityName?: string | null;
+  dateRange?: string | null;
+};
 
 type HeroProps = {
-  city: FESTIVAL_CITY_QUERY_RESULT | null;
+  content: HeroContent | null;
 };
 
 const FALLBACK_TITLE = "«Країна Мрій» 2026";
@@ -14,13 +21,41 @@ const FALLBACK_DATES = "15–16 серпня 2026";
 const FALLBACK_VENUE = "Парк культури ім. Богдана Хмельницького";
 const FALLBACK_FOUNDER = "Автор та засновник — Олег Скрипка";
 
-export const Hero = ({ city }: HeroProps) => {
-  const title = city?.title || FALLBACK_TITLE;
-  const tagline = city?.tagline || FALLBACK_TAGLINE;
-  const cityName = city?.cityName || FALLBACK_CITY;
-  const dates = city?.dateRange || FALLBACK_DATES;
-  const heroImage = city?.heroImage ?? null;
-  const hasSanityHero = Boolean(heroImage?.asset?.url);
+export const Hero = ({ content }: HeroProps) => {
+  const [isSwapped, setIsSwapped] = useState(false);
+  const rawTitle = content?.title || FALLBACK_TITLE;
+  const title = rawTitle.replace(/героїчна/gi, "").replace(/\s+/g, " ").trim();
+  const tagline = content?.tagline || FALLBACK_TAGLINE;
+  const cityName = content?.cityName || FALLBACK_CITY;
+  const dates = content?.dateRange || FALLBACK_DATES;
+
+  const primaryImage = isSwapped
+    ? {
+        src: "/images/festival/30-07/post-poster-2.webp",
+        alt: "Кампанійне плакатне мистецтво Країна Мрій 2026",
+        width: 1440,
+        height: 1800,
+      }
+    : {
+        src: "/images/festival/30-07/lineup-community.webp",
+        alt: "Учасники фестивалю танцюють просто неба у традиційному вбранні",
+        width: 720,
+        height: 900,
+      };
+
+  const secondaryImage = isSwapped
+    ? {
+        src: "/images/festival/30-07/lineup-community.webp",
+        alt: "Учасники фестивалю танцюють просто неба у традиційному вбранні",
+        width: 720,
+        height: 900,
+      }
+    : {
+        src: "/images/festival/30-07/post-poster-2.webp",
+        alt: "Кампанійне плакатне мистецтво Країна Мрій 2026",
+        width: 1440,
+        height: 1800,
+      };
 
   return (
     <section
@@ -38,111 +73,87 @@ export const Hero = ({ city }: HeroProps) => {
         aria-hidden="true"
       />
 
-      {hasSanityHero ? (
-        /* ── Sanity branch: centered stacked layout with priority LCP image ── */
-        <div className="relative z-10 w-full max-w-5xl text-center">
-          <span className="mb-4 inline-block rounded-full border border-secondary/40 bg-secondary/5 px-5 py-1.5 text-xs font-bold uppercase tracking-[0.25em] text-secondary transition-colors duration-300 md:mb-6 md:text-sm">
+      <div className="relative z-10 grid w-full max-w-6xl items-center gap-8 md:grid-cols-2 md:gap-12 lg:gap-16">
+        {/* Text column — centered on mobile, left-aligned at md+ */}
+        <div className="flex flex-col justify-center text-center md:text-left">
+          <span className="mb-4 inline-block rounded-full border border-secondary/40 bg-secondary/5 px-5 py-1.5 text-xs font-bold uppercase tracking-[0.25em] text-secondary transition-colors duration-300 md:mb-6 md:text-sm md:self-start">
             Етно-фестиваль
           </span>
 
           <h1
-            className="mb-6 font-serif text-5xl font-bold leading-[1.1] tracking-[-0.02em] text-foreground md:text-7xl lg:text-8xl"
+            className="mb-6 font-serif text-5xl font-bold leading-[1.1] tracking-[-0.02em] text-foreground md:text-6xl lg:text-7xl"
             id="hero-heading"
           >
             {title}
           </h1>
 
-          <p className="mx-auto mb-2 max-w-2xl text-lg leading-relaxed text-muted-foreground md:text-xl lg:text-2xl">
+          <p className="mb-4 text-lg leading-relaxed text-muted-foreground md:text-xl lg:text-2xl">
             {tagline}
           </p>
 
-          <div className="mx-auto mb-4 max-w-2xl text-sm leading-relaxed text-muted-foreground md:text-base">
-            <p className="font-semibold text-foreground">
-              {cityName}
-              {dates ? ` · ${dates}` : null}
-            </p>
-            <p>{FALLBACK_VENUE}</p>
+          {/* Place & Date highlight card */}
+          <div className="mb-6 flex flex-col gap-1 rounded-xl border border-secondary/20 bg-secondary/5 p-3.5 text-base md:self-start md:text-lg">
+            <div className="flex flex-wrap items-center justify-center gap-2 font-bold md:justify-start">
+              <span className="text-secondary">{cityName}</span>
+              <span className="text-muted-foreground/40">•</span>
+              <span className="text-primary">{dates}</span>
+            </div>
+            <p className="text-xs text-muted-foreground sm:text-sm">{FALLBACK_VENUE}</p>
           </div>
 
-          <p className="mb-10 font-hand text-xl text-primary transition-colors duration-300 md:text-2xl lg:text-3xl">
+          <p className="mb-6 font-hand text-xl text-primary transition-colors duration-300 md:mb-8 md:text-2xl lg:text-3xl">
             {FALLBACK_FOUNDER}
           </p>
 
-          <Link
-            className="mb-10 inline-flex rounded-lg bg-primary px-6 py-3 text-base font-semibold text-primary-foreground shadow-sm transition-all duration-300 hover:opacity-90 hover:shadow-md hover:shadow-primary/20 focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background motion-reduce:transition-none md:px-7 md:py-3.5"
-            href="/tickets/"
+          <a
+            className="self-center rounded-lg bg-primary px-6 py-3 text-base font-semibold text-primary-foreground shadow-sm transition-all duration-300 hover:opacity-90 hover:shadow-md hover:shadow-primary/20 focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background motion-reduce:transition-none md:self-start md:px-7 md:py-3.5"
+            href="https://novosad.tibox.me/krayina-mrii"
+            rel="noopener noreferrer"
+            target="_blank"
           >
             Купити квитки
-          </Link>
-
-          <div className="relative mx-auto mt-4 aspect-[16/9] w-full max-w-4xl overflow-hidden rounded-2xl shadow-lg">
-            <SanityImageFill
-              alt={heroImage!.alt || `Панорама фестивалю Країна Мрій у місті ${cityName}`}
-              className="transition-transform duration-700 hover:scale-[1.02] motion-reduce:transition-none motion-reduce:hover:scale-100"
-              image={heroImage}
-              priority
-              sizes="(min-width: 1024px) 896px, (min-width: 768px) 768px, calc(100vw - 32px)"
-            />
-          </div>
+          </a>
         </div>
-      ) : (
-        /* ── Fallback branch: responsive split grid (text + campaign art) ── */
-        <div className="relative z-10 grid w-full max-w-6xl items-center gap-8 md:grid-cols-2 md:gap-12 lg:gap-16">
-          {/* Text column — centered on mobile, left-aligned at md+ */}
-          <div className="flex flex-col justify-center text-center md:text-left">
-            <span className="mb-4 inline-block rounded-full border border-secondary/40 bg-secondary/5 px-5 py-1.5 text-xs font-bold uppercase tracking-[0.25em] text-secondary transition-colors duration-300 md:mb-6 md:text-sm md:self-start">
-              Етно-фестиваль
-            </span>
 
-            <h1
-              className="mb-6 font-serif text-5xl font-bold leading-[1.1] tracking-[-0.02em] text-foreground md:text-6xl lg:text-7xl"
-              id="hero-heading"
-            >
-              {title}
-            </h1>
-
-            <p className="mb-2 text-lg leading-relaxed text-muted-foreground md:text-xl lg:text-2xl">
-              {tagline}
-            </p>
-
-            <div className="mb-4 text-sm leading-relaxed text-muted-foreground md:text-base">
-              <p className="font-semibold text-foreground">
-                {cityName}
-                {dates ? ` · ${dates}` : null}
-              </p>
-              <p>{FALLBACK_VENUE}</p>
-            </div>
-
-            <p className="mb-6 font-hand text-xl text-primary transition-colors duration-300 md:mb-8 md:text-2xl lg:text-3xl">
-              {FALLBACK_FOUNDER}
-            </p>
-
-            <Link
-              className="self-center rounded-lg bg-primary px-6 py-3 text-base font-semibold text-primary-foreground shadow-sm transition-all duration-300 hover:opacity-90 hover:shadow-md hover:shadow-primary/20 focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background motion-reduce:transition-none md:self-start md:px-7 md:py-3.5"
-              href="/tickets/"
-            >
-              Купити квитки
-            </Link>
-          </div>
-
-          {/* Art column — eager/high-priority campaign artwork */}
-          <div className="relative aspect-[9/16] overflow-hidden rounded-2xl bg-background shadow-lg md:aspect-[4/5]">
+        {/* Art column — interactive dual-poster campaign artwork composition */}
+        <div className="relative flex items-center justify-center p-2 sm:p-4">
+          {/* Secondary poster layered behind */}
+          <button
+            type="button"
+            onClick={() => setIsSwapped((prev) => !prev)}
+            aria-label="Поміняти плакати місцями"
+            className="absolute -right-1 -top-1 aspect-[4/5] w-3/4 overflow-hidden rounded-2xl border border-secondary/20 bg-card/60 shadow-md rotate-3 opacity-80 transition-all duration-500 hover:rotate-1 hover:opacity-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary sm:-right-2 sm:-top-2"
+          >
             <CampaignArtwork
-              alt="Кампанійна ілюстрація Країна Мрій — птах серед гір, традиції та етно-мотиви"
-              className="size-full object-contain transition-transform duration-700 hover:scale-[1.02] motion-reduce:transition-none motion-reduce:hover:scale-100"
-              fetchPriority="high"
-              height={1800}
-              loading="eager"
-              mobileHeight={1280}
-              mobileSrc="/images/festival/30-07/hero-traditions-mobile.webp"
-              mobileWidth={720}
-              sizes="(min-width: 1024px) 50vw, (min-width: 768px) 50vw, calc(100vw - 32px)"
-              src="/images/festival/30-07/hero-traditions-desktop.webp"
-              width={1440}
+              alt={secondaryImage.alt}
+              className="size-full object-cover"
+              fetchPriority="low"
+              height={secondaryImage.height}
+              src={secondaryImage.src}
+              width={secondaryImage.width}
             />
-          </div>
+          </button>
+
+          {/* Primary artwork card in foreground */}
+          <button
+            type="button"
+            onClick={() => setIsSwapped((prev) => !prev)}
+            aria-label="Поміняти плакати місцями"
+            className="relative z-10 aspect-[4/5] w-full overflow-hidden rounded-2xl border border-border bg-background text-left shadow-2xl transition-all duration-500 hover:scale-[1.01] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary sm:w-11/12"
+          >
+            <CampaignArtwork
+              alt={primaryImage.alt}
+              className="size-full object-contain"
+              fetchPriority="high"
+              height={primaryImage.height}
+              loading="eager"
+              sizes="(min-width: 1024px) 50vw, (min-width: 768px) 768px, calc(100vw - 32px)"
+              src={primaryImage.src}
+              width={primaryImage.width}
+            />
+          </button>
         </div>
-      )}
+      </div>
     </section>
   );
 };
