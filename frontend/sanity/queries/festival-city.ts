@@ -36,16 +36,26 @@ export const FESTIVAL_CITY_QUERY = groq`
         ${imageQuery}
       }
     },
-    partners[]->{
-      _id,
-      name,
-      slug,
-      level,
-      url,
-      logo{
-        ${imageQuery}
+    "partners": select(
+      defined(partners) && count(partners) > 0 => partners[]->{
+        _id,
+        name,
+        slug,
+        url,
+        logo{
+          ${imageQuery}
+        }
+      },
+      *[_type == "partner"] | order(orderRank asc, name asc){
+        _id,
+        name,
+        slug,
+        url,
+        logo{
+          ${imageQuery}
+        }
       }
-    },
+    ),
     history[]{
       _key,
       year,

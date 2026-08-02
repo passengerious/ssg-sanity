@@ -35,13 +35,8 @@ export const Founder = () => {
 
       {/* Image side — Oleg Skrypka campaign portrait artwork */}
       <div className="flex-1">
-        <div className="group relative mx-auto max-w-sm">
-          {/* Decorative border frame — green nature accent */}
-          <div
-            className="absolute -inset-3 rounded-2xl border-2 border-secondary/25 transition-all duration-500 group-hover:border-secondary/50 group-hover:shadow-lg motion-reduce:transition-none"
-            aria-hidden="true"
-          />
-          <div className="relative z-10 aspect-[9/16] overflow-hidden rounded-2xl bg-background shadow-xl">
+        <div className="group relative mx-auto max-w-xs md:max-w-[300px] lg:max-w-[340px]">
+          <div className="relative z-10 aspect-[9/16] overflow-hidden rounded-2xl border border-primary/20 bg-background shadow-2xl shadow-black/15">
             <CampaignArtwork
               alt="Олег Скрипка — засновник фестивалю Країна Мрій, кампанійна ілюстрація з етно-мотивами"
               className="size-full object-cover transition-transform duration-700 group-hover:scale-[1.02] motion-reduce:transition-none motion-reduce:group-hover:scale-100"

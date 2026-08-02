@@ -63,25 +63,20 @@ export function ArtistsLineup({ days }: { days: DayGroup[] }) {
         <div className="mx-auto mt-12 max-w-5xl space-y-12">
           {days.map((day, index) => {
             const headingId = `artists-day-${index + 1}-heading`;
-            const parts = day.label.split(",").map((s) => s.trim());
-            const [datePart, dayPart] = parts;
 
             return (
               <section aria-labelledby={headingId} key={day.label}>
-                <h3
-                  className="mb-6 font-serif text-2xl font-bold md:text-3xl"
-                  id={headingId}
-                >
-                  {datePart && dayPart ? (
-                    <>
-                      <span className="text-secondary">{datePart}</span>
-                      <span className="text-muted-foreground/60">, </span>
-                      <span className="text-primary">{dayPart}</span>
-                    </>
-                  ) : (
-                    <span className="text-secondary">{day.label}</span>
-                  )}
-                </h3>
+                <div className="mb-6 flex flex-wrap items-center gap-3">
+                  <span className="rounded-full border border-secondary/30 bg-secondary/10 px-3.5 py-1 text-xs font-bold uppercase tracking-[0.15em] text-secondary">
+                    {index === 0 ? "1-й день" : `${index + 1}-й день`}
+                  </span>
+                  <h3
+                    className="font-serif text-2xl font-bold text-foreground md:text-3xl"
+                    id={headingId}
+                  >
+                    {day.label}
+                  </h3>
+                </div>
                 <ul className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
                   {day.artists.map((artist) => (
                     <ArtistCard artist={artist} key={artist._id} />
@@ -91,13 +86,13 @@ export function ArtistsLineup({ days }: { days: DayGroup[] }) {
             );
           })}
 
-          <p className="rounded-2xl border border-border bg-card px-6 py-5 text-center text-sm leading-relaxed text-muted-foreground md:text-base">
+          <p className="rounded-2xl border border-secondary/20 bg-card px-6 py-5 text-center text-sm leading-relaxed text-muted-foreground shadow-sm md:text-base">
             Основну програму фестивалю оголошено! Стежте за оновленнями розкладу
             та новинами події.
           </p>
         </div>
       ) : (
-        <p className="mx-auto mt-12 max-w-xl rounded-2xl border border-border bg-card px-6 py-8 text-center text-muted-foreground">
+        <p className="mx-auto mt-12 max-w-xl rounded-2xl border border-secondary/20 bg-card px-6 py-8 text-center text-muted-foreground shadow-sm">
           Артистів буде оголошено.
         </p>
       )}
@@ -119,42 +114,43 @@ function ArtistCard({ artist }: { artist: Artist }) {
 
   return (
     <li
-      className={`overflow-hidden rounded-2xl bg-card shadow-sm ${
-        isHighlight ? "border-2 border-primary" : "border border-border"
+      className={`group overflow-hidden rounded-2xl bg-card transition-all duration-300 hover:-translate-y-1 hover:shadow-xl ${
+        isHighlight
+          ? "border-2 border-primary/80 shadow-md hover:border-primary"
+          : "border border-secondary/15 shadow-sm hover:border-secondary/35"
       }`}
     >
       {/* Image area (~60 % of card height) */}
-      <div className="relative aspect-[4/3] overflow-hidden bg-muted/30">
+      <div className="relative aspect-[4/3] overflow-hidden bg-muted/20">
         {hasPhoto ? (
           <SanityImageFill
             alt={`Фото артиста ${artist.name || "фестивалю"}`}
-            className="object-cover"
+            className="object-cover transition-transform duration-500 group-hover:scale-105 motion-reduce:transition-none"
             image={artist.photo}
             sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, calc(100vw - 32px)"
           />
         ) : (
           <div
             aria-hidden="true"
-            className="flex h-full w-full items-center justify-center"
+            className="flex h-full w-full items-center justify-center bg-muted/30"
           >
             <Music
-              className="size-12 text-muted-foreground/60"
+              className="size-12 text-muted-foreground/50 transition-transform duration-300 group-hover:scale-110"
               strokeWidth={1}
             />
           </div>
         )}
-
       </div>
 
       {/* Content area (~40 % of card height) */}
       <div className="p-4 md:p-5">
         {artist.genre ? (
-          <p className="mb-1 text-xs font-bold uppercase tracking-wider text-muted-foreground">
+          <p className="mb-1.5 text-xs font-bold uppercase tracking-wider text-secondary">
             {artist.genre}
           </p>
         ) : null}
 
-        <h4 className="font-serif text-lg font-bold leading-tight text-foreground md:text-xl">
+        <h4 className="font-serif text-lg font-bold leading-tight text-foreground transition-colors duration-300 group-hover:text-primary md:text-xl">
           {artist.name || "Артист"}
         </h4>
 
@@ -166,7 +162,7 @@ function ArtistCard({ artist }: { artist: Artist }) {
 
         {artist.externalUrl ? (
           <a
-            className="mt-3 inline-flex items-center gap-1 text-xs font-bold uppercase tracking-[0.12em] text-secondary transition-opacity hover:opacity-80 focus-visible:ring-2 focus-visible:ring-primary motion-reduce:transition-none"
+            className="mt-3 inline-flex items-center gap-1 text-xs font-bold uppercase tracking-[0.12em] text-secondary transition-colors hover:text-primary focus-visible:ring-2 focus-visible:ring-primary motion-reduce:transition-none"
             href={artist.externalUrl}
             rel="noopener noreferrer"
             target="_blank"

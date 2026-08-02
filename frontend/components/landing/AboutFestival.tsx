@@ -10,7 +10,7 @@ export const AboutFestival = () => {
       tabIndex={-1}
     >
       {/* Image side */}
-      <div className="relative w-full flex-1">
+      <div className="relative w-full flex-1 md:max-w-sm lg:max-w-md">
         <div className="relative aspect-[4/5] w-full overflow-hidden rounded-2xl shadow-2xl">
           <CampaignArtwork
             alt="Багатополінна родина в українському традиційному вбранні — фестиваль Країна Мрій об'єднує покоління"

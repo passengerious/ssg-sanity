@@ -36,7 +36,7 @@ export const BuyTickets = () => {
               Не проґав фінал літа!
             </h2>
             <p className="text-lg leading-relaxed opacity-90 md:text-xl" id="tickets-note">
-              Перші 300 квитків за ціною <span className="font-bold">999 грн</span> на 2 дні!
+              Перші 300 квитків за ціною <span className="font-bold">900 грн</span> на 2 дні!
             </p>
           </div>
           <a

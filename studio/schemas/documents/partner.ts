@@ -62,35 +62,16 @@ export default defineType({
           scheme: ["http", "https"],
         }),
     }),
-    defineField({
-      name: "level",
-      title: "Partnership Level",
-      type: "string",
-      options: {
-        list: [
-          { title: "Title", value: "title" },
-          { title: "Gold", value: "gold" },
-          { title: "Silver", value: "silver" },
-          { title: "Bronze", value: "bronze" },
-          { title: "Media", value: "media" },
-          { title: "Friend", value: "friend" },
-        ],
-        layout: "radio",
-      },
-      validation: (Rule) => Rule.required(),
-    }),
     orderRankField({ type: "partner" }),
   ],
   preview: {
     select: {
       title: "name",
-      level: "level",
       media: "logo",
     },
-    prepare({ title, level, media }) {
+    prepare({ title, media }) {
       return {
         title: title || "Untitled partner",
-        subtitle: level,
         media,
       };
     },

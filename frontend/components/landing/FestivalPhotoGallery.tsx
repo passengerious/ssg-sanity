@@ -130,7 +130,7 @@ function ResponsivePhoto({
       className={
         lightbox
           ? "max-h-full max-w-full h-auto w-auto object-contain rounded-xl shadow-2xl"
-          : "absolute inset-0 size-full object-contain"
+          : "absolute inset-0 size-full object-cover transition-transform duration-500 group-hover:scale-105 motion-reduce:transition-none"
       }
       decoding="async"
       height={source.height}
@@ -260,7 +260,7 @@ export function FestivalPhotoGallery() {
       tabIndex={-1}
     >
       <div className="mx-auto max-w-7xl">
-        <div className="mb-10 max-w-4xl text-left md:mb-12">
+        <div className="mb-10 max-w-5xl text-left md:mb-12">
           <span className="mb-3 inline-block text-xs font-bold uppercase tracking-[0.2em] text-primary">
             21–23 червня 2024 · Київ
           </span>
@@ -334,7 +334,7 @@ export function FestivalPhotoGallery() {
               <figure className="overflow-hidden rounded-2xl border border-border bg-card shadow-sm focus-within:ring-2 focus-within:ring-primary focus-within:ring-offset-2 focus-within:ring-offset-background">
                 <button
                   aria-label={`Відкрити фото ${index + 1}: ${photo.alt}`}
-                  className="group relative flex aspect-[3/2] w-full items-center justify-center overflow-hidden bg-muted/30 p-2 focus-visible:outline-none"
+                  className="group relative flex aspect-[3/2] w-full cursor-pointer items-center justify-center overflow-hidden bg-muted/30 focus-visible:outline-none"
                   onClick={() => openPhoto(index)}
                   ref={(element) => {
                     triggerRefs.current[index] = element;

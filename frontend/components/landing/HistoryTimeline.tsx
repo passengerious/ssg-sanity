@@ -120,7 +120,7 @@ export function HistoryTimeline({
             className="font-serif text-3xl font-bold leading-tight text-foreground md:text-4xl lg:text-5xl"
             id="history-heading"
           >
-            Історія фестивалю
+            Історія ВВ та фестивалю КМ
           </h2>
           <div
             aria-hidden="true"

@@ -78,19 +78,6 @@ const fallbackPartners: PartnerCard[] = [
   },
 ];
 
-const partnerLevelLabels: Partial<Record<NonNullable<Partner["level"]>, string>> = {
-  title: "Титульний партнер",
-  gold: "Золотий партнер",
-  silver: "Срібний партнер",
-  bronze: "Бронзовий партнер",
-  media: "Медіапартнер",
-  friend: "Друг фестивалю",
-};
-
-function partnerLabel(partner: Partner) {
-  return partner.level ? partnerLevelLabels[partner.level] || partner.level : null;
-}
-
 function partnerCards(partners: Partner[]): PartnerCard[] {
   if (!partners.length) {
     return fallbackPartners;
@@ -100,7 +87,7 @@ function partnerCards(partners: Partner[]): PartnerCard[] {
     id: partner._id,
     name: partner.name?.trim() || "Партнер",
     url: partner.url,
-    label: partnerLabel(partner),
+    label: null,
     logo: partner.logo?.asset?.url
       ? {
           src: partner.logo.asset.url,
@@ -142,43 +129,38 @@ export function PartnersSection({
 
       {cards.length ? (
         <ul
-          className="mx-auto mt-12 grid max-w-5xl grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3"
+          className="mx-auto mt-12 grid max-w-5xl grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3"
           role="list"
         >
           {cards.map((partner) => {
             const safeId = partner.id.replace(/[^a-zA-Z0-9_-]/g, "-");
             const headingId = `partner-${safeId}`;
             const descriptionId = `partner-${safeId}-new-tab`;
-            const card = (
+
+            const cardContent = (
               <>
-                <div className="flex min-h-28 items-center justify-center rounded-2xl bg-background p-6">
-                  {partner.logo ? (
-                    <SanityImage
-                      alt=""
-                      className="max-h-16 max-w-full w-auto object-contain"
-                      height={partner.logo.height}
-                      sizes="(min-width: 1024px) 288px, (min-width: 640px) calc((100vw - 4.25rem) / 2), calc(100vw - 4rem)"
-                      src={partner.logo.src}
-                      width={partner.logo.width}
-                    />
-                  ) : (
-                    <span aria-hidden="true" className="font-serif text-2xl font-bold text-primary">
-                      {partner.name}
-                    </span>
-                  )}
-                </div>
-                <div className="mt-4">
-                  <h3 className="font-serif text-2xl font-bold text-foreground" id={headingId}>
+                {partner.logo ? (
+                  <SanityImage
+                    alt={partner.name}
+                    className="max-h-16 w-auto max-w-[85%] object-contain transition-transform duration-300 group-hover:scale-105 md:max-h-20"
+                    height={partner.logo.height}
+                    sizes="(min-width: 1024px) 288px, (min-width: 640px) calc((100vw - 4.25rem) / 2), calc(100vw - 4rem)"
+                    src={partner.logo.src}
+                    width={partner.logo.width}
+                  />
+                ) : (
+                  <span aria-hidden="true" className="font-serif text-2xl font-bold text-primary transition-transform duration-300 group-hover:scale-105">
                     {partner.name}
-                  </h3>
-                  {partner.label ? (
-                    <p className="mt-1 text-xs font-bold uppercase tracking-[0.12em] text-secondary">
-                      {partner.label}
-                    </p>
-                  ) : null}
-                </div>
+                  </span>
+                )}
+                <h3 className="sr-only" id={headingId}>
+                  {partner.name}
+                </h3>
               </>
             );
+
+            const cardClasses =
+              "group relative flex h-36 w-full items-center justify-center rounded-2xl border border-secondary/15 bg-card p-6 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:border-secondary/35 hover:shadow-lg";
 
             return (
               <li key={partner.id}>
@@ -186,22 +168,22 @@ export function PartnersSection({
                   <a
                     aria-describedby={descriptionId}
                     aria-labelledby={headingId}
-                    className={`group block h-full rounded-2xl border border-border bg-card p-5 shadow-sm ${cardHover}`}
+                    className={cardClasses}
                     href={partner.url}
                     rel="noopener noreferrer"
                     target="_blank"
                   >
-                    {card}
-                    <span className="sr-only" id={descriptionId}>Відкриється у новій вкладці</span>
-                    <span className="mt-4 inline-flex items-center gap-2 text-sm font-bold text-secondary">
-                      Перейти до партнера
-                      <ExternalLink aria-hidden="true" className="size-4 transition-transform group-hover:translate-x-1 motion-reduce:transition-none" />
+                    {cardContent}
+                    <span className="sr-only" id={descriptionId}>
+                      Відкриється у новій вкладці
                     </span>
+                    <ExternalLink
+                      aria-hidden="true"
+                      className="absolute right-3.5 top-3.5 size-4 text-muted-foreground/40 transition-colors group-hover:text-secondary"
+                    />
                   </a>
                 ) : (
-                  <div className="h-full rounded-2xl border border-border bg-card p-5 shadow-sm">
-                    {card}
-                  </div>
+                  <div className={cardClasses}>{cardContent}</div>
                 )}
               </li>
             );
