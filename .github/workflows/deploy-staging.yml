@@ -137,10 +137,6 @@ jobs:
           <IfModule mod_rewrite.c>
             RewriteEngine On
 
-            # Canonicalize known static routes to HTTPS trailing-slash URLs before
-            # the host's directory-slash redirect can downgrade them to http://.
-            RewriteRule ^tickets$ https://%{HTTP_HOST}/tickets/ [R=302,L,NE]
-
             # Same protection for statically exported blog posts.
             RewriteRule ^blog/([^/]+)$ https://%{HTTP_HOST}/blog/$1/ [R=302,L,NE]
           </IfModule>
@@ -154,13 +150,6 @@ jobs:
           for file in .htaccess index.html 404.html sitemap.xml robots.txt; do
             test -f "$OUT/$file" || {
               echo "Missing required export file: $OUT/$file"
-              exit 1
-            }
-          done
-
-          for file in tickets/index.html; do
-            test -f "$OUT/$file" || {
-              echo "Missing expected directory route file: $OUT/$file"
               exit 1
             }
           done
@@ -242,7 +231,6 @@ jobs:
           test -f "$DEPLOY_PATH/404.html"
           test -f "$DEPLOY_PATH/sitemap.xml"
           test -f "$DEPLOY_PATH/robots.txt"
-          test -f "$DEPLOY_PATH/tickets/index.html"
           test -d "$DEPLOY_PATH/_next"
           ls -la "$DEPLOY_PATH" | sed -n '1,40p'
           REMOTE
