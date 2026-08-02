@@ -73,10 +73,10 @@ export const Hero = ({ content }: HeroProps) => {
         aria-hidden="true"
       />
 
-      <div className="relative z-10 grid w-full max-w-6xl items-center gap-6 md:grid-cols-2 md:gap-10 lg:gap-14">
+      <div className="relative z-10 grid w-full max-w-5xl items-center gap-6 md:grid-cols-2 md:gap-8 lg:gap-10">
         {/* Text column — centered on mobile, left-aligned at md+ */}
         <div className="flex flex-col justify-center text-center md:text-left">
-          <span className="mb-3 inline-block w-fit self-center rounded-full border border-secondary/40 bg-secondary/5 px-4 py-1 text-xs font-bold uppercase tracking-[0.25em] text-secondary transition-colors duration-300 md:mb-4 md:self-start md:text-sm">
+          <span className="mb-3 inline-block w-fit self-center rounded-full border border-secondary/40 bg-secondary/5 px-4 py-1.5 text-xs font-bold uppercase tracking-[0.25em] text-secondary transition-colors duration-300 md:mb-4 md:self-start md:text-sm">
             Етно-фестиваль
           </span>
 
@@ -87,26 +87,26 @@ export const Hero = ({ content }: HeroProps) => {
             {title}
           </h1>
 
-          <p className="mb-4 font-hand text-lg text-secondary transition-colors duration-300 md:mb-6 md:text-xl lg:text-2xl">
+          <p className="mb-4 font-hand text-xl text-secondary transition-colors duration-300 sm:text-2xl md:text-2xl lg:text-3xl">
             {tagline}
           </p>
 
           {/* Place & Date highlight card */}
-          <div className="mb-4 flex flex-col gap-1 rounded-xl border border-secondary/20 bg-secondary/5 p-3 text-sm md:self-start md:text-base">
+          <div className="mb-5 flex flex-col gap-1 rounded-2xl border border-secondary/25 bg-secondary/5 p-3.5 text-base shadow-sm md:self-start md:text-lg">
             <div className="flex flex-wrap items-center justify-center gap-2 font-bold md:justify-start">
               <span className="text-secondary">{cityName}</span>
               <span className="text-muted-foreground/40">•</span>
               <span className="text-primary">{dates}</span>
             </div>
-            <p className="text-xs text-muted-foreground">{FALLBACK_VENUE}</p>
+            <p className="text-xs font-medium text-muted-foreground sm:text-sm">{FALLBACK_VENUE}</p>
           </div>
 
-          {/* <p className="mb-3 text-xs font-bold uppercase tracking-[0.12em] text-secondary sm:text-sm md:text-base">
+          <p className="mb-6 font-serif text-xs font-bold uppercase tracking-[0.15em] text-muted-foreground md:text-sm">
             {FALLBACK_FOUNDER}
-          </p> */}
+          </p>
 
           <a
-            className="self-center rounded-lg bg-primary px-6 py-3 text-base font-semibold text-primary-foreground shadow-sm transition-all duration-300 hover:opacity-90 hover:shadow-md hover:shadow-primary/20 focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background motion-reduce:transition-none md:self-start md:px-7 md:py-3.5"
+            className="self-center rounded-lg bg-primary px-6 py-3.5 text-base font-semibold text-primary-foreground shadow-sm transition-all duration-300 hover:opacity-90 hover:shadow-md hover:shadow-primary/20 focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background motion-reduce:transition-none md:self-start md:px-8 md:py-4 md:text-lg"
             href="https://novosad.tibox.me/krayina-mrii"
             rel="noopener noreferrer"
             target="_blank"
@@ -123,7 +123,7 @@ export const Hero = ({ content }: HeroProps) => {
             onClick={() => setIsSwapped((previous) => !previous)}
             aria-describedby="hero-artwork-description"
             aria-label="Поміняти плакати місцями"
-            className="group relative aspect-[4/5] w-full text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-4 focus-visible:ring-offset-background sm:w-11/12"
+            className="group relative aspect-[4/5] w-full text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-4 focus-visible:ring-offset-background sm:w-11/12 md:max-w-[360px] lg:max-w-[400px]"
           >
             <span className="sr-only" id="hero-artwork-description">
               Попереду: {primaryImage.description} Позаду: {secondaryImage.description}
@@ -132,7 +132,7 @@ export const Hero = ({ content }: HeroProps) => {
             {/* Secondary poster layered behind */}
             <div
               aria-hidden="true"
-              className="absolute -right-1 -top-1 aspect-[4/5] w-3/4 overflow-hidden rounded-2xl border border-secondary/20 bg-card/60 shadow-md rotate-3 opacity-80 transition-all duration-500 group-hover:rotate-1 group-hover:opacity-100 motion-reduce:transition-none motion-reduce:group-hover:rotate-3 motion-reduce:group-hover:opacity-80 sm:-right-2 sm:-top-2"
+              className="absolute top-1 -right-3 sm:top-2 sm:-right-5 aspect-[4/5] w-3/4 overflow-hidden rounded-2xl border-2 border-primary/25 bg-card shadow-xl rotate-6 opacity-95 transition-all duration-500 group-hover:rotate-3 group-hover:opacity-100 motion-reduce:transition-none motion-reduce:group-hover:rotate-6 motion-reduce:group-hover:opacity-95"
             >
               <CampaignArtwork
                 alt=""
