@@ -19,7 +19,7 @@ export default function PostHero({
       {image && image.asset?._id && (
         <div className="my-4 md:my-6 rounded-2xl overflow-hidden">
           <SanityImage
-            alt={image.alt || ""}
+            alt={image.alt || title || "Обкладинка допису"}
             image={image}
             quality={100}
             src={urlFor(image).quality(100).url()}
@@ -32,7 +32,7 @@ export default function PostHero({
             {author?.image && author.image.asset?._id && (
               <div className="relative w-6 h-6 md:w-10 md:h-10">
                 <SanityImageFill
-                  alt={author.image.alt || ""}
+                  alt={author.image.alt || `Фото автора ${author.name || ""}`.trim()}
                   className="w-10 h-10 rounded-full mr-2"
                   image={author.image}
                   sizes="40px"

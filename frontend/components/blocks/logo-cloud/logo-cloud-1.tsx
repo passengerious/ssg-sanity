@@ -48,7 +48,7 @@ export default function LogoCloud1({
                   className="shrink-0 w-24 h-24 flex items-center justify-center"
                 >
                   <SanityImage
-                    alt={image.alt || ""}
+                    alt={image.alt || title || "Логотип партнера"}
                     image={image}
                     priority={arrayIndex === 0 && index < 3}
                     src={urlFor(image).url()}

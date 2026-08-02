@@ -65,7 +65,7 @@ export default function Carousel1({
                     )}
                   >
                     <SanityImageFill
-                      alt={image.alt || ""}
+                      alt={image.alt || `Слайд галереї ${index + 1}`}
                       image={image}
                       sizes="(min-width: 1024px) 25vw, (min-width: 640px) 50vw, 100vw"
                     />

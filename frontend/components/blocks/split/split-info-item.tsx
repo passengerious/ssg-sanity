@@ -45,7 +45,7 @@ export default function SplitCardsItem({
           {image && image.asset?._id && (
             <div className="shrink-0 w-10 h-10 flex items-center justify-center">
               <SanityImage
-                alt={image.alt || ""}
+                alt={image.alt || title || "Іконка інформаційного елемента"}
                 image={image}
                 src={urlFor(image).url()}
               />

@@ -49,11 +49,13 @@ export function generatePageMetadata({
     openGraph: {
       title,
       description,
+      siteName: "Країна Мрій",
       images: [
         {
           url: imageUrl,
           width: page?.meta?.image?.asset?.metadata?.dimensions?.width || 1200,
           height: page?.meta?.image?.asset?.metadata?.dimensions?.height || 630,
+          alt: title || "Країна Мрій 2026",
         },
       ],
       locale: "uk_UA",
@@ -64,7 +66,12 @@ export function generatePageMetadata({
       card: "summary_large_image",
       title,
       description,
-      images: [imageUrl],
+      images: [
+        {
+          url: imageUrl,
+          alt: title || "Країна Мрій 2026",
+        },
+      ],
     },
     robots: !isProduction
       ? "noindex, nofollow"

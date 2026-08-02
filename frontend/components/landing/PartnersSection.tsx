@@ -141,7 +141,7 @@ export function PartnersSection({
               <>
                 {partner.logo ? (
                   <SanityImage
-                    alt={partner.name}
+                    alt={`Логотип партнера ${partner.name}`}
                     className="max-h-16 w-auto max-w-[85%] object-contain transition-transform duration-300 group-hover:scale-105 md:max-h-20"
                     height={partner.logo.height}
                     sizes="(min-width: 1024px) 288px, (min-width: 640px) calc((100vw - 4.25rem) / 2), calc(100vw - 4rem)"

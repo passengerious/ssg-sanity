@@ -37,7 +37,7 @@ export default function GridPost({ color, post }: GridPostProps) {
           {image && image.asset?._id && (
             <div className="mb-4 relative h-[15rem] sm:h-[20rem] md:h-[25rem] lg:h-[9.5rem] xl:h-[12rem] rounded-2xl overflow-hidden">
               <SanityImageFill
-                alt={image.alt || ""}
+                alt={image.alt || title || "Обкладинка публікації"}
                 image={image}
                 sizes="(min-width: 1024px) 25vw, (min-width: 640px) 50vw, 100vw"
               />
