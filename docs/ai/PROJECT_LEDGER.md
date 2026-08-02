@@ -1,10 +1,10 @@
 # Project Ledger
 
-Last updated: 2026-07-31
+Last updated: 2026-08-03
 
 ## Current phase
 
-Phase 7 staging route-output fix and update-loop validation; Phase 8 single-city Lviv pivot — architecture, interactive fixed two-poster Hero, published nine-location catalog, six-artist lineup, twelve-milestone history, 2024 Kyiv photo rewind, and five-logo static partner fallback completed locally; CMS partner metadata, manual browser checks, and deployment remain pending
+Phase 7 staging route-output fix and update-loop validation; Phase 8 single-city Lviv pivot — architecture, interactive fixed two-poster Hero, published nine-location catalog, six-artist lineup, twelve-milestone history, 2024 Kyiv photo rewind, five-logo static partner fallback, and comprehensive SEO audit & legal policy pages (/privacy, /terms, /public-offer) completed locally
 
 ## Active priorities
 
@@ -63,7 +63,7 @@ Phase 7 staging route-output fix and update-loop validation; Phase 8 single-city
 | Sanity content updates require rebuilds                        |   Medium | Architect  | Use documented manual GitHub Actions rebuild workflow in `workflow.md`; consider webhook automation later |
 | Festival UI can drift from updated `.stitch/DESIGN.md` tokens  |   Medium | UI agents  | Keep landing/city styling aligned to Brand Red, Natural Green, Warm Beige, Dark Grey tokens              |
 | Newsletter signup is not connected yet                         |      Low | Product    | Keep disabled for MVP; implement an external form/backend later if needed                                |
-| Artist-photo coverage is partial (3 of 6 cards)               |   Medium | Content    | Retain intentional placeholders for Braty Hadyukiny, Myroslav Kuvaldin + IBASH, and Burdon until exact approved Ukrainian-described assets are available; do not repurpose `Медовий полин.JPG` |
+| Artist-photo coverage is partial (3 of 6 cards) sm              |   Medium | Content    | Retain intentional placeholders for Braty Hadyukiny, Myroslav Kuvaldin + IBASH, and Burdon until exact approved Ukrainian-described assets are available; do not repurpose `Медовий полин.JPG` |
 | Static host conflicts with flat export files and same-named route payload directories | High | Deployment | Use `trailingSlash: true` directory output; verify slash routes after redeploy |
 | Staging reports mixed-content browser console errors | High | Testing | Redeploy directory-style output; verify host no longer redirects slash routes to `http://` |
 | Static partner fallback has no verified links or partnership levels | Medium | Content | Publish a complete ordered CMS partner set when approved metadata is available; CMS partners replace the fallback automatically |
@@ -76,6 +76,7 @@ Phase 7 staging route-output fix and update-loop validation; Phase 8 single-city
 
 | Date       | Change                                                                       | Log                                                                |
 | ---------- | ---------------------------------------------------------------------------- | ------------------------------------------------------------------ |
+| 2026-08-03 | Implemented SEO audit optimizations, purged legacy /tickets entity/schema, updated Footer to direct ticketing URL, added JSON-LD schemas & legal policy pages (/privacy, /terms, /public-offer) | `docs/logs/2026-08.md` |
 | 2026-07-28 | Single-city Lviv route consolidation, typed homepage data contract, fixed-Heroic UI, query cleanup, and static-export verification | `docs/logs/2026-07.md` |
 | 2026-07-28 | Refactored Lviv places plan and enhanced the CMS-driven Program grid for nine location categories; content population remains pending | `docs/logs/2026-07.md` |
 | 2026-07-29 | Published nine Lviv locations, updated the canonical ordered references, and verified live/static output excludes Epic Stage | `docs/logs/2026-07.md` |

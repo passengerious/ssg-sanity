@@ -1,7 +1,36 @@
 import React from "react";
 import Link from "next/link";
 import Image from "next/image";
+import { ExternalLink } from "lucide-react";
 import { CampaignArtwork } from "@/components/landing/CampaignArtwork";
+import { DEFAULT_TICKETS_URL } from "@/lib/tickets";
+
+type NavLink = {
+  href: string;
+  label: string;
+  external?: boolean;
+};
+
+const navLinks: NavLink[] = [
+  { href: "/#history", label: "Історія" },
+  { href: "/#program", label: "Програма" },
+  { href: "/#artists", label: "Артисти" },
+  { href: "/#partners", label: "Партнери" },
+  { href: DEFAULT_TICKETS_URL, label: "Квитки", external: true },
+];
+
+const socialLinks = [
+  { href: "https://facebook.com/krainamriy", label: "Facebook" },
+  { href: "https://instagram.com/krainamriy", label: "Instagram" },
+  { href: "https://youtube.com/user/KrainaMriyFest", label: "YouTube" },
+  { href: "https://t.me/krainamriyfest", label: "Telegram" },
+];
+
+const policyLinks = [
+  { href: "/privacy/", label: "Політика конфіденційності" },
+  { href: "/terms/", label: "Умови використання" },
+  { href: "/public-offer/", label: "Публічна оферта" },
+];
 
 export const Footer = () => {
   return (
@@ -18,45 +47,107 @@ export const Footer = () => {
       </div>
 
       <div className="relative z-10 mx-auto max-w-5xl px-4 py-12 md:px-12 md:py-16">
-        <div className="flex flex-col items-center gap-6 text-center">
+        <div className="flex flex-col items-center gap-10 text-center">
           {/* Logo / brand */}
-          <Link
-            href="/"
-            className="group inline-flex items-center rounded-md transition-colors hover:opacity-90 focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background"
-          >
-            <Image
-              alt="Логотип Країна Мрій"
-              className="h-10 w-auto shrink-0 object-contain transition-transform duration-300 group-hover:scale-105 motion-reduce:transition-none sm:h-12"
-              height={48}
-              priority
-              src="/images/logo.svg"
-              width={110}
-            />
-          </Link>
-
-          {/* Social placeholders */}
-          <ul aria-label="Майбутні соціальні канали" className="flex flex-wrap justify-center gap-6">
-            {["Facebook", "Instagram", "YouTube", "Telegram"].map((label) => (
-              <li
-                className="rounded-md px-3 py-1.5 text-sm font-medium text-muted-foreground"
-                key={label}
-              >
-                {label}
-              </li>
-            ))}
-          </ul>
-
-          {/* Decorative divider — green nature accent */}
-          <div aria-hidden="true" className="mt-2 flex items-center gap-4">
-            <div className="h-px w-16 bg-secondary/30" />
-            <div className="size-1.5 rounded-full bg-secondary/50" />
-            <div className="h-px w-16 bg-secondary/30" />
+          <div className="space-y-3">
+            <Link
+              aria-label="Країна Мрій — на головну сторінку"
+              href="/"
+              className="group inline-flex items-center rounded-md transition-colors hover:opacity-90 focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+            >
+              <Image
+                alt="Логотип Країна Мрій"
+                className="h-10 w-auto shrink-0 object-contain transition-transform duration-300 group-hover:scale-105 motion-reduce:transition-none sm:h-12"
+                height={48}
+                priority
+                src="/images/logo.svg"
+                width={110}
+              />
+            </Link>
+            <p className="text-sm text-muted-foreground font-hand text-lg">
+              Територія свободи, де традиції творять майбутнє української культури.
+            </p>
           </div>
 
-          {/* Copyright */}
-          <p className="text-xs text-muted-foreground">
-            &copy; 2026 Країна Мрій. Усі права захищено.
-          </p>
+          {/* Navigation Links */}
+          <nav aria-label="Навігація у підвалі" className="w-full">
+            <ul className="flex flex-wrap justify-center gap-x-8 gap-y-3">
+              {navLinks.map((link) => (
+                <li key={link.href}>
+                  {link.external ? (
+                    <a
+                      className="inline-flex items-center gap-1 text-sm font-semibold text-foreground transition-colors hover:text-secondary focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+                      href={link.href}
+                      rel="noopener noreferrer"
+                      target="_blank"
+                    >
+                      <span>{link.label}</span>
+                      <span className="sr-only">, відкриється у новій вкладці</span>
+                      <ExternalLink aria-hidden="true" className="size-3 text-secondary" />
+                    </a>
+                  ) : (
+                    <Link
+                      className="text-sm font-semibold text-foreground transition-colors hover:text-secondary focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+                      href={link.href}
+                    >
+                      {link.label}
+                    </Link>
+                  )}
+                </li>
+              ))}
+            </ul>
+          </nav>
+
+          {/* Social Links */}
+          <div className="space-y-3">
+            <p className="text-xs font-bold uppercase tracking-[0.2em] text-secondary">
+              Соціальні мережі
+            </p>
+            <ul aria-label="Офіційні соціальні канали" className="flex flex-wrap justify-center gap-4">
+              {socialLinks.map((social) => (
+                <li key={social.label}>
+                  <a
+                    className="inline-flex items-center gap-1.5 rounded-full border border-secondary/20 bg-background/80 px-4 py-1.5 text-xs font-medium text-muted-foreground transition-colors hover:border-secondary hover:text-foreground focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+                    href={social.href}
+                    rel="noopener noreferrer"
+                    target="_blank"
+                  >
+                    <span>{social.label}</span>
+                    <span className="sr-only">, відкриється в новій вкладці</span>
+                    <ExternalLink aria-hidden="true" className="size-3 text-secondary" />
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          {/* Decorative divider — green nature accent */}
+          <div aria-hidden="true" className="flex items-center gap-4">
+            <div className="h-px w-24 bg-secondary/30" />
+            <div className="size-1.5 rounded-full bg-secondary/50" />
+            <div className="h-px w-24 bg-secondary/30" />
+          </div>
+
+          {/* Legal / Policy Links */}
+          <div className="space-y-4">
+            <ul aria-label="Юридичні документи" className="flex flex-wrap justify-center gap-x-6 gap-y-2">
+              {policyLinks.map((policy) => (
+                <li key={policy.href}>
+                  <Link
+                    className="text-xs text-muted-foreground transition-colors hover:text-secondary focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+                    href={policy.href}
+                  >
+                    {policy.label}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+
+            {/* Copyright */}
+            <p className="text-xs text-muted-foreground">
+              &copy; 2026 Країна Мрій. Усі права захищено.
+            </p>
+          </div>
         </div>
       </div>
     </footer>

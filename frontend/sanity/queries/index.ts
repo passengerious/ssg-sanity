@@ -10,4 +10,3 @@ export {
 } from "./post";
 export { NAVIGATION_QUERY } from "./navigation";
 export { SETTINGS_QUERY } from "./settings";
-export { TICKET_INFO_QUERY } from "./ticket-info";

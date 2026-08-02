@@ -1,16 +1,12 @@
-import type {
-  FESTIVAL_CITY_QUERY_RESULT,
-  TICKET_INFO_QUERY_RESULT,
-} from "@/sanity.types";
+import type { FESTIVAL_CITY_QUERY_RESULT } from "@/sanity.types";
 
 type CityTicketSource = Pick<
   NonNullable<FESTIVAL_CITY_QUERY_RESULT>,
   "ticketUrlOverride"
 > | null;
 
-export function resolveTicketUrl(
-  city: CityTicketSource,
-  ticketInfo: TICKET_INFO_QUERY_RESULT | null,
-) {
-  return city?.ticketUrlOverride || ticketInfo?.boxOfficeUrl || "https://novosad.tibox.me/krayina-mrii";
+export const DEFAULT_TICKETS_URL = "https://novosad.tibox.me/krayina-mrii";
+
+export function resolveTicketUrl(city?: CityTicketSource) {
+  return city?.ticketUrlOverride || DEFAULT_TICKETS_URL;
 }

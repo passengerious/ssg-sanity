@@ -109,13 +109,4 @@ export const structure = (S: any, context: any) =>
             .schemaType("settings")
             .documentId("settings")
         ),
-      S.listItem()
-        .title("Ticket Info")
-        .icon(Ticket)
-        .child(
-          S.editor()
-            .id("ticketInfo")
-            .schemaType("ticketInfo")
-            .documentId("ticketInfo")
-        ),
     ]);

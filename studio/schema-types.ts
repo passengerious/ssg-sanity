@@ -7,7 +7,6 @@ import faq from "./schemas/documents/faq";
 import testimonial from "./schemas/documents/testimonial";
 import navigation from "./schemas/documents/navigation";
 import settings from "./schemas/documents/settings";
-import ticketInfo from "./schemas/documents/ticket-info";
 import festivalCity from "./schemas/documents/festival-city";
 import location from "./schemas/documents/location";
 import artist from "./schemas/documents/artist";
@@ -57,7 +56,6 @@ export const schemaTypes = [
   testimonial,
   navigation,
   settings,
-  ticketInfo,
   festivalCity,
   location,
   artist,

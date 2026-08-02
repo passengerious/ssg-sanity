@@ -7,7 +7,6 @@ import {
   POSTS_SLUGS_QUERY,
   NAVIGATION_QUERY,
   SETTINGS_QUERY,
-  TICKET_INFO_QUERY,
   FESTIVAL_CITY_QUERY,
 } from "@/sanity/queries";
 import {
@@ -18,7 +17,6 @@ import {
   POSTS_SLUGS_QUERY_RESULT,
   NAVIGATION_QUERY_RESULT,
   SETTINGS_QUERY_RESULT,
-  TICKET_INFO_QUERY_RESULT,
   FESTIVAL_CITY_QUERY_RESULT,
 } from "@/sanity.types";
 
@@ -113,19 +111,6 @@ export const fetchSanitySettings = async (): Promise<SETTINGS_QUERY_RESULT> => {
     return await client.fetch(SETTINGS_QUERY);
   } catch (error) {
     warn("Failed to fetch settings", error);
-    return null;
-  }
-};
-
-export const fetchSanityTicketInfo = async (): Promise<TICKET_INFO_QUERY_RESULT> => {
-  try {
-    const ticketInfo = await client.withConfig({ stega: false }).fetch(
-      TICKET_INFO_QUERY,
-    );
-
-    return ticketInfo ?? null;
-  } catch (error) {
-    warn("Failed to fetch ticket info", error);
     return null;
   }
 };
