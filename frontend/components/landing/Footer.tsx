@@ -1,7 +1,7 @@
 import React from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { ExternalLink } from "lucide-react";
+import { ExternalLink, Heart, PenTool } from "lucide-react";
 import { CampaignArtwork } from "@/components/landing/CampaignArtwork";
 import { DEFAULT_TICKETS_URL } from "@/lib/tickets";
 
@@ -19,11 +19,24 @@ const navLinks: NavLink[] = [
   { href: DEFAULT_TICKETS_URL, label: "Квитки", external: true },
 ];
 
+const participationLinks: (NavLink & { icon?: React.ElementType })[] = [
+  {
+    href: "https://forms.uspa.cy/6a48be6c93e20d4fe70bdab8",
+    label: "Реєстрація учасників",
+    external: true,
+    icon: PenTool,
+  },
+  {
+    href: "https://www.portmone.com.ua/r3/pg/adl0pzf7q7swcsw8044sws40kc4o0w4?is=30303332fc24c4412360a465196bb4718d4e6eafe65878f921e2b1a90f6e158ab87e74c34cf48c81754b5ea6&py=&h=973b6c125f6ac9451c772087c13ff6c1",
+    label: `Благодійни внесок у БФ \"Країна Мрій\"`,
+    external: true,
+    icon: Heart,
+  },
+];
+
 const socialLinks = [
-  { href: "https://facebook.com/krainamriy", label: "Facebook" },
-  { href: "https://instagram.com/krainamriy", label: "Instagram" },
-  { href: "https://youtube.com/user/KrainaMriyFest", label: "YouTube" },
-  { href: "https://t.me/krainamriyfest", label: "Telegram" },
+  { href: "https://www.facebook.com/krainamriy", label: "Facebook" },
+  { href: "https://www.instagram.com/kraina_mriy_fest", label: "Instagram" },
 ];
 
 const policyLinks = [
@@ -67,6 +80,27 @@ export const Footer = () => {
             <p className="text-sm text-muted-foreground font-hand text-lg">
               Територія свободи, де традиції творять майбутнє української культури.
             </p>
+          </div>
+
+          {/* Participation / Action Badges */}
+          <div aria-label="Участь та підтримка" className="flex flex-wrap justify-center gap-4">
+            {participationLinks.map((item) => {
+              const Icon = item.icon;
+              return (
+                <a
+                  className="inline-flex items-center gap-2 rounded-xl border border-secondary/30 bg-secondary/10 px-5 py-2.5 text-sm font-semibold text-secondary shadow-xs transition-all duration-300 hover:border-secondary hover:bg-secondary/20 hover:text-foreground focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background motion-reduce:transition-none"
+                  href={item.href}
+                  key={item.label}
+                  rel="noopener noreferrer nofollow"
+                  target="_blank"
+                >
+                  {Icon ? <Icon aria-hidden="true" className="size-4" /> : null}
+                  <span>{item.label}</span>
+                  <span className="sr-only">, відкриється у новій вкладці</span>
+                  <ExternalLink aria-hidden="true" className="size-3.5 opacity-70" />
+                </a>
+              );
+            })}
           </div>
 
           {/* Navigation Links */}
