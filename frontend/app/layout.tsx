@@ -15,8 +15,16 @@ export const metadata: Metadata = {
   },
   description:
     "Міжнародний етно-фестиваль Країна Мрій 2026 у Львові (15–16 серпня 2026). Територія свободи, музика, ремесла та українська традиція у парку ім. Богдана Хмельницького.",
+  manifest: "/site.webmanifest",
   icons: {
-    icon: "/favicon.ico",
+    icon: [
+      { url: "/favicon.ico" },
+      { url: "/images/icons/favicon-48x48.png", sizes: "48x48", type: "image/png" },
+      { url: "/images/logo.svg", type: "image/svg+xml" },
+    ],
+    apple: [
+      { url: "/images/icons/apple-touch-icon.png", sizes: "180x180", type: "image/png" },
+    ],
   },
   alternates: {
     canonical: "./",
