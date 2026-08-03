@@ -135,7 +135,7 @@ export const Hero = ({ content }: HeroProps) => {
               className="absolute top-1 -right-3 sm:top-2 sm:-right-5 aspect-[4/5] w-3/4 overflow-hidden rounded-2xl border-2 border-primary/25 bg-card shadow-xl rotate-6 opacity-95 transition-all duration-500 group-hover:rotate-3 group-hover:opacity-100 motion-reduce:transition-none motion-reduce:group-hover:rotate-6 motion-reduce:group-hover:opacity-95"
             >
               <CampaignArtwork
-                alt=""
+                alt={secondaryImage.description}
                 className="size-full object-cover"
                 fetchPriority="low"
                 height={secondaryImage.height}
@@ -151,7 +151,7 @@ export const Hero = ({ content }: HeroProps) => {
               className="relative z-10 aspect-[4/5] w-full overflow-hidden rounded-2xl border border-border bg-background shadow-2xl transition-all duration-500 group-hover:scale-[1.01] motion-reduce:transition-none motion-reduce:group-hover:scale-100"
             >
               <CampaignArtwork
-                alt=""
+                alt={primaryImage.description}
                 className="size-full object-contain"
                 fetchPriority={!isSwapped ? "high" : "low"}
                 height={primaryImage.height}

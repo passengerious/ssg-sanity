@@ -27,7 +27,7 @@ const participationLinks: (NavLink & { icon?: React.ElementType })[] = [
     icon: PenTool,
   },
   {
-    href: "https://www.portmone.com.ua/r3/pg/adl0pzf7q7swcsw8044sws40kc4o0w4?is=30303332fc24c4412360a465196bb4718d4e6eafe65878f921e2b1a90f6e158ab87e74c34cf48c81754b5ea6&py=&h=973b6c125f6ac9451c772087c13ff6c1",
+    href: "https://prt.mn/tSOuiqnjHI",
     label: `Благодійни внесок у БФ \"Країна Мрій\"`,
     external: true,
     icon: Heart,
@@ -51,7 +51,7 @@ export const Footer = () => {
       {/* Decorative ethnic motif background covering the whole footer */}
       <div aria-hidden="true" className="absolute inset-0 size-full pointer-events-none opacity-15">
         <CampaignArtwork
-          alt=""
+          alt="Декоративний етно-орнамент підвалу сайту"
           className="size-full object-cover"
           height={600}
           src="/images/festival/30-07/motif-border.webp"
