@@ -72,11 +72,11 @@ Use this when changing Next.js, Tailwind, GROQ, Sanity schemas, GitHub Actions, 
    frontend/out/.htaccess
    frontend/out/index.html
    frontend/out/404.html
+   frontend/out/privacy/index.html
+   frontend/out/terms/index.html
+   frontend/out/public-offer/index.html
    frontend/out/sitemap.xml
    frontend/out/robots.txt
-   frontend/out/kamianets/index.html
-   frontend/out/lviv/index.html
-   frontend/out/tickets/index.html
    frontend/out/_next/
    ```
 
@@ -115,12 +115,9 @@ Use this when changing Next.js, Tailwind, GROQ, Sanity schemas, GitHub Actions, 
    export SITE_URL="https://<STAGING-DOMAIN>"
 
    curl -I "$SITE_URL/"
-   curl -I "$SITE_URL/tickets"
-   curl -I "$SITE_URL/tickets/"
-   curl -I "$SITE_URL/lviv"
-   curl -I "$SITE_URL/lviv/"
-   curl -I "$SITE_URL/kamianets"
-   curl -I "$SITE_URL/kamianets/"
+   curl -I "$SITE_URL/privacy/"
+   curl -I "$SITE_URL/terms/"
+   curl -I "$SITE_URL/public-offer/"
    curl -I "$SITE_URL/sitemap.xml"
    curl -I "$SITE_URL/robots.txt"
    curl -I "$SITE_URL/not-a-real-page"
@@ -128,7 +125,7 @@ Use this when changing Next.js, Tailwind, GROQ, Sanity schemas, GitHub Actions, 
 
    Expected behavior:
 
-   - `/`, `/tickets/`, `/lviv/`, `/kamianets/`, `/sitemap.xml`, and `/robots.txt` return `200`.
+   - `/`, `/privacy/`, `/terms/`, `/public-offer/`, `/sitemap.xml`, and `/robots.txt` return `200`.
    - non-slash route URLs redirect to `https://.../route/`, not `http://.../route/`.
    - `/not-a-real-page` returns `404` and shows the exported app 404 body in the browser.
    - staging pages include `noindex, nofollow` metadata.
@@ -136,11 +133,9 @@ Use this when changing Next.js, Tailwind, GROQ, Sanity schemas, GitHub Actions, 
 7. **Browser smoke-test.**
 
    Confirm:
-
-   - homepage loads;
-   - city cards open `/kamianets/` and `/lviv/`;
-   - `/tickets/` opens;
-   - city-to-city links work;
+   - homepage loads with current festival content;
+   - legal links (`/privacy/`, `/terms/`, `/public-offer/`) load;
+   - external ticket button links to official ticketing platform;
    - 404 page displays for unknown routes;
    - Chrome Console has no mixed-content errors;
    - keyboard navigation works for primary links and cards.
