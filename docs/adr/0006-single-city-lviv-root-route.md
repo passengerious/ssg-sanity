@@ -72,7 +72,7 @@ Keeping both `/` and `/lviv/` after the pivot would duplicate the only festival 
 
 - **REF-001**: `docs/adr/0001-static-export-to-adm-tools.md`
 - **REF-002**: `docs/adr/0002-festival-content-model.md`
-- **REF-003**: `docs/adr/0003-root-slug-route-contract.md`
+- **REF-003**: Former multi-city root slug contract (Superseded by ADR 0006)
 - **REF-004**: `docs/adr/0004-root-festival-landing-route.md`
 - **REF-005**: `docs/adr/0005-directory-style-static-export.md`
 - **REF-006**: `artifacts/ARCHITECTURE.md`

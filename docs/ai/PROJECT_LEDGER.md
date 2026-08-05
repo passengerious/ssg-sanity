@@ -21,18 +21,7 @@ Phase 7 staging route-output fix and update-loop validation; Phase 8 single-city
 
 | Plan                                | Status          | Owner     | Updated    |
 | ----------------------------------- | --------------- | --------- | ---------- |
-| `docs/plans/implementation-plan.md` | Deploy-managed host rules pending verification | Architect | 2026-05-17 |
-| `docs/plans/stitch-task.md`         | MVP implemented | UI agent  | 2026-05-08 |
-| `docs/logs/fix-hero-visibility.md`  | Completed       | Architect | 2026-05-09 |
-| `docs/plans/single-city-lviv-pivot.md` | Completed | Architect | 2026-07-28 |
-| `docs/plans/places.md` | Nine-location content correction and export verification complete; browser/staging smoke test pending | Architect | 2026-07-31 |
-| `docs/plans/lineup.md` | Content, partial artist-image publication, and export verification complete; browser/staging crop/responsive smoke tests pending | Architect | 2026-07-31 |
-| `docs/plans/poster-led-brand-rebalance.md` | Implemented locally; browser/staging smoke test pending | Architect | 2026-07-29 |
-| `docs/plans/festival-history-facts.md` | Implemented and published; public source-link verification and browser/staging smoke test pending | Architect | 2026-07-29 |
-| `docs/plans/landing-visual-asset-integration.md` | Implemented locally; manual browser/staging smoke tests pending | Architect | 2026-07-30 |
-| `docs/plans/festival-photo-rewind-gallery.md` | Implemented locally; nine-location correction published; manual browser/staging smoke tests pending | Architect | 2026-07-31 |
-| `docs/plans/homepage-sanity-type-boundary.md` | Completed; Hero decoupled and unused query projections removed | Architect | 2026-07-31 |
-| `docs/plans/partner-logo-integration.md` | Completed; five optimized static fallback logos render when CMS partners are empty | Architect | 2026-07-31 |
+| `docs/plans/implementation-plan.md` | Single-city Lviv festival MVP implemented & verified | Architect | 2026-08-05 |
 
 ## Architecture decisions
 
@@ -40,7 +29,6 @@ Phase 7 staging route-output fix and update-loop validation; Phase 8 single-city
 | ---------------------------------------------- | -------- | ---------------------------------------------------------------------------------------------------------------------- | ---------- |
 | `docs/adr/0001-static-export-to-adm-tools.md`  | Accepted | Use `output: 'export'`; remove frontend API routes, Draft Mode, live editing, and runtime redirects                    | 2026-05-08 |
 | `docs/adr/0002-festival-content-model.md`      | Accepted | Use dedicated `festivalCity` documents with city-owned references to locations, artists, and partners                  | 2026-05-08 |
-| `docs/adr/0003-root-slug-route-contract.md`    | Superseded | Former multi-city root-slug contract; superseded by ADR 0006                                                   | 2026-05-08 |
 | `docs/adr/0004-root-festival-landing-route.md` | Accepted | Render the festival landing at `/` before launch instead of requiring generic Sanity `page` slug `index`               | 2026-05-09 |
 | `docs/adr/0005-directory-style-static-export.md` | Accepted | Use `trailingSlash: true` so static route pages export as directory indexes for host compatibility                    | 2026-05-17 |
 | `docs/adr/0006-single-city-lviv-root-route.md` | Accepted | Render the single Lviv festival at `/`; reserve city slugs and keep `/:slug` for generic pages only                  | 2026-07-28 |

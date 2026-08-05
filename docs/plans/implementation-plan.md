@@ -42,7 +42,7 @@ Relevant ADRs:
 
 - `docs/adr/0001-static-export-to-adm-tools.md` — static export to `adm.tools`, including the loss of runtime APIs, draft preview, ISR, and Next.js redirects.
 - `docs/adr/0002-festival-content-model.md` — dedicated `festivalCity` documents with city-owned references.
-- `docs/adr/0003-root-slug-route-contract.md` — one root `/:slug` route where `festivalCity` resolves before generic `page`.
+- `docs/adr/0006-single-city-lviv-root-route.md` — canonical `/` route for Lviv festival experience.
 - `docs/adr/0004-root-festival-landing-route.md` — root `/` renders the festival landing rather than requiring a generic Sanity `page` with slug `index`.
 - `docs/adr/0005-directory-style-static-export.md` — use `trailingSlash: true` so route pages export as directory indexes for static host compatibility.
 
