@@ -12,7 +12,7 @@ Phase 7 staging route-output fix and update-loop validation; Phase 8 single-city
 2. Finish Phase 7 staging validation: root-page browser smoke tests, custom 404 body, and repeat deployment/update loop.
 3. Prepare Phase 8 production deployment using the same manual GitHub Actions workflow with a different GitHub Environment and production domain.
 4. Keep staging non-indexable with `NEXT_PUBLIC_SITE_ENV=development`; production must use `NEXT_PUBLIC_SITE_ENV=production`.
-5. Test the documented manual Sanity content update loop once; webhook rebuild automation remains deferred.
+5. Configure and test ADR 0008's repository-scoped Sanity webhook so published site-content changes rebuild staging automatically; retain manual production promotion.
 6. Treat `.stitch/DESIGN.md` as the source of truth for fixed-Heroic festival UI design tokens and page styling.
 7. Complete manual desktop/mobile/keyboard/reduced-motion smoke tests for the campaign Hero, About, Founder, History, Program, and Line-up before the staging deployment check.
 8. Complete manual keyboard/touch/screen-reader/reduced-motion testing for the implemented 2024 Kyiv photo rail and native-dialog lightbox.
@@ -22,6 +22,7 @@ Phase 7 staging route-output fix and update-loop validation; Phase 8 single-city
 | Plan                                | Status          | Owner     | Updated    |
 | ----------------------------------- | --------------- | --------- | ---------- |
 | `docs/plans/implementation-plan.md` | Single-city Lviv festival MVP implemented & verified | Architect | 2026-08-05 |
+| `docs/plans/auto-rebuild.md` | Staging auto-rebuild / manual production promotion implementation | Architect | 2026-08-06 |
 
 ## Architecture decisions
 
@@ -33,13 +34,14 @@ Phase 7 staging route-output fix and update-loop validation; Phase 8 single-city
 | `docs/adr/0005-directory-style-static-export.md` | Accepted | Use `trailingSlash: true` so static route pages export as directory indexes for host compatibility                    | 2026-05-17 |
 | `docs/adr/0006-single-city-lviv-root-route.md` | Accepted | Render the single Lviv festival at `/`; reserve city slugs and keep `/:slug` for generic pages only                  | 2026-07-28 |
 | `docs/adr/0007-festival-history-milestones.md` | Accepted | Use ordered inline `festivalMilestone` objects on the canonical Lviv `festivalCity` document | 2026-07-29 |
+| `docs/adr/0008-automatic-staging-rebuild-manual-production-promotion.md` | Accepted | Trigger staging from published Sanity content; keep production manual-only | 2026-08-06 |
 
 ## Open architecture questions
 
 | Question                                                                  | Impact | Needed decision                                                                              |
 | ------------------------------------------------------------------------- | -----: | -------------------------------------------------------------------------------------------- |
 | How should newsletter submissions work on static hosting if reintroduced? | Medium | External provider or separate backend that does not expose secrets                           |
-| When should Sanity rebuilds become automated?                             | Low | Skipped for now; current MVP uses manual GitHub Actions dispatch after content batches        |
+| When should a stronger content snapshot/release mechanism be added?       | Low | Use editorial freeze between staging sign-off and manual production deploy; consider Sanity Releases later |
 | Should homepage SEO metadata remain code-owned for MVP?                   | Medium | Keep code-owned metadata documented or move SEO fields into a Sanity singleton before launch |
 
 ## Current risks
@@ -48,7 +50,8 @@ Phase 7 staging route-output fix and update-loop validation; Phase 8 single-city
 | -------------------------------------------------------------- | -------: | ---------- | -------------------------------------------------------------------------------------------------------- |
 | Static export removes draft preview/live editing               |     High | Architect  | Use Studio-only editing and document rebuild workflow; consider separate preview deployment later        |
 | Newsletter signup is disabled on static hosting                |   Medium | Architect  | Choose external form backend or separate endpoint before enabling newsletter collection                  |
-| Sanity content updates require rebuilds                        |   Medium | Architect  | Use documented manual GitHub Actions rebuild workflow in `workflow.md`; consider webhook automation later |
+| Sanity webhook PAT requires rotation and least-privilege control | Medium | Architect | Limit the fine-grained PAT to this repository and `Contents: Read and write`; store only in the Sanity webhook header |
+| Published content changes queue staging rebuilds                |   Low | Content | Batch related publishes where possible; serialized staging deployments prevent overlapping `rsync --delete` operations |
 | Festival UI can drift from updated `.stitch/DESIGN.md` tokens  |   Medium | UI agents  | Keep landing/city styling aligned to Brand Red, Natural Green, Warm Beige, Dark Grey tokens              |
 | Newsletter signup is not connected yet                         |      Low | Product    | Keep disabled for MVP; implement an external form/backend later if needed                                |
 | Artist-photo coverage is partial (3 of 6 cards) sm              |   Medium | Content    | Retain intentional placeholders for Braty Hadyukiny, Myroslav Kuvaldin + IBASH, and Burdon until exact approved Ukrainian-described assets are available; do not repurpose `Медовий полин.JPG` |
@@ -65,6 +68,7 @@ Phase 7 staging route-output fix and update-loop validation; Phase 8 single-city
 | Date       | Change                                                                       | Log                                                                |
 | ---------- | ---------------------------------------------------------------------------- | ------------------------------------------------------------------ |
 | 2026-08-03 | Implemented SEO audit optimizations, purged legacy /tickets entity/schema, updated Footer to direct ticketing URL, added JSON-LD schemas & legal policy pages (/privacy, /terms, /public-offer) | `docs/logs/2026-08.md` |
+| 2026-08-06 | Accepted staging-auto/manual-production deployment policy; staging workflow now accepts the Sanity dispatch event pending webhook setup | `docs/logs/2026-08.md` |
 | 2026-07-28 | Single-city Lviv route consolidation, typed homepage data contract, fixed-Heroic UI, query cleanup, and static-export verification | `docs/logs/2026-07.md` |
 | 2026-07-28 | Refactored Lviv places plan and enhanced the CMS-driven Program grid for nine location categories; content population remains pending | `docs/logs/2026-07.md` |
 | 2026-07-29 | Published nine Lviv locations, updated the canonical ordered references, and verified live/static output excludes Epic Stage | `docs/logs/2026-07.md` |

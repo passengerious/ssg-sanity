@@ -5,11 +5,11 @@ This project is a Sanity-powered, statically exported Next.js site. Content is e
 ## Current decision
 
 - **Code updates:** commit and push changes, then run the staging GitHub Actions deployment manually.
-- **Content updates:** publish a coherent batch of content in Sanity Studio, then run the staging GitHub Actions deployment manually.
-- **Current rebuild trigger:** manual GitHub Actions `workflow_dispatch`.
-- **Future enhancement:** Sanity webhook → GitHub `repository_dispatch` or equivalent workflow trigger once editorial frequency increases.
+- **Content updates:** publish a coherent batch in Sanity Studio; the configured Sanity webhook automatically dispatches the staging workflow.
+- **Staging rebuild triggers:** Sanity `repository_dispatch` for published content and manual GitHub Actions `workflow_dispatch` as a fallback.
+- **Production rebuild trigger:** manual GitHub Actions `workflow_dispatch` only, after staging review.
 
-Manual rebuild is the preferred MVP workflow because it is predictable, avoids webhook/token complexity, and lets editors publish content in batches instead of rebuilding after every small Sanity change.
+The staging webhook is limited to published site content and deploys only staging. Production remains a deliberate manual promotion to preserve the review boundary. See `docs/plans/auto-rebuild.md` and ADR 0008 for the token, webhook, batching, and release rules.
 
 ## Roles
 
@@ -24,10 +24,10 @@ Manual rebuild is the preferred MVP workflow because it is predictable, avoids w
 | Environment | Source | Deployment trigger | Notes |
 | --- | --- | --- | --- |
 | Local development | local files + Sanity dataset | developer commands | Used for code validation before commit. |
-| Staging | `main` branch + published Sanity content at build time | manual GitHub Actions dispatch | Staging should remain `noindex`. |
+| Staging | `main` branch + published Sanity content at build time | automatic Sanity webhook; manual GitHub Actions fallback | Staging should remain `noindex`. |
 | Production | `main` branch + published Sanity content at build time | manual GitHub Actions dispatch with production GitHub Environment | Same host/directory pattern as staging, but different production domain webroot. |
 
-Production should reuse the same deploy workflow with a different GitHub Environment. It remains manual-only for now. Do not add automatic push deploys or Sanity webhook deploys until editorial frequency or launch operations require them.
+Production should use a separate production workflow with the production GitHub Environment. It remains manual-only: do not add automatic push deploys or Sanity webhook deploys to production.
 
 Production values that should differ from staging:
 
@@ -163,7 +163,7 @@ The public site is static. During the GitHub Actions build, Next.js fetches publ
 
    Before requesting a rebuild, confirm referenced documents are published and complete:
 
-   - city documents have stable slugs such as `kamianets` and `lviv`;
+   - the canonical Lviv festival document and generic-page slugs are stable;
    - referenced artists, locations, and partners are published;
    - required images have usable assets and alt text where applicable;
    - external links use `https://` unless there is a deliberate exception;
@@ -171,17 +171,15 @@ The public site is static. During the GitHub Actions build, Next.js fetches publ
 
 3. **Publish the content batch in Sanity Studio.**
 
-   Use Sanity's normal publish action. The content is now live in Sanity, but not yet visible on the static public site.
+   Use Sanity's normal publish action. The configured webhook queues a staging rebuild; the content is not visible on the static site until that deployment completes.
 
-4. **Request or run a manual rebuild.**
+4. **Wait for the staging rebuild.**
 
-   Run the staging deployment workflow:
+   The Sanity webhook triggers `sanity_content_published`, which rebuilds the frontend against the latest published content and deploys it to staging. If the webhook is unavailable or a manual rerun is needed, run:
 
    ```bash
    gh workflow run "Deploy staging static site" --ref main -f confirm_deploy=deploy
    ```
-
-   This rebuilds the frontend against the latest published Sanity content, generates `frontend/out/`, and deploys it to the staging webroot.
 
 5. **Verify the content on staging.**
 
@@ -189,26 +187,26 @@ The public site is static. During the GitHub Actions build, Next.js fetches publ
 
    | Content changed | Pages to verify |
    | --- | --- |
-   | City title, description, date, hero image | `/kamianets/` or `/lviv/`, plus homepage city card |
-   | Artists | homepage artist section, city page artist card/list |
-   | Partners | homepage partner section, city page partner card/list |
-   | Ticket info | `/tickets/`, homepage ticket CTA, city ticket CTA behavior |
+   | Festival title, description, date, hero image | `/` landing page |
+   | Artists | homepage artist section |
+   | Partners | homepage partner section |
+   | Ticket destination | homepage external ticket CTA |
    | Slugs | direct route, homepage links, sitemap |
    | SEO metadata | page source for `title`, `description`, `canonical`, `og:url` |
 
-6. **Promote to production later.**
+6. **Promote to production manually.**
 
-   Until a production workflow exists, staging is the authoritative verification environment. When production deployment is added, it should follow the same manual rebuild pattern first.
+   After staging sign-off, stop further publishes until the production build completes. Run the separate production workflow with its manual confirmation and production GitHub Environment settings.
 
 ### Expected freshness
 
-With the current workflow, content is visible after:
+With the staging workflow, content is visible after:
 
 ```text
-Sanity publish → manual GitHub Actions dispatch → build → rsync deploy → public verification
+Sanity publish → webhook dispatch → staging build → rsync deploy → staging verification → manual production deploy
 ```
 
-This is not instant CMS publishing. Treat it as a controlled static rebuild. For urgent content changes, keep the batch small and run the workflow immediately after publishing.
+This is not instant CMS publishing. Treat it as a controlled static rebuild. For urgent content changes, keep the batch small and manually promote production immediately after staging verification.
 
 ## Rollback workflow
 
@@ -223,27 +221,9 @@ If a deployment is bad:
 
 Rollback restore commands are host-specific and should be tested before launch.
 
-## Future automation option
-
-Manual rebuild remains the preferred MVP path. If editorial frequency increases, add automation:
-
-```text
-Sanity publish webhook → GitHub repository_dispatch → staging build/deploy workflow
-```
-
-Recommended constraints for future webhook automation:
-
-- trigger only on published content changes, not every draft edit;
-- debounce or batch rapid publish events if possible;
-- keep a manual workflow dispatch fallback;
-- use a dedicated GitHub token with minimum required permissions;
-- verify the webhook cannot expose Sanity or GitHub secrets client-side;
-- start with staging-only automation before production automation;
-- record the decision in an ADR if webhook-triggered production rebuild becomes part of the deployment architecture.
-
 ## Current policy summary
 
 - Editors publish content in hosted Sanity Studio.
-- Maintainers manually run GitHub Actions to rebuild the static site after a content batch is published.
-- The static site should be verified on staging after every rebuild.
-- Webhook-triggered rebuilds are a future enhancement, not part of the current MVP workflow.
+- Published site-content changes automatically rebuild staging through the Sanity webhook.
+- Maintainers verify staging after every rebuild and manually promote approved content to production.
+- The Sanity webhook never deploys production.

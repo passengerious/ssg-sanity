@@ -7,6 +7,8 @@ on:
         description: Type "deploy" to confirm staging deployment
         required: true
         type: string
+  repository_dispatch:
+    types: [sanity_content_published]
 
 permissions:
   contents: read
@@ -22,6 +24,12 @@ env:
 jobs:
   build-and-deploy:
     name: Build and deploy staging
+    # Published Sanity content may deploy to staging automatically. A human-run
+    # workflow still requires the explicit confirmation input before accessing
+    # the staging environment and its deployment secrets.
+    if: >-
+      github.event_name == 'repository_dispatch' ||
+      inputs.confirm_deploy == 'deploy'
     runs-on: ubuntu-latest
     environment:
       name: staging
@@ -41,12 +49,6 @@ jobs:
       DEPLOY_PATH: ${{ vars.DEPLOY_PATH }}
 
     steps:
-      - name: Confirm deployment
-        if: ${{ inputs.confirm_deploy != 'deploy' }}
-        run: |
-          echo 'Deployment not confirmed. Re-run and type "deploy".'
-          exit 1
-
       - name: Validate required environment
         env:
           HAS_SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY != '' }}
