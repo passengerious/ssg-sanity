@@ -1,5 +1,5 @@
 import React from "react";
-import { ExternalLink, Music } from "lucide-react";
+import { Clock, ExternalLink, Music } from "lucide-react";
 import { SanityImageFill } from "@/components/sanity-image";
 import {
   decorativeDivider,
@@ -13,6 +13,7 @@ export type Artist = NonNullable<
 
 export type DayGroup = {
   label: string;
+  startTime?: string;
   artists: Artist[];
 };
 
@@ -66,18 +67,32 @@ export function ArtistsLineup({ days }: { days: DayGroup[] }) {
 
             return (
               <section aria-labelledby={headingId} key={day.label}>
-                <div className="mb-6 flex flex-wrap items-center gap-3">
-                  <span className="rounded-full border border-secondary/30 bg-secondary/10 px-3.5 py-1 text-xs font-bold uppercase tracking-[0.15em] text-secondary">
-                    {index === 0 ? "1-й день" : `${index + 1}-й день`}
-                  </span>
-                  <h3
-                    className="font-serif text-2xl font-bold text-foreground md:text-3xl"
-                    id={headingId}
-                  >
-                    {day.label}
-                  </h3>
+                <div className="mb-6 flex flex-wrap items-center justify-between gap-3">
+                  <div className="flex flex-wrap items-center gap-3">
+                    <span className="rounded-full border border-secondary/30 bg-secondary/10 px-3.5 py-1 text-xs font-bold uppercase tracking-[0.15em] text-secondary">
+                      {index === 0 ? "1-й день" : `${index + 1}-й день`}
+                    </span>
+                    <h3
+                      className="font-serif text-2xl font-bold text-foreground md:text-3xl"
+                      id={headingId}
+                    >
+                      {day.label}
+                    </h3>
+                  </div>
+                  {day.startTime ? (
+                    <span className="inline-flex items-center gap-1.5 rounded-full border border-secondary/20 bg-secondary/5 px-3 py-1 text-xs font-medium text-muted-foreground">
+                      <Clock aria-hidden="true" className="size-3.5 text-secondary" />
+                      Початок о {day.startTime}
+                    </span>
+                  ) : null}
                 </div>
-                <ul className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+                <ul
+                  className={`grid grid-cols-1 gap-6 ${
+                    day.artists.length <= 2
+                      ? "sm:grid-cols-2 max-w-3xl mx-auto"
+                      : "sm:grid-cols-2 lg:grid-cols-3"
+                  }`}
+                >
                   {day.artists.map((artist) => (
                     <ArtistCard artist={artist} key={artist._id} />
                   ))}
@@ -106,7 +121,10 @@ export function ArtistsLineup({ days }: { days: DayGroup[] }) {
 
 function ArtistCard({ artist }: { artist: Artist }) {
   const slug = artist.slug?.current;
-  const isHighlight = slug === HIGHLIGHT_SLUG;
+  const isHighlight =
+    slug === HIGHLIGHT_SLUG ||
+    slug === "oleg-skrypka" ||
+    slug === "oleg-skrypka-ta-vv";
   const hasPhoto = Boolean(artist.photo?.asset?.url);
   const description = artist.description
     ? truncateWords(artist.description, 140)

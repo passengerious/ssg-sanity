@@ -17,7 +17,7 @@ type HeroProps = {
 const FALLBACK_TITLE = "«Країна Мрій» 2026";
 const FALLBACK_TAGLINE = "Територія свободи, де традиції формують майбутнє.";
 const FALLBACK_CITY = "Львів";
-const FALLBACK_DATES = "15–16 серпня 2026";
+const FALLBACK_DATES = "19–20 вересня 2026";
 const FALLBACK_VENUE = "Парк культури ім. Богдана Хмельницького";
 const FALLBACK_FOUNDER = "Автор та засновник — Олег Скрипка";
 
